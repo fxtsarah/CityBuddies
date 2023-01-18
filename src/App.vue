@@ -83,7 +83,6 @@ export default {
       //   }
       // ]
 
-      console.log("find buddy called with id:" + target_id)
       const target_city_entry = Object.values(this.cities_list).filter(entry => String(entry["city"]["value"]) == String(target_id))[0]
       const target_city_index = this.cities_list.indexOf(target_city_entry)
 
