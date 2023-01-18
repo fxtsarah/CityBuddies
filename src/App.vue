@@ -20,6 +20,8 @@
 
 const axios = require("axios");
 const wbk = require("wikibase-sdk")
+import test from '../public/test.json'
+
 
 export default {
   name: 'App',
@@ -195,10 +197,11 @@ export default {
     },
 
     async get_list() {
-        fetch("./assets/test.json")
-          .then((res) => {
-            console.log(res);
-          })
+//         fetch ("./public/test.json")
+//           .then((res) => {
+//             console.log(res);
+//           })
+        console.log(test)
     }
   }
 }
