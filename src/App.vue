@@ -30,14 +30,16 @@ export default {
       buddy_city_label: "",
       disambiguation: false,
       possible_target_cities: [],
-      // target_city_entry: null,
-      // buddy_city_entry: null,
+      target_city_entry: null,
+      buddy_city_entry: null,
       search_active: false,
       cities_list: []
     }
   },
   methods: {
     async submit() {
+
+      this.get_list()
       if (!this.cities_list.length) {
         this.cities_list = await this.get_cities_list()
       }
@@ -114,6 +116,7 @@ export default {
         }
         
       }
+      this.buddy_city_entry = buddy_entry
 
       let buddy_label = buddy_entry["city"]["label"]
       
@@ -165,7 +168,6 @@ export default {
           SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }    
         }
         ORDER BY DESC(?population)`)
-      console.log("cities list generated!")
       return new_list
     },
 
@@ -190,6 +192,13 @@ export default {
       const results = await axios.get(url)
       let simplifiedResults = wbk.simplify.sparqlResults(results.data);
       return simplifiedResults
+    },
+
+    async get_list() {
+        fetch("./assets/test.json")
+          .then((res) => {
+            console.log(res);
+          })
     }
   }
 }
