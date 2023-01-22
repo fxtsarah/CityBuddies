@@ -101,7 +101,7 @@ export default {
   methods: {
     async input_submit() {
 
-      var res = await this.get_cities_dupes()
+
 
       
       var input = this.input_value
@@ -152,6 +152,25 @@ export default {
       
       const filtered_list = Object.values(cities_list).filter(entry => String(entry["cityLabel"]).localeCompare(String(target_label), 'en', { sensitivity: 'base' }) == 0)
       return filtered_list
+    },
+
+    async find_possible_matches2(target_label) {
+      // var label_formatted = String(target_label).charAt(0).toUpperCase() + String(target_label).slice(1).toLowerCase()
+      // TODO make case insensitive searching wokr with muliple word cities
+      
+      var query = `SELECT DISTINCT ?city ?cityDescription
+                  WHERE
+                  { 
+                    ?city wdt:P31/wdt:P279* wd:Q515 
+                    { ?city skos:altLabel \'${target_label}\'@en }
+                    UNION
+                    { ?city rdfs:label \'${target_label}\'@en }
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+
+                  } `
+
+      var result = await this.submit_query(query)
+      return result
     },
 
     async find_buddy(target_id) {
@@ -207,7 +226,7 @@ export default {
 
     async get_cities_dupes() {
       console.log("get cities dupes called")
-      var query = `SELECT DISTINCT ?city  WHERE { 
+      var query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
   ?city wdt:P31/wdt:P279* wd:Q515 . 
   ?city p:P1082 ?populationStatement . 
   ?populationStatement ps:P1082 ?cityPopulation.
@@ -216,9 +235,36 @@ export default {
 
 ORDER BY DESC(?date)`
 
+
+
       var result = await this.submit_query(query)
-      console.log(result)
       return result
+    },
+
+    async delete_dupes(list_with_dupes) {
+
+      console.log("delete dupes called")
+
+      var list_no_dupes = []
+      var cities_added = []
+
+      // for (const entry in list_with_dupes) {
+      //   console.log(entry)
+      //   // if (!cities_added.contains(entry["value"])) {
+      //   //   cities_added.append(entry["value"])
+
+      //   // }
+      // }
+
+      for (let i = 0; i < list_with_dupes.length; i++) {
+        var entry = list_with_dupes[i]
+        if (!cities_added.includes(entry["city"]["value"])) {
+          cities_added.push(entry["city"]["value"])
+          list_no_dupes.push(entry["city"])
+        } 
+      }
+      return list_no_dupes
+          
     },
 
     // async id_to_desc(target_id) {
@@ -298,9 +344,24 @@ ORDER BY DESC(?date)`
       
     },
 
+    async sort_by_pop(cities_list) {
+      cities_list.sort(
+        (first, second) => { 
+          // TODO fix the stupid european decimals!!!!!!!!!
+          return first.population - second.population }
+      );
+    return cities_list
+    }
+
   }, 
-  mounted() {
+  async mounted() {
     
+    var cities_dupes = await this.get_cities_dupes()
+    var cities_no_dupes = await this.delete_dupes(cities_dupes)
+    var cities_pop_sorted = await this.sort_by_pop(cities_no_dupes)
+    console.log(cities_pop_sorted)
+    var poss = await this.find_possible_matches2("Sao Paulo")
+    console.log(poss)
 
     map = L.map('map').setView([0, 0], 2)
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
