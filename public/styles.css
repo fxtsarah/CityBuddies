@@ -39,6 +39,7 @@ body {
   
 #input_form {
     margin-right: 20px;
+    max-width: 300px; margin: auto;
 }
   
 #input_button {
@@ -59,7 +60,7 @@ body {
 #banner_form {
     float: right;
     display: inline-flex;
-    margin-top: 25px;
+    margin-top: 10px;
 }
   
 #disambiguation_info {
@@ -85,10 +86,17 @@ body {
     margin-top: 18px; 
 }
 
-#markers_loading {
-    margin-top: 20px;
+#list_loading {
+    position:absolute; 
+    bottom: 130px;
+    font-size: 18px;
 }
 
 #city_not_found {
     margin-top: 20px;
+}
+
+.disabled_input {
+    pointer-events: none;
+    opacity: .6;
 }
