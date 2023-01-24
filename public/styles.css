@@ -99,4 +99,10 @@ body {
 .disabled_input {
     pointer-events: none;
     opacity: .6;
+
+}
+.disabled_button {
+    pointer-events: none;
+    opacity: .6;
+
 }

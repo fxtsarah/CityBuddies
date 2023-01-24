@@ -8,8 +8,7 @@
 
     <div id="banner_form">
       <input placeholder="City name" class="form-control" :class="{ disabled_input: list_loading }" id="input_form" v-model="input_value" :tabindex=this.input_tab_index>
-      <button class="btn btn-light" :class="{ disabled: list_loading }" id="input_button" @click="input_submit">Search For Buddy</button>
-      <!-- TODO this message jumps around; get it to STOP -->
+      <button class="btn btn-light" :class="{ disabled_button: list_loading }" id="input_button" @click="input_submit">Search For Buddy</button>
       <p v-if="list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
     </div>
   </div>
@@ -47,13 +46,12 @@
 </template>
 
 <script>
-import { unescapeComponent } from "uri-js";
-
 
 const axios = require("axios");
 const wbk = require("wikibase-sdk")
 
-// import cities_list from '../public/cities.json'
+// import the list of city names that don't follow normal capitalization rules
+import exceptions_list from '../public/exceptions.json'
 
 // making sure the map and the layer that contains the map's markers are global so that they can be reffered to by any function
 var map
@@ -102,26 +100,34 @@ export default {
     }
   },
   methods: {
+    // method called when the user clicks the 'search for buddy' button
     async input_submit() {
 
       var input = this.input_value
+
+      // look for any cities that share a name with the imputted value.
       this.possible_target_cities = await this.find_possible_matches(input)
       this.input_value = ""
       this.city_not_found = false
       this.last_submitted_value = input
 
+      // if there were no cities found with the same name, show a message stating that the city couldn't be found
       if (this.possible_target_cities.length == 0) {
         this.city_not_found = true
         this.match_found = false
         this.hide_map = true
         await this.reset_map()
       }
+
+      // if there is only one city found with the same name, automatically choose that city as the target and search for its buddy
       else if (this.possible_target_cities.length == 1) {
         this.hide_map = true
         await this.reset_map()
         await this.chosen_target(this.possible_target_cities[0]["value"])
         
       }
+
+      // if there are multiple cities found with the same name, allow the user to select which one they want before searching for a buddy
       else {
         this.disambiguation = true
         this.match_found = false
@@ -131,6 +137,9 @@ export default {
       
     },
 
+    // method called when a target city is chosen, 
+    // either automatically because there was only one city that matched the inputted name,
+    // or manually because the user selected the city from the disambiguation page
     async chosen_target(target_id) {
 
       this.target_city_label = await this.id_to_label(target_id)
@@ -149,11 +158,15 @@ export default {
       await this.add_markers()
     },
 
+    // Given a string, output all the cities with a label or alternate label that matches the input
     async find_possible_matches(target_label) {
-      var label_formatted = this.format_city_name(target_label)
-      console.log("format city name called correctly. result: " + label_formatted)
-      var no_quotes = label_formatted.replace("\'", "\\'");
 
+      // since case insensitive searching in sparql takes too much time, 
+      // normalize the input with capitalization rules
+      var label_formatted = this.format_city_name(target_label)
+
+      // escape any quotes present in the input so the query doesn't break
+      var no_quotes = label_formatted.replace("\'", "\\'");
       
       var query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
                     WHERE
@@ -167,25 +180,26 @@ export default {
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 
                     } ORDER BY DESC (?population)`
-
-      console.log("query called correctly. Query: " + query)
       
       var result = await this.submit_query(query)
+
+      // remove duplicate cities from the result
       var no_dupes = await this.delete_dupes(result)
-      console.log("result: " + JSON.stringify(no_dupes))
       return no_dupes
     },
 
+    // method called when the exact target city id is known and the program wants to find that city's buddy.
     async find_buddy(target_id) {
       let buddy_entry = null
 
+      // update the target_city_entry to the entry that contains the city id
       const target_city_entry = Object.values(this.cities_list).filter(entry => String(entry["value"]) == String(target_id))[0]
-      console.log(JSON.stringify(target_city_entry))
       this.target_city_entry = target_city_entry
-      
 
+      // find the index of the target city entry in the list of all the city entries
       const target_city_index = this.cities_list.indexOf(target_city_entry)
 
+      // edge cases for when the city is at the from or back of the list and only has one neighbor.
       if (target_city_index == 0) {
         buddy_entry = this.cities_list[1]
       }
@@ -193,6 +207,10 @@ export default {
         buddy_entry = this.cities_list[this.cities_list.length - 2]
       }
       else {
+
+        // if the city is not at the very front or very back of the list, then it has two possible buddies:
+        // the two city entries adjacent to it. Find which of these two neighbors is closest in population
+        // to the target city -> that is the buddy.
         const bigger_neighbor_index = target_city_index + 1
         const smaller_neighbor_index = target_city_index - 1
     
@@ -217,6 +235,11 @@ export default {
       return buddy_entry
     },
 
+    // get a list of all the cities from wikidata, without removing duplicate entries.
+    // cities without a population, without a point in time associated with that population, 
+    // or with a point in time earlier that 2000 are excluded.
+    // Sort these cities by the date at which their population was recorded so that when we remove duplicates,
+    // we keep the most recent population from every city.
     async get_cities_dupes() {
       var query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
                   ?city wdt:P31/wdt:P279* wd:Q515 . 
@@ -229,6 +252,7 @@ export default {
                 } 
 
                 ORDER BY DESC(?date)`
+                // this code excludes cities that don't have a label, although it makes the program run more slowly.
                   // filter exists {                          
                   //   ?city rdfs:label ?enLabel .                    
                   //   filter(langMatches(lang(?enLabel),"en"))   
@@ -238,6 +262,9 @@ export default {
       return result
     },
 
+    // deletes duplicates from the list that get_cities_dupes() returns
+    // by only taking the first instance of every id in the list, only the most recent population record is saved,
+    // since the list is sorted by population date.
     async delete_dupes(list_with_dupes) {
 
       var list_no_dupes = []
@@ -254,6 +281,7 @@ export default {
           
     },
 
+    // get the latitude and longitude of a city given its ID.
     async id_to_latlong(target_id) {
       var query = `SELECT ?city ?long ?lat
                   WHERE
@@ -268,11 +296,13 @@ export default {
       return L.latLng(result[0]["lat"], result[0]["long"])
     },
 
+    // When the user makes a new search, call this function to re-center the map and get rid of the old buddy markers.
     async reset_map() {
       layerGroup.clearLayers()
       map.setView([0, 0], 2)
     },
 
+    // get the name of the country a city is in given the city's ID
     async id_to_country(target_id) {
       var query = `SELECT DISTINCT ?countryLabel {
                   VALUES ?city { wd:${target_id}} 
@@ -284,6 +314,7 @@ export default {
 
     }, 
 
+    // get the name of a city given its ID
     async id_to_label(target_id) {
       var query = `SELECT DISTINCT ?cityLabel {
                     VALUES ?city { wd:${target_id}} 
@@ -293,7 +324,7 @@ export default {
       return result[0]["cityLabel"]
     }, 
 
-
+    // submit a SPARQL query and return the result.
     async submit_query(sparql) {
       const wdk = wbk({
         instance: 'https://www.wikidata.org',
@@ -306,6 +337,7 @@ export default {
       return simplifiedResults
     },
 
+    // add markers on the map at the locations of the target and buddy cities
     async add_markers() {
       let target_latlong = await this.id_to_latlong(this.target_city_entry["value"])
       let buddy_latlong = await this.id_to_latlong(this.buddy_city_entry["value"])
@@ -316,24 +348,25 @@ export default {
       
     },
 
+    // sorts a list of all the cities by population
     async sort_by_pop(cities_list) {
       cities_list.sort(
         (first, second) => { 
-          // TODO fix the stupid european decimals!!!!!!!!!
           return this.remove_euro_format(first.population) - this.remove_euro_format(second.population) }
-          // return first.population - second.population }
       );
     return cities_list
     },
 
+    // get the list of all the cities. Each entry includes the ID and population.
     async get_cities_list() {
       var cities_dupes = await this.get_cities_dupes()
       var cities_no_dupes = await this.delete_dupes(cities_dupes)
-      // var cities_no_dupes_no_unlabeled = await this.remove_unlabeled(cities_no_dupes)
       var cities_pop_sorted = await this.sort_by_pop(cities_no_dupes)
       return cities_pop_sorted
 
     },
+
+    // another attempt to remove cities without an english label - also takes too long.
 
     // remove_unlabeled(list) {
     //   var new_list = []
@@ -346,70 +379,60 @@ export default {
     //   return new_list
     // },
 
+    // correctly format the name of a city according to capitalization rules
     format_city_name(str) {
+
+      // if these words appear in a city name, they are always uncapitalized, unless they are the lsit of last word of the city name.
       var uncapped = ['dem', 'auf', 'pod', 'u', 'i', 'dos', 'das', 'da', 'do', 'the', 'on', 'or', 'din', 'cu', 'sub', 'lui', 'cel', 'adh', 'lu\'', 'du', 'vor', 'den', 'aan', 'bei', 'unter', 'and', 'der', 'y', 'upon', 'e', 'in', 'im', 'dei', 'op', 'los', 'del', 'nad', 'di', 'of', 'es', 'de', 'na', 'v', 'ob', 'am', 'las', 'el', 'la']
-      var uncapped_prefixes_2char = ['d\'', 'l\'']
-      var uncapped_prefixes_3char = ['al-','el-',  'ez-']
-      var uncapped_prefixes_4char = ['ash-']
+      
+      // if a word begins with any of these prefixes, then the prefix is uncapitalized, and the first character after the prefix is capitalized.
+      // Unless the word in question is the first word of the city name - then the first character of the prexif is also capitalized
+      var prefixes_2char = ['d\'', 'l\'', "mc", "o\'"]
+      var prefixes_3char = ['al-','el-',  'ez-']
+      var prefixes_4char = ['ash-']
+
+      // if any of these words appear after a hyphen, they are uncapitalized.
       var uncapped_hypen = ['sur', 'real', 'sous', 'à', 'de', 'en', 'e', 'i', 'on', 'ye', 'au', 'o', 'a', 'the', 'by', 'les', '-']
+     
       var str_lower = String(str).toLowerCase()
       var str_array = str_lower.split(/(\s+)/)
       var new_string = ""
 
-      // TODO for excpetions - if the inputted text matches an excpetion regardless of text
-      // save proper spellings of exceptions in array
-      // then used saved proper spelling
+      // if the inputted string matches any of the cities that don't follow the capitalization rules, output the excpetion that it matched
+      var filtered_list = Object.values(exceptions_list).filter(entry => String(entry["cityLabel"]).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
+      if (filtered_list.length == 1) {
+        return filtered_list[0]["cityLabel"]
+      }
 
-      if (str_lower == "north las vegas") {
-        return "North Las Vegas"
-      }
-      else if (str_lower == "bayou la batre") {
-        return "Bayou La Batre"
-      }
-      else if (str_lower == "borg el arab") {
-        return "Borg El Arab"
-      }
-      else if (str_lower == "el salahaia el gadeda") {
-        return "El Salahaia El Gadeda"
-      }
-      else if (str_lower == "new borg el arab") {
-        return "New Borg El Arab"
-      }
-      else if (str_lower == "ras el bar") {
-        return "Ras El Bar"
-      }
-      else if (str_lower == "south el monte") {
-        return "South El Monte"
-      }
-      else if (str_lower == "dibba al-fujairah") {
-        return "Dibba Al-Fujairah"
-      }
+      // go through each word (seperated by spaces) and capitalize it according to capitalization rules
 
       for (let i = 0; i < str_array.length; i++) {
         var word = str_array[i]
+
+        // handles words that are always uncapitalized unless they are the first or last word
         if (i != 0 && i != str_array.length - 1 && uncapped.includes(word) ) {
           new_string = new_string + String(word)
-        
-        // TODO any upper in the middle of a word exceptions
-
-        // TODO these should be upper anyway if they are the first word I think???
         } 
 
-        else if ( word.length >= 4 && (uncapped_prefixes_2char.includes(String(word).substring(0, 2)))) {
+        // handles prefixes
+        else if ( word.length >= 4 && (prefixes_2char.includes(String(word).substring(0, 2)))) {
           var addition = String(word).substring(0, 2) + String(word).charAt(2).toUpperCase() + String(word).slice(3)
           if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
           new_string = new_string + addition
         } 
-        else if (word.length >= 5 && (uncapped_prefixes_3char.includes(String(word).substring(0, 3)))) {
+        else if (word.length >= 5 && (prefixes_3char.includes(String(word).substring(0, 3)))) {
           var addition = new_string + String(word).substring(0, 3) + String(word).charAt(3).toUpperCase() + String(word).slice(4)
           if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
           new_string = new_string + addition
         } 
-        else if (word.length >= 6 && (uncapped_prefixes_4char.includes(String(word).substring(0, 4)))) {
+        else if (word.length >= 6 && (prefixes_4char.includes(String(word).substring(0, 4)))) {
           var addition = new_string + String(word).substring(0, 4) + String(word).charAt(4).toUpperCase() + String(word).slice(5)
           if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
           new_string = new_string + addition
         }
+
+        // handles hyphens. Each chunk that the hypen seperates should have its first character capitalized,
+        // unless that chunk is in the uncapped_hyphen list
         else if (word.includes("-")){
           var word_array = word.split(/(-)/g)
           var addition = ""
@@ -423,9 +446,33 @@ export default {
             }
           }
           new_string = new_string + addition
+        }
 
+        // If a word starts with an open parenthesis, capitalize the second character.
+        else if(String(word).charAt(0) == "(") {
+          new_string = new_string + "(" + String(word).charAt(1).toUpperCase() + String(word).slice(2)
+        }
+
+        // If a word has a slash in the middle, capitalize the first character of the chunks of either side of the slash.
+        else if(String(word).includes("/")) {
+          var word_array = word.split("/")
+          var first_chunk = String(word_array[0]).charAt(0).toUpperCase() + String(word_array[0]).slice(1)
+          var second_chunk = String(word_array[1]).charAt(0).toUpperCase() + String(word_array[1]).slice(1)
+          new_string = new_string + first_chunk + "/" + second_chunk
+        }
+
+        // dots work the same as hypens, but there are no exceptions for the chunk to remain uncapitalized.
+        else if (word.includes(".")) {
+          var word_array = word.split(/(.)/g)
+          var addition = ""
+          for (let j = 0; j < word_array.length; j++) {
+            var dot_chunk = word_array[j]
+            addition = addition + String(dot_chunk).charAt(0).toUpperCase() + String(dot_chunk).slice(1)
+          }
+          new_string = new_string + addition
         }
         
+        // if none of the above are true, then each word has its first letter capitalized with the rest uncapitalized.
         else {
           new_string = new_string + (String(word).charAt(0).toUpperCase() + String(word).slice(1))
         }
@@ -434,6 +481,8 @@ export default {
       return new_string
     },
 
+    // many of the cities have populations where decimal points replace commas
+    // this function takes those numbers that JS assumed were floats and translates them back into integers
     remove_euro_format(num) {
       var num_str = String(num)
 
@@ -449,8 +498,6 @@ export default {
         return final_str
       }
       return num
-      
-
     }
 
   }, 
@@ -475,9 +522,6 @@ export default {
     },
     buddy_pop() {
       return Number(this.remove_euro_format(this.buddy_city_entry["population"])).toLocaleString("en-US")
-    },
-    target_label_cap() {
-      return String(this.target_city_label).charAt(0).toUpperCase() + String(this.target_city_label).slice(1)
     },
     input_tab_index() {
       return this.list_loading ? "-1" : "0";
