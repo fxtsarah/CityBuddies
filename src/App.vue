@@ -9,24 +9,23 @@
     <div id="banner_form">
       <input placeholder="City name" class="form-control" :class="{ disabled_input: list_loading }" id="input_form" v-model="input_value" :tabindex=this.input_tab_index>
       <button class="btn btn-light" :class="{ disabled: list_loading }" id="input_button" @click="input_submit">Search For Buddy</button>
+      <!-- TODO this message jumps around; get it to STOP -->
       <p v-if="list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
     </div>
   </div>
 
   <div v-if="city_not_found" id="city_not_found">
-    <!-- TODO instead of last submitted value, use computed value like target_label_cap  -->
-    <h3>Sorry, we couldn't find a city with the name {{ last_submitted_value }}.</h3>
+    <h3>Sorry, we couldn't find a city with the name {{ this.format_city_name(last_submitted_value) }}.</h3>
   </div>
 
   
       
   <div id="disambiguation_info" v-if="disambiguation">
-    <!-- TODO instead of last submitted value, use computed value like target_label_cap  -->
-    <h3 class="above_divider">Choose which <strong>{{ last_submitted_value }}</strong> you want to search for:</h3>
+    <h3 class="above_divider">Choose which <strong>{{ this.format_city_name(last_submitted_value) }}</strong> you want to search for:</h3>
     <div class="divider"></div>
     <div class="below_divider">
-      <div v-for="entry in this.possible_target_cities" :key="entry" @click="chosen_target(entry.city.value)" class ="city_choice" >
-        <h4>{{entry.city.description}}</h4>
+      <div v-for="entry in this.possible_target_cities" :key="entry" @click="chosen_target(entry.value)" class ="city_choice" >
+        <h4>{{entry.description}}</h4>
       </div>
     </div>
   </div>
@@ -48,6 +47,8 @@
 </template>
 
 <script>
+import { unescapeComponent } from "uri-js";
+
 
 const axios = require("axios");
 const wbk = require("wikibase-sdk")
@@ -118,7 +119,7 @@ export default {
       else if (this.possible_target_cities.length == 1) {
         this.hide_map = true
         await this.reset_map()
-        await this.chosen_target(this.possible_target_cities[0]["city"]["value"])
+        await this.chosen_target(this.possible_target_cities[0]["value"])
         
       }
       else {
@@ -132,7 +133,6 @@ export default {
 
     async chosen_target(target_id) {
 
-      console.log("chosen target called with id: " + String(target_id))
       this.target_city_label = await this.id_to_label(target_id)
    
       this.disambiguation = false
@@ -143,55 +143,40 @@ export default {
       this.match_found = true
       this.target_city_country = await this.id_to_country(target_id)
 
-      console.log("target city country found: " + String(this.target_city_country))
-
       this.buddy_city_country = await this.id_to_country(this.buddy_city_entry["value"])
-      console.log("buddy city country found: " + String(this.target_city_country))
 
       this.hide_map = false
       await this.add_markers()
     },
 
     async find_possible_matches(target_label) {
-      // var label_formatted = String(target_label).charAt(0).toUpperCase() + String(target_label).slice(1).toLowerCase()
-      // TODO make case insensitive searching wokr with muliple word cities
+      var label_formatted = this.format_city_name(target_label)
+      console.log("format city name called correctly. result: " + label_formatted)
+      var no_quotes = label_formatted.replace("\'", "\\'");
 
-
-//       // TODO sort by population -->>
-//       SELECT DISTINCT ?place ?placeLabel ?coords ?lat ?long {
-//   VALUES ?place { wd:Q87} 
-//   ?place p:P1082 ?coords_sample .
-//   {
-//     SELECT (MAX(?coords_stmt) AS ?coords_sample) {
-//       VALUES ?place { wd:Q87} 
-//          ?place p:P1082  ?coords_stmt .
-//     } GROUP BY ?place
-//   }
-//   ?coords_sample ps:P1082 ?coords;
-
-//   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-// }
-// ORDER BY ?placeLabel
       
-      var query = `SELECT DISTINCT ?city ?cityDescription
-                  WHERE
-                  { 
-                    ?city wdt:P31/wdt:P279* wd:Q515 
-                    { ?city skos:altLabel \'${target_label}\'@en }
+      var query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
+                    WHERE
+                    { 
+                    ?city wdt:P31/wdt:P279* wd:Q515 .
+                    { ?city skos:altLabel \'${no_quotes}\'@en }
                     UNION
-                    { ?city rdfs:label \'${target_label}\'@en }
+                    { ?city rdfs:label \'${no_quotes}\'@en }
+                    ?city wdt:P1082 ?population .
+                                        
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 
-                  } `
+                    } ORDER BY DESC (?population)`
 
+      console.log("query called correctly. Query: " + query)
       
       var result = await this.submit_query(query)
-      console.log("poss matches: " + JSON.stringify(result))
-      return result
+      var no_dupes = await this.delete_dupes(result)
+      console.log("result: " + JSON.stringify(no_dupes))
+      return no_dupes
     },
 
     async find_buddy(target_id) {
-      console.log("find buddy called with id "+ JSON.stringify(target_id))
       let buddy_entry = null
 
       const target_city_entry = Object.values(this.cities_list).filter(entry => String(entry["value"]) == String(target_id))[0]
@@ -200,7 +185,6 @@ export default {
       
 
       const target_city_index = this.cities_list.indexOf(target_city_entry)
-      console.log("target index " + String(target_city_index))
 
       if (target_city_index == 0) {
         buddy_entry = this.cities_list[1]
@@ -209,62 +193,52 @@ export default {
         buddy_entry = this.cities_list[this.cities_list.length - 2]
       }
       else {
-        console.log("middle of the list")
         const bigger_neighbor_index = target_city_index + 1
         const smaller_neighbor_index = target_city_index - 1
     
         const bigger_neighbor_entry = this.cities_list[bigger_neighbor_index]
         const smaller_neighbor_entry = this.cities_list[smaller_neighbor_index]
 
-        console.log("big " + JSON.stringify(bigger_neighbor_entry))
-        console.log("small " + JSON.stringify(smaller_neighbor_entry))
-
         const target_city_pop = parseInt(target_city_entry["population"])
         const bigger_neighbor_pop = parseInt(bigger_neighbor_entry["population"])
         const smaller_neighbor_pop = parseInt(smaller_neighbor_entry["population"])
 
-        console.log("target pop " + String(target_city_pop))
-        console.log("big pop " + String(bigger_neighbor_pop))
-        console.log("small pop " + String(smaller_neighbor_pop))
-
         const bigger_neighbor_diff = bigger_neighbor_pop - target_city_pop
         const smaller_neighbor_diff = target_city_pop - smaller_neighbor_pop
 
-        console.log("bigger diff " + String(bigger_neighbor_diff))
-        console.log("smaller diff " + String(smaller_neighbor_diff))
-
         if (bigger_neighbor_diff < smaller_neighbor_diff) {
-            console.log("bigger is buddy")
             buddy_entry = bigger_neighbor_entry
         }
         else{
-          console.log("smaller is buddy")
             buddy_entry = smaller_neighbor_entry
         }
         
       }
-      console.log("buddy entry: " + JSON.stringify(buddy_entry))
       return buddy_entry
     },
 
     async get_cities_dupes() {
-      console.log("get cities dupes called")
       var query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
                   ?city wdt:P31/wdt:P279* wd:Q515 . 
                   ?city p:P1082 ?populationStatement . 
                   ?populationStatement ps:P1082 ?cityPopulation.
                   ?populationStatement pq:P585 ?date
-                  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } } 
+                  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } 
+                  FILTER("2000-01-01"^^xsd:dateTime <= ?date)
+
+                } 
 
                 ORDER BY DESC(?date)`
+                  // filter exists {                          
+                  //   ?city rdfs:label ?enLabel .                    
+                  //   filter(langMatches(lang(?enLabel),"en"))   
+                  // }
 
       var result = await this.submit_query(query)
       return result
     },
 
     async delete_dupes(list_with_dupes) {
-
-      console.log("delete dupes called")
 
       var list_no_dupes = []
       var cities_added = []
@@ -281,7 +255,6 @@ export default {
     },
 
     async id_to_latlong(target_id) {
-      console.log("id to latlong called with id: " + String(target_id))
       var query = `SELECT ?city ?long ?lat
                   WHERE
                   {
@@ -301,7 +274,6 @@ export default {
     },
 
     async id_to_country(target_id) {
-      console.log("id to country called with id " + String(target_id) )
       var query = `SELECT DISTINCT ?countryLabel {
                   VALUES ?city { wd:${target_id}} 
                   ?city wdt:P17 ?country .
@@ -313,30 +285,24 @@ export default {
     }, 
 
     async id_to_label(target_id) {
-      console.log("id_to_label called with id: " + String(target_id))
       var query = `SELECT DISTINCT ?cityLabel {
                     VALUES ?city { wd:${target_id}} 
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     }`
-      console.log("query sent: " + query)
       var result = await this.submit_query(query)
       return result[0]["cityLabel"]
     }, 
 
 
     async submit_query(sparql) {
-      console.log("submit query called with sparql: " + String(sparql))
       const wdk = wbk({
         instance: 'https://www.wikidata.org',
         sparqlEndpoint: 'https://query.wikidata.org/sparql'
         })
 
       const url = wdk.sparqlQuery(sparql)
-      console.log('url: ' + String(url))
       const results = await axios.get(url)
-      console.log("results: " + JSON.stringify(results))
       let simplifiedResults = wbk.simplify.sparqlResults(results.data)
-      console.log("simp results: " + JSON.stringify(simplifiedResults))
       return simplifiedResults
     },
 
@@ -354,18 +320,136 @@ export default {
       cities_list.sort(
         (first, second) => { 
           // TODO fix the stupid european decimals!!!!!!!!!
-          return first.population - second.population }
+          return this.remove_euro_format(first.population) - this.remove_euro_format(second.population) }
+          // return first.population - second.population }
       );
     return cities_list
     },
 
     async get_cities_list() {
       var cities_dupes = await this.get_cities_dupes()
-      console.log("cities_dupes: " + cities_dupes.length)
       var cities_no_dupes = await this.delete_dupes(cities_dupes)
+      // var cities_no_dupes_no_unlabeled = await this.remove_unlabeled(cities_no_dupes)
       var cities_pop_sorted = await this.sort_by_pop(cities_no_dupes)
-      console.log("no dupes pop sorted: " + cities_pop_sorted.length)
       return cities_pop_sorted
+
+    },
+
+    // remove_unlabeled(list) {
+    //   var new_list = []
+    //   for (let i = 0; i < list.length; i++) {
+    //     var element = list[i]
+    //     if (!(String(element).charAt[0] == 'Q' && !isNaN(String(element).charAt[1]))){
+    //       new_list.push(element)
+    //     }
+    //   }
+    //   return new_list
+    // },
+
+    format_city_name(str) {
+      var uncapped = ['dem', 'auf', 'pod', 'u', 'i', 'dos', 'das', 'da', 'do', 'the', 'on', 'or', 'din', 'cu', 'sub', 'lui', 'cel', 'adh', 'lu\'', 'du', 'vor', 'den', 'aan', 'bei', 'unter', 'and', 'der', 'y', 'upon', 'e', 'in', 'im', 'dei', 'op', 'los', 'del', 'nad', 'di', 'of', 'es', 'de', 'na', 'v', 'ob', 'am', 'las', 'el', 'la']
+      var uncapped_prefixes_2char = ['d\'', 'l\'']
+      var uncapped_prefixes_3char = ['al-','el-',  'ez-']
+      var uncapped_prefixes_4char = ['ash-']
+      var uncapped_hypen = ['sur', 'real', 'sous', 'à', 'de', 'en', 'e', 'i', 'on', 'ye', 'au', 'o', 'a', 'the', 'by', 'les', '-']
+      var str_lower = String(str).toLowerCase()
+      var str_array = str_lower.split(/(\s+)/)
+      var new_string = ""
+
+      // TODO for excpetions - if the inputted text matches an excpetion regardless of text
+      // save proper spellings of exceptions in array
+      // then used saved proper spelling
+
+      if (str_lower == "north las vegas") {
+        return "North Las Vegas"
+      }
+      else if (str_lower == "bayou la batre") {
+        return "Bayou La Batre"
+      }
+      else if (str_lower == "borg el arab") {
+        return "Borg El Arab"
+      }
+      else if (str_lower == "el salahaia el gadeda") {
+        return "El Salahaia El Gadeda"
+      }
+      else if (str_lower == "new borg el arab") {
+        return "New Borg El Arab"
+      }
+      else if (str_lower == "ras el bar") {
+        return "Ras El Bar"
+      }
+      else if (str_lower == "south el monte") {
+        return "South El Monte"
+      }
+      else if (str_lower == "dibba al-fujairah") {
+        return "Dibba Al-Fujairah"
+      }
+
+      for (let i = 0; i < str_array.length; i++) {
+        var word = str_array[i]
+        if (i != 0 && i != str_array.length - 1 && uncapped.includes(word) ) {
+          new_string = new_string + String(word)
+        
+        // TODO any upper in the middle of a word exceptions
+
+        // TODO these should be upper anyway if they are the first word I think???
+        } 
+
+        else if ( word.length >= 4 && (uncapped_prefixes_2char.includes(String(word).substring(0, 2)))) {
+          var addition = String(word).substring(0, 2) + String(word).charAt(2).toUpperCase() + String(word).slice(3)
+          if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
+          new_string = new_string + addition
+        } 
+        else if (word.length >= 5 && (uncapped_prefixes_3char.includes(String(word).substring(0, 3)))) {
+          var addition = new_string + String(word).substring(0, 3) + String(word).charAt(3).toUpperCase() + String(word).slice(4)
+          if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
+          new_string = new_string + addition
+        } 
+        else if (word.length >= 6 && (uncapped_prefixes_4char.includes(String(word).substring(0, 4)))) {
+          var addition = new_string + String(word).substring(0, 4) + String(word).charAt(4).toUpperCase() + String(word).slice(5)
+          if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
+          new_string = new_string + addition
+        }
+        else if (word.includes("-")){
+          var word_array = word.split(/(-)/g)
+          var addition = ""
+          for (let j = 0; j < word_array.length; j++) {
+            var hyphen_chunk = word_array[j]
+            if (uncapped_hypen.includes(hyphen_chunk)) {
+              addition = addition + hyphen_chunk
+            }
+            else {
+              addition = addition + String(hyphen_chunk).charAt(0).toUpperCase() + String(hyphen_chunk).slice(1)
+            }
+          }
+          new_string = new_string + addition
+
+        }
+        
+        else {
+          new_string = new_string + (String(word).charAt(0).toUpperCase() + String(word).slice(1))
+        }
+        
+      }
+      return new_string
+    },
+
+    remove_euro_format(num) {
+      var num_str = String(num)
+
+      if (num_str.includes(".")) {
+        var num_array = num_str.split(".")
+        var arr_len = num_array.length
+        var digits_in_last_chunk = num_array[arr_len - 1].length
+        var zeros_needed = 3 - digits_in_last_chunk
+        var zeros = "0".repeat(zeros_needed)
+        var last_chunk_updated = num_array[arr_len - 1].concat(zeros)
+        num_array[arr_len - 1] = last_chunk_updated
+        var final_str = num_array.join('')
+        return final_str
+      }
+      return num
+      
 
     }
 
@@ -373,7 +457,6 @@ export default {
   async mounted() {
     
     this.cities_list = await this.get_cities_list()
-    console.log(this.cities_list)
 
     map = L.map('map').setView([0, 0], 2)
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -388,10 +471,10 @@ export default {
   },
   computed: {
     target_pop() {
-      return Number(this.target_city_entry["population"]).toLocaleString("en-US")
+      return Number(this.remove_euro_format(this.target_city_entry["population"])).toLocaleString("en-US")
     },
     buddy_pop() {
-      return Number(this.buddy_city_entry["population"]).toLocaleString("en-US")
+      return Number(this.remove_euro_format(this.buddy_city_entry["population"])).toLocaleString("en-US")
     },
     target_label_cap() {
       return String(this.target_city_label).charAt(0).toUpperCase() + String(this.target_city_label).slice(1)
@@ -403,3 +486,4 @@ export default {
 
 }
 </script>
+
