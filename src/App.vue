@@ -1,50 +1,18 @@
 <template>
 
-  <banner :list_loading="list_loading"></banner>
-  <!-- <div id = "banner">
-    <div id="banner_text">
-      <h1>City Buddies</h1>
-      <p style="font-size: 20px;">See which city is nearest in population to your city</p>
-    </div>
-
-    <div id="banner_form">
-      <input placeholder="City name" class="form-control" :class="{ disabled_input: list_loading }" id="input_form" v-model="input_value" :tabindex=this.input_tab_index>
-      <button class="btn btn-light" :class="{ disabled_button: list_loading }" id="input_button" @click="input_submit">Search For Buddy</button>
-      <p v-if="list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
-    </div>
-  </div> -->
+  <banner :list_loading="list_loading" @input_submit="input_submit"></banner>
 
   <div v-if="city_not_found" id="city_not_found">
     <h3>Sorry, we couldn't find a city with the name {{ this.format_city_name(last_submitted_value) }}.</h3>
   </div>
 
-  
-      
-  <div id="disambiguation_info" v-if="disambiguation">
-    <h3 class="above_divider">Choose which <strong>{{ this.format_city_name(last_submitted_value) }}</strong> you want to search for:</h3>
-    <div class="divider"></div>
-    <div class="below_divider">
-      <div v-for="entry in this.possible_target_cities" :key="entry" @click="chosen_target(entry.value)" class ="city_choice" >
-        <h4>{{entry.description}}</h4>
-      </div>
-    </div>
-  </div>
+  <disambiguation :active="disambiguation" :target_label="last_submitted_value_formatted" :cities="possible_target_cities" @chosen_target="chosen_target" ></disambiguation>
 
-  <div id="buddy_match_info" v-if="match_found">
-    <h3 class="above_divider"><strong>{{ target_city_label }}</strong> is buddies with <strong>{{ buddy_city_label }}</strong></h3>
-    <div class="divider"></div>
-    <div class="below_divider">
-      <h4>Population of {{target_city_label}}, {{target_city_country}}: <strong>{{target_pop}}</strong></h4>
-      <h4>Population of {{buddy_city_label}}, {{buddy_city_country}}: <strong>{{buddy_pop}}</strong></h4>
-    </div>
-  </div>
+  <buddy_match :active="match_found" :target_entry="this.target_city_entry" :buddy_entry="this.buddy_city_entry"></buddy_match>
+ 
   
-  <div :class="{ invisible: hide_map }" id="map"></div>
+  <div :class="{ invisible: !match_found }" id="map"></div>
   
-
-
-  
-
 </template>
 
 <script>
@@ -54,7 +22,10 @@ const wbk = require("wikibase-sdk")
 
 // import the list of city names that don't follow normal capitalization rules
 import exceptions_list from '../public/exceptions.json'
+// import {submit_query} from '../public/external.js'
 import Banner from "./components/Banner.vue"
+import Disambiguation from "./components/Disambiguation.vue"
+import Buddy_Match from "./components/Buddy_Match.vue"
 
 // making sure the map and the layer that contains the map's markers are global so that they can be reffered to by any function
 var map
@@ -63,13 +34,12 @@ var layerGroup
 export default {
   name: 'App',
   components: {
-    'banner': Banner
+    'banner': Banner,
+    'disambiguation': Disambiguation,
+    'buddy_match': Buddy_Match
   },
   data () {
     return {
-
-       // value of the text currently in the input box
-      input_value: "",
 
       // the most recent value submitted by the user
       last_submitted_value: '',
@@ -83,8 +53,8 @@ export default {
       buddy_city_label: "",
 
       // entries include the id and population
-      target_city_entry: null,
-      buddy_city_entry: null,
+      target_city_entry: {"value":"", "population":0},
+      buddy_city_entry: {"value":"", "population":0},
 
       target_city_country: null,
       buddy_city_country: null,
@@ -93,8 +63,6 @@ export default {
       disambiguation: false,
       // true if we are seeing the screen that tells the user who the buddy is
       match_found: false,
-
-      hide_map: true,
 
       // true if the user has just inputted a value that does not coorespond to any city
       city_not_found: false,
@@ -107,13 +75,11 @@ export default {
   },
   methods: {
     // method called when the user clicks the 'search for buddy' button
-    async input_submit() {
+    async input_submit(input) {
 
-      var input = this.input_value
 
       // look for any cities that share a name with the imputted value.
       this.possible_target_cities = await this.find_possible_matches(input)
-      this.input_value = ""
       this.city_not_found = false
       this.last_submitted_value = input
 
@@ -121,13 +87,11 @@ export default {
       if (this.possible_target_cities.length == 0) {
         this.city_not_found = true
         this.match_found = false
-        this.hide_map = true
         await this.reset_map()
       }
 
       // if there is only one city found with the same name, automatically choose that city as the target and search for its buddy
       else if (this.possible_target_cities.length == 1) {
-        this.hide_map = true
         await this.reset_map()
         await this.chosen_target(this.possible_target_cities[0]["value"])
         
@@ -137,7 +101,6 @@ export default {
       else {
         this.disambiguation = true
         this.match_found = false
-        this.hide_map = true
         await this.reset_map()
       }
       
@@ -156,11 +119,10 @@ export default {
       this.buddy_city_label = await this.id_to_label(buddy_id)
 
       this.match_found = true
-      this.target_city_country = await this.id_to_country(target_id)
+      // this.target_city_country = await this.id_to_country(target_id)
 
-      this.buddy_city_country = await this.id_to_country(this.buddy_city_entry["value"])
+      // this.buddy_city_country = await this.id_to_country(this.buddy_city_entry["value"])
 
-      this.hide_map = false
       await this.add_markers()
     },
 
@@ -523,15 +485,15 @@ export default {
     
   },
   computed: {
-    target_pop() {
-      return Number(this.remove_euro_format(this.target_city_entry["population"])).toLocaleString("en-US")
-    },
-    buddy_pop() {
-      return Number(this.remove_euro_format(this.buddy_city_entry["population"])).toLocaleString("en-US")
-    } //,
-    // input_tab_index() {
-    //   return this.list_loading ? "-1" : "0";
-    // }
+    // target_pop() {
+    //   return Number(this.remove_euro_format(this.target_city_entry["population"])).toLocaleString("en-US")
+    // },
+    // buddy_pop() {
+    //   return Number(this.remove_euro_format(this.buddy_city_entry["population"])).toLocaleString("en-US")
+    // },
+    last_submitted_value_formatted() {
+      return this.format_city_name(this.last_submitted_value)
+    }
   }
 
 }
