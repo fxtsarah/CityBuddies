@@ -1,6 +1,7 @@
 <template>
 
-  <div id = "banner">
+  <banner :list_loading="list_loading"></banner>
+  <!-- <div id = "banner">
     <div id="banner_text">
       <h1>City Buddies</h1>
       <p style="font-size: 20px;">See which city is nearest in population to your city</p>
@@ -11,7 +12,7 @@
       <button class="btn btn-light" :class="{ disabled_button: list_loading }" id="input_button" @click="input_submit">Search For Buddy</button>
       <p v-if="list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
     </div>
-  </div>
+  </div> -->
 
   <div v-if="city_not_found" id="city_not_found">
     <h3>Sorry, we couldn't find a city with the name {{ this.format_city_name(last_submitted_value) }}.</h3>
@@ -39,6 +40,7 @@
   </div>
   
   <div :class="{ invisible: hide_map }" id="map"></div>
+  
 
 
   
@@ -52,6 +54,7 @@ const wbk = require("wikibase-sdk")
 
 // import the list of city names that don't follow normal capitalization rules
 import exceptions_list from '../public/exceptions.json'
+import Banner from "./components/Banner.vue"
 
 // making sure the map and the layer that contains the map's markers are global so that they can be reffered to by any function
 var map
@@ -59,6 +62,9 @@ var layerGroup
 
 export default {
   name: 'App',
+  components: {
+    'banner': Banner
+  },
   data () {
     return {
 
@@ -522,10 +528,10 @@ export default {
     },
     buddy_pop() {
       return Number(this.remove_euro_format(this.buddy_city_entry["population"])).toLocaleString("en-US")
-    },
-    input_tab_index() {
-      return this.list_loading ? "-1" : "0";
-    }
+    } //,
+    // input_tab_index() {
+    //   return this.list_loading ? "-1" : "0";
+    // }
   }
 
 }

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>
@@ -27,18 +27,43 @@
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>
   </div>
+</template> -->
+
+<template>
+    <div id = "banner">
+    <div id="banner_text">
+      <h1>City Buddies</h1>
+      <p style="font-size: 20px;">See which city is nearest in population to your city</p>
+    </div>
+
+    <div id="banner_form">
+      <input placeholder="City name" class="form-control" :class="{ disabled_input: list_loading }" id="input_form" v-model="input_value" :tabindex=this.input_tab_index>
+      <button class="btn btn-light" :class="{ disabled_button: list_loading }" id="input_button" @click="input_submit">Search For Buddy</button>
+      <p v-if="list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
+    </div>
+  </div>
 </template>
 
 <script>
+import { booleanLiteral } from '@babel/types';
+
 export default {
-  name: 'HelloWorld',
+  name: 'Banner',
   props: {
-    msg: String
+    list_loading: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    input_tab_index() {
+      return this.list_loading ? "-1" : "0";
+    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add "scoped" attribute to limit CSS to this component only
 <style scoped>
 h3 {
   margin: 40px 0 0;
@@ -54,4 +79,4 @@ li {
 a {
   color: #42b983;
 }
-</style>
+</style> -->
