@@ -100,10 +100,12 @@ body {
   
 .above_divider {
     margin-bottom: 18px;
+    caret-color: transparent;
 }
   
 .below_divider {
     margin-top: 18px; 
+    caret-color: transparent;
 }
 
 #list_loading {
@@ -114,6 +116,7 @@ body {
 
 #city_not_found {
     margin-top: 20px;
+    caret-color: transparent;
 }
 
 .disabled_input {
