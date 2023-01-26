@@ -21,9 +21,20 @@
 body {
     background-color: #F6F6F6;
 }
+
+.city_choice {
+    width: 55%;
+    margin: auto;
+    caret-color: transparent;
+}
   
 .city_choice:hover {
     color: #519872;
+}
+
+.city_choice:focus {
+    color: #519872;
+    outline: none;
 }
   
 .invisible {
@@ -41,20 +52,29 @@ body {
     margin-right: 20px;
     max-width: 300px; margin: auto;
 }
+#input_form:focus {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
+}
   
 #input_button {
     color:#E16036;
     width: 250px;
     margin-left: 20px;
     background-color: #F6F6F6;
+    caret-color: transparent;       
 }
 #input_button:hover {
+    background-color: #dbdbdb;
+}
+#input_button:focus {
     background-color: #dbdbdb;
 }
   
 #banner_text {
     float: left;
     text-align: left;
+    caret-color: transparent;    
 }
   
 #banner_form {

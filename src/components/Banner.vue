@@ -6,38 +6,34 @@
     </div>
 
     <div id="banner_form">
-      <input placeholder="City name" class="form-control" :class="{ disabled_input: list_loading }" id="input_form" v-model="input_value" :tabindex=this.input_tab_index>
-      <button class="btn btn-light" :class="{ disabled_button: list_loading }" id="input_button" @click="input_submit">Search For Buddy</button>
-      <p v-if="list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
+      <input @keydown.enter="input_submit" placeholder="City name" class="form-control" :class="{ disabled_input: props.list_loading }" id="input_form" v-model="input_value" :tabindex=input_tab_index>
+      <button class="btn btn-light" :class="{ disabled_button: props.list_loading }" id="input_button" @keydown.enter="input_submit" @click="input_submit" :tabindex=submit_tab_index>Search For Buddy</button>
+      <p v-if="props.list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 
-export default {
-  name: 'Banner',
-  props: {
-    list_loading: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      input_value: ""
-    }
-  },
-  methods: {
-    input_submit() {
-      this.$emit('input_submit', this.input_value)
-      this.input_value = ""
-    }
-  },
-  computed: {
-    input_tab_index() {
-      return this.list_loading ? "-1" : "0";
-    }
-  }
+import { ref, computed, defineEmits, onMounted} from 'vue'
+
+const emit = defineEmits(['input_submit'])
+const props = defineProps(['list_loading'])
+
+let input_value = ref("")
+let input = ref(null)
+
+const input_tab_index = computed(() => {
+  return props.list_loading.value ? "-1" : "0"
+})
+
+const submit_tab_index = computed(() => {
+  return props.list_loading.value ? "-1" : "0"
+})
+
+function input_submit() {
+  emit('input_submit', input_value.value)
+  input_value.value = ""
 }
+
 </script>
