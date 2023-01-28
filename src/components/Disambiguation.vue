@@ -2,11 +2,11 @@
   <div id="disambiguation_info" v-if="props.active">
     <h3 class="above_divider">Choose which <strong>{{ props.target_label }}</strong> you want to search for:</h3>
     <div class="divider"></div>
-    <div class="below_divider">
-      <div v-for="entry in props.cities" :key="entry" @keydown.enter="chosen_target(entry.value)" @click="chosen_target(entry.value)" class ="city_choice" tabindex="0" >
+    <ul class="below_divider" id="disambiguation_list">
+      <li v-for="entry in props.cities" :key="entry" @keydown.enter="chosen_target(entry.value)" @click="chosen_target(entry.value)" class ="city_choice" tabindex="0" >
         <h4>{{entry.description}}</h4>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 

@@ -129,3 +129,7 @@ body {
     opacity: .6;
 
 }
+
+#disambiguation_list {
+    list-style-type: none;
+}
