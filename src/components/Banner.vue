@@ -2,7 +2,7 @@
     <div id = "banner">
     <div id="banner_text">
       <h1>City Buddies</h1>
-      <h5>See which city is nearest in population to your city</h5>
+      <p style="font-size: 20px;">See which city is nearest in population to your city</p>
     </div>
 
     <div id="banner_form">
@@ -15,7 +15,7 @@
 
 <script setup>
 
-import { ref, computed, defineEmits, onMounted} from 'vue'
+import { ref, computed } from 'vue'
 
 const emit = defineEmits(['input_submit'])
 const props = defineProps(['list_loading'])

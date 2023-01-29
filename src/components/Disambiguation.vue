@@ -12,8 +12,6 @@
 
 <script setup>
 
-import { defineEmits} from 'vue'
-
 const emit = defineEmits(['chosen_target'])
 const props = defineProps(['target_label', 'cities', 'active'])
 
