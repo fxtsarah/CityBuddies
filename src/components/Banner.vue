@@ -2,7 +2,7 @@
     <div id = "banner">
     <div id="banner_text">
       <h1>City Buddies</h1>
-      <p style="font-size: 20px;">See which city is nearest in population to your city</p>
+      <h5>See which city is nearest in population to your city</h5>
     </div>
 
     <div id="banner_form">
