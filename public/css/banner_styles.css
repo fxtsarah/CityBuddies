@@ -1,22 +1,25 @@
 #banner {
-    display: flex;
-    justify-content: space-between;
     background-color: #E16036;
     color: #F6F6F6;
     min-height: 10rem;
-    padding: 1.8rem;
+    padding: 2.5rem;
+    padding-bottom: .5rem;
     overflow: auto; 
+    display: flex;
+    justify-content: space-between;
 }
 
 #banner_text {
+    /* float: left; */
     text-align: left;
     caret-color: transparent;
     width: 40%;    
 }
   
 #banner_form {
+    /* float: right; */
     display: block;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     width: 55%;
     max-width: 450px;
 }

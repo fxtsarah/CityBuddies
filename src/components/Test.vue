@@ -1,0 +1,5 @@
+<template>
+  <p>test component</p>
+</template>
+
+
