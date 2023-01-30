@@ -1,0 +1,59 @@
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #E16036;
+    padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+}
+  
+body {
+    background-color: #F6F6F6;
+}
+
+.invisible {
+    visibility: hidden
+}
+   
+
+.divider {
+    background-color: #E16036;
+    height: 8px;
+    width: 55%;
+    margin: auto;
+}
+  
+.above_divider {
+    margin-bottom: 18px;
+    caret-color: transparent;
+}
+  
+.below_divider {
+    margin-top: 18px; 
+    caret-color: transparent;
+}
+
+
+#city_not_found {
+    margin-top: 20px;
+    caret-color: transparent;
+}
+
+#buddy_match_info {
+    margin-top: 25px;
+}
+  
+
+#map { 
+    display: block;
+    height: 500px; 
+    max-height: 500px; 
+    margin-top: 60px;
+    margin-left: 60px;
+    margin-right: 60px;
+    overflow: hidden
+}
+
+
+
