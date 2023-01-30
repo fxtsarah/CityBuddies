@@ -1,9 +1,4 @@
 <template>
-  <!-- <nav style="display: flex; width: 50%;">
-    <h1 style="margin-right: 10px;">City Buddies</h1>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav> -->
   <router-view/>
 </template>
 
@@ -13,7 +8,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  /* color: #2c3e50; */
 }
 
 </style>
