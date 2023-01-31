@@ -77,3 +77,15 @@ watch(()=>props.buddy_label, async (new_label) => {
 })
 
 </script>
+
+<style>
+#map { 
+    display: block;
+    height: 500px; 
+    max-height: 500px; 
+    margin-top: 60px;
+    margin-left: 60px;
+    margin-right: 60px;
+    overflow: hidden
+}
+</style>

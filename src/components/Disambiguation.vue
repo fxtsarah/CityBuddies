@@ -20,3 +20,25 @@ function chosen_target(id) {
 }
 
 </script>
+
+<style>
+#disambiguation_list {
+    list-style-type: none;
+}
+#disambiguation_info {
+    margin-top: 25px;
+}
+.city_choice {
+    width: 55%;
+    margin: auto;
+    caret-color: transparent;
+}
+.city_choice:hover {
+    color: #519872;
+}
+
+.city_choice:focus {
+    color: #519872;
+    outline: none;
+}
+</style>

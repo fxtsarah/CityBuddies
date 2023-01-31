@@ -1,15 +1,16 @@
 <template>
-    <nav>
+    <div id="nav">
       <h1>City Buddies</h1>
         <div id="pages" >
-            <router-link to="/" class="btn btn-light banner_button page">Home</router-link> 
-            <router-link to="/about" class="btn btn-light banner_button page">About</router-link>
+            <div class="btn btn-light banner_button page" tabindex="0">Home</div> 
+            <!-- to="/" -->
+            <router-link to="/about" class="btn btn-light banner_button page" tabindex="0">About</router-link>
         </div>
-    </nav>
+    </div>
 </template>
 
 <style>
-    nav {
+    #nav {
         background-color: #E16036;
         color: #F6F6F6;
         display: flex;
@@ -26,7 +27,8 @@
     background-color: #dbdbdb;
     }
     .page:focus {
-        background-color: #dbdbdb;
+
+        background-color: red
     }
 
     .page.router-link-exact-active {

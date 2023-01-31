@@ -1,6 +1,6 @@
 <template>
 
-  <Banner :list_loading="list_loading" :include_form="true" @input_submit="input_submit"/>
+  <Banner :list_loading="props.list_loading" :include_form="true" @input_submit="input_submit"/>
 
   <div v-if="city_not_found" id="city_not_found">
     <h3>Sorry, we couldn't find a city with the name {{ format_city_name(last_submitted_value) }}.</h3>
@@ -13,18 +13,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed} from 'vue'
+import { ref, computed} from 'vue'
 // import the list of city names that don't follow normal capitalization rules
 import exceptions_list from '../../public/exceptions.json'
 import {use_submit_query} from '../composables/use_submit_query.js'
-import {use_remove_euro_format} from '../composables/use_remove_euro_format.js'
+import {use_delete_dupes} from '../composables/use_delete_dupes.js'
+
 import Banner from "../components/Banner.vue"
 import Disambiguation from "../components/Disambiguation.vue"
 import Buddy_Match from "../components/Buddy_Match.vue"
-let cities_list = ref([])
-// true if the list of cities sorted by population has not been generated yet
-let list_loading = ref(true)
-// true if we are seeing the screen where the user has to choose among multiple cities with the same name
+
+const props = defineProps(['list_loading', 'cities_list'])
+
 let disambiguation = ref(false)
 // true if we are seeing the screen that tells the user who the buddy is
 let match_found = ref(false)
@@ -37,71 +37,17 @@ let possible_target_cities = ref([])
 // entries include the id and population
 let target_city_entry = ref({"value":"", "population":0})
 let buddy_city_entry = ref({"value":"", "population":0})
+
 let { submit_query } = use_submit_query()
-let { remove_euro_format } = use_remove_euro_format()
-onMounted(async () => {
-  cities_list.value = await get_cities_list()
-  list_loading.value = false
-})
+let { delete_dupes } = use_delete_dupes()
+
 const last_submitted_value_formatted = computed(() => {
   return format_city_name(last_submitted_value.value)
 })
-// get the list of all the cities. Each entry includes the ID and population.
-async function get_cities_list() {
-  var cities_dupes = await get_cities_dupes()
-  var cities_no_dupes = await delete_dupes(cities_dupes)
-  var cities_pop_sorted = await sort_by_pop(cities_no_dupes)
-  return cities_pop_sorted
-}
-// get a list of all the cities from wikidata, without removing duplicate entries.
-// cities without a population, without a point in time associated with that population, 
-// or with a point in time earlier that 2000 are excluded.
-// Sort these cities by the date at which their population was recorded so that when we remove duplicates,
-// we keep the most recent population from every city.
-async function get_cities_dupes() {
-  var query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
-              ?city wdt:P31/wdt:P279* wd:Q515 . 
-              ?city p:P1082 ?populationStatement . 
-              ?populationStatement ps:P1082 ?cityPopulation.
-              ?populationStatement pq:P585 ?date
-              SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } 
-              FILTER("2000-01-01"^^xsd:dateTime <= ?date)
-            } 
-            ORDER BY DESC(?date)`
-            // this code excludes cities that don't have a label, although it makes the program run more slowly.
-              // filter exists {                          
-              //   ?city rdfs:label ?enLabel .                    
-              //   filter(langMatches(lang(?enLabel),"en"))   
-              // }
-  var result = await submit_query(query)
-  return result
-}
-// deletes duplicates from the list that get_cities_dupes() returns
-// by only taking the first instance of every id in the list, only the most recent population record is saved,
-// since the list is sorted by population date.
-async function delete_dupes(list_with_dupes) {
-  var list_no_dupes = []
-  var cities_added = []
-  for (let i = 0; i < list_with_dupes.length; i++) {
-    var entry = list_with_dupes[i]
-    if (!cities_added.includes(entry["city"]["value"])) {
-      cities_added.push(entry["city"]["value"])
-       list_no_dupes.push(entry["city"])
-    } 
-  }
-  return list_no_dupes
-          
-}
-// sorts a list of all the cities by population
-async function sort_by_pop(list) {
-  list.sort(
-    (first, second) => { 
-      return remove_euro_format(first.population) - remove_euro_format(second.population) }
-  );
-return list
-}
+
 // method called when the user clicks the 'search for buddy' button
 async function input_submit(input)  {
+
   //look for any cities that share a name with the inputted value.
   possible_target_cities.value = await find_possible_matches(input)
   city_not_found.value = false
@@ -151,8 +97,9 @@ async function find_possible_matches(target_label) {
 // either automatically because there was only one city that matched the inputted name,
 // or manually because the user selected the city from the disambiguation page
 async function chosen_target(target_id) {
+
   disambiguation.value = false
-  target_city_entry.value = Object.values(cities_list.value).filter(entry => String(entry["value"]) == String(target_id))[0]
+  target_city_entry.value = Object.values(props.cities_list).filter(entry => String(entry["value"]) == String(target_id))[0]
   buddy_city_entry.value = await find_buddy()
   match_found.value = true
 }
@@ -160,13 +107,13 @@ async function chosen_target(target_id) {
 async function find_buddy() {
   let buddy_entry = null
   // find the index of the target city entry in the list of all the city entries
-  const target_city_index = cities_list.value.indexOf(target_city_entry.value)
+  const target_city_index = props.cities_list.indexOf(target_city_entry.value)
   // edge cases for when the city is at the from or back of the list and only has one neighbor.
   if (target_city_index == 0) {
-    buddy_entry = cities_list.value[1]
+    buddy_entry = props.cities_list[1]
   }
-  else if (target_city_index == cities_list.value.length - 1) {
-    buddy_entry = cities_list[cities_list.value.length - 2]
+  else if (target_city_index == props.cities_list.length - 1) {
+    buddy_entry = props.cities_list[props.cities_list.length - 2]
   }
   else {
     // if the city is not at the very front or very back of the list, then it has two possible buddies:
@@ -174,8 +121,8 @@ async function find_buddy() {
     // to the target city -> that is the buddy.
     const bigger_neighbor_index = target_city_index + 1
     const smaller_neighbor_index = target_city_index - 1
-    const bigger_neighbor_entry = cities_list.value[bigger_neighbor_index]
-    const smaller_neighbor_entry = cities_list.value[smaller_neighbor_index]
+    const bigger_neighbor_entry = props.cities_list[bigger_neighbor_index]
+    const smaller_neighbor_entry = props.cities_list[smaller_neighbor_index]
     const target_city_pop = parseInt(target_city_entry.value["population"])
     const bigger_neighbor_pop = parseInt(bigger_neighbor_entry["population"])
     const smaller_neighbor_pop = parseInt(smaller_neighbor_entry["population"])
