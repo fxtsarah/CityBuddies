@@ -36,10 +36,10 @@
         margin-right: 10px;
     }
 
-    @media screen and (max-width: 1000px) {
+    /* @media screen and (max-width: 1000px) {
     #nav {
         display: block;
     }
-}
+} */
 
 </style>
