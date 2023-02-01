@@ -41,7 +41,7 @@
             justify-content: space-between;
         }
         h1 {
-            font-size: 6vw;
+            font-size: 7vw;
         }
     }
 
