@@ -88,4 +88,11 @@ watch(()=>props.buddy_label, async (new_label) => {
     margin-right: 60px;
     overflow: hidden
 }
+
+
+@media screen and (max-width: 800px) {
+  #map {
+    width: 95%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
+}
 </style>
