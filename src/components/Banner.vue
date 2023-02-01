@@ -100,7 +100,7 @@ function input_submit() {
         padding: 3vw;
     }
     #banner_input_and_button {
-    display: flex;
+    display: block;
     }
 }
 </style>
