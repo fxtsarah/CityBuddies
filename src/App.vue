@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue'
+import {ref, onMounted} from 'vue'
 import {use_submit_query} from './composables/use_submit_query.js'
 import {use_remove_euro_format} from './composables/use_remove_euro_format.js'
 import {use_delete_dupes} from './composables/use_delete_dupes.js'
@@ -63,11 +63,5 @@ return list
 
 </script>
 
-<!-- <style> -->
-<!-- /* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-</style> */ -->
+
+

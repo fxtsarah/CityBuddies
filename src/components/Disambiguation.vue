@@ -31,7 +31,6 @@ function chosen_target(id) {
 .city_choice {
     width: 55%;
     margin: auto;
-    caret-color: transparent;
 }
 .city_choice:hover {
     color: #519872;

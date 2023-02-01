@@ -1,4 +1,4 @@
-# city-buddies-cli
+# City Buddies
 
 ## Project setup
 ```

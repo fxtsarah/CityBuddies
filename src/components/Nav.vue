@@ -2,9 +2,8 @@
     <div id="nav">
       <h1>City Buddies</h1>
         <div id="pages" >
-            <div class="btn btn-light banner_button page" tabindex="0">Home</div> 
-            <!-- to="/" -->
-            <router-link to="/about" class="btn btn-light banner_button page" tabindex="0">About</router-link>
+            <router-link to="/" class="btn btn-light banner_button page">Home</router-link> 
+            <router-link to="/about" class="btn btn-light banner_button page">About</router-link>
         </div>
     </div>
 </template>
@@ -17,23 +16,15 @@
     }
 
     .page {
-    background-color: #F6F6F6;
-    font-size: 16px;
-    margin: 5px;
-    width: 80px
-    
-    }
-    .page:hover {
-    background-color: #dbdbdb;
-    }
-    .page:focus {
-
-        background-color: red
+        background-color: #F6F6F6;
+        font-size: 16px;
+        margin: 5px;
+        width: 80px
     }
 
     .page.router-link-exact-active {
-    font-weight: bold;
-    color: #E16036;
+        font-weight: bold;
+        color: #E16036;
     }
 
     #pages {
