@@ -98,6 +98,7 @@ function input_submit() {
 @media screen and (max-width: 1000px) {
     #banner {
         padding: 3vw;
+        display: block;
     }
     #banner_input_and_button {
     display: block;
