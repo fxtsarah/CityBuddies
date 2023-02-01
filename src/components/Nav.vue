@@ -20,6 +20,7 @@
         font-size: 16px;
         margin: 5px;
         width: 6vw;
+        min-width: 50px;
     }
 
     .page.router-link-exact-active {

@@ -95,4 +95,9 @@ function input_submit() {
     pointer-events: none;
     opacity: .6;
 }
+@media screen and (max-width: 1000px) {
+    #banner {
+        padding: 3vw;
+    }
+}
 </style>
