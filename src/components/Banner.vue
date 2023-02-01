@@ -36,10 +36,8 @@ function input_submit() {
 #banner {
     background-color: #E16036;
     color: #F6F6F6;
-    min-height: 10rem;
+    height: 10rem;
     padding: 2.5rem;
-    padding-bottom: .5rem;
-    overflow: auto; 
     display: flex;
     justify-content: space-between;
 }
@@ -53,8 +51,6 @@ function input_submit() {
 #banner_form {
     margin-top: 5px;
     display: block;
-    /* width: 55%;
-    max-width: 450px; */
 }
 
 #banner_input_and_button {
@@ -80,7 +76,6 @@ function input_submit() {
 .banner_button {
     background-color: #F6F6F6; 
     white-space: nowrap;   
-
 }
 .banner_button:hover {
     background-color: #dbdbdb;
