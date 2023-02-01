@@ -83,17 +83,13 @@ watch(()=>props.buddy_label, async (new_label) => {
     display: block;
     height: 500px; 
     max-height: 500px; 
-    margin-top: 60px;
-    margin-left: 60px;
-    margin-right: 60px;
+    margin-top: 50px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    /* margin-left: 60px;
+    margin-right: 60px; */
     overflow: hidden
 }
 
-
-@media screen and (max-width: 800px) {
-  #map {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-}
 </style>
