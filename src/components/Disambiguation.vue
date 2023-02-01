@@ -31,6 +31,7 @@ function chosen_target(id) {
 .city_choice {
     width: 55%;
     margin: auto;
+    margin-bottom: 20px;
 }
 .city_choice:hover {
     color: #519872;
@@ -39,5 +40,11 @@ function chosen_target(id) {
 .city_choice:focus {
     color: #519872;
     outline: none;
+}
+@media screen and (max-width: 900px) {
+    .city_choice {
+      width: 90%;
+      margin-bottom: 25px;
+    }
 }
 </style>

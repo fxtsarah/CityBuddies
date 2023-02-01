@@ -1,10 +1,10 @@
 <template>
     <div id="nav">
       <h1>City Buddies</h1>
-        <div id="pages" >
-            <router-link to="/" class="btn btn-light banner_button page">Home</router-link> 
-            <router-link to="/about" class="btn btn-light banner_button page">About</router-link>
-        </div>
+      <div id="pages" >
+        <router-link to="/" class="btn btn-light banner_button page">Home</router-link> 
+        <router-link to="/about" class="btn btn-light banner_button page">About</router-link>
+      </div>
     </div>
 </template>
 
@@ -36,10 +36,13 @@
         margin-right: 10px;
     }
 
-    /* @media screen and (max-width: 1000px) {
-    #nav {
-        display: block;
+    @media screen and (max-width: 900px) {
+        #nav {
+            justify-content: space-between;
+        }
+        h1 {
+            font-size: 40px;
+        }
     }
-} */
 
 </style>

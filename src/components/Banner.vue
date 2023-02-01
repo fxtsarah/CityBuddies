@@ -53,8 +53,8 @@ function input_submit() {
 #banner_form {
     margin-top: 5px;
     display: block;
-    width: 55%;
-    max-width: 450px;
+    /* width: 55%;
+    max-width: 450px; */
 }
 
 #banner_input_and_button {
@@ -64,6 +64,7 @@ function input_submit() {
 #input_form {
     margin-right: 20px;
     max-width: 300px; 
+    min-width: 60px;
     caret-color: black;
 }
 #input_form:focus {
@@ -95,13 +96,20 @@ function input_submit() {
     pointer-events: none;
     opacity: .6;
 }
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 900px) {
     #banner {
         padding: 3vw;
         display: block;
     }
-    /* #banner_input_and_button {
-    display: block;
-    } */
+    #input_form {
+    margin-right: 10px;
+
+    }
+    #banner_form {
+        width: auto;
+    }
+    #banner_input_and_button {
+        justify-content: space-between;
+    }
 }
 </style>
