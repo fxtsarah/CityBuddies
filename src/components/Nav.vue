@@ -19,7 +19,7 @@
         background-color: #F6F6F6;
         font-size: 16px;
         margin: 5px;
-        width: 80px
+        width: 6vw;
     }
 
     .page.router-link-exact-active {
@@ -35,5 +35,11 @@
     h1 {
         margin-right: 10px;
     }
+
+    @media screen and (max-width: 1000px) {
+    #nav {
+        display: block;
+    }
+}
 
 </style>

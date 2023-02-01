@@ -87,8 +87,6 @@ watch(()=>props.buddy_label, async (new_label) => {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-    /* margin-left: 60px;
-    margin-right: 60px; */
     overflow: hidden
 }
 
