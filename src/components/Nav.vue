@@ -42,7 +42,7 @@
         }
         h1 {
             font-size: 7.5vw;
-            /* margin-top:  */
+            margin-top: 5px;
         }
     }
 
