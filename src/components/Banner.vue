@@ -99,5 +99,8 @@ function input_submit() {
     #banner {
         padding: 3vw;
     }
+    #banner_form {
+    display: flex;
+    }
 }
 </style>

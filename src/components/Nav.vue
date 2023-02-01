@@ -19,8 +19,7 @@
         background-color: #F6F6F6;
         font-size: 16px;
         margin: 5px;
-        width: 6vw;
-        min-width: 50px;
+        width: 70px;
     }
 
     .page.router-link-exact-active {
