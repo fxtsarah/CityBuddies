@@ -2,7 +2,7 @@
     <div id = "banner">
     <Nav />
     <div v-show="props.include_form" id="banner_form">
-      <div id="baner_input_and_button">
+      <div id="banner_input_and_button">
         <input @keydown.enter="input_submit" placeholder="City name" class="form-control" :class="{ disabled_item: props.list_loading }" id="input_form" v-model="input_value" :tabindex=form_tab_index>
         <button class="btn btn-light banner_button" :class="{ disabled_item: props.list_loading }" id="input_button" @keydown.enter="input_submit" @click="input_submit" :tabindex=form_tab_index><strong>Search For Buddy</strong></button>
       </div>
@@ -57,7 +57,7 @@ function input_submit() {
     max-width: 450px;
 }
 
-#baner_input_and_button {
+#banner_input_and_button {
     display: flex;
 }
 
@@ -99,7 +99,7 @@ function input_submit() {
     #banner {
         padding: 3vw;
     }
-    #banner_form {
+    #banner_input_and_button {
     display: flex;
     }
 }
