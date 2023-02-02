@@ -1,9 +1,9 @@
 <template>
 
-  <Banner :list_loading="props.list_loading" :include_form="true" @input_submit="input_submit"/>
+  <!-- <Banner :list_loading="props.list_loading" :include_form="true" @input_submit="input_submit"/> -->
 
   <div v-if="city_not_found" id="city_not_found">
-    <h3>Sorry, we couldn't find a city with the name {{ format_city_name(last_submitted_value) }}.</h3>
+    <h3>Sorry, we couldn't find a city with the name {{ format_city_name(props.last_submitted_value) }}.</h3>
   </div>
 
   <Disambiguation :active="disambiguation" :target_label="last_submitted_value_formatted" :cities="possible_target_cities" @chosen_target="chosen_target" />
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, computed} from 'vue'
+import { ref, watch, computed} from 'vue'
 // import the list of city names that don't follow normal capitalization rules
 import exceptions_list from '../../public/exceptions.json'
 import {use_submit_query} from '../composables/use_submit_query.js'
@@ -23,7 +23,7 @@ import Banner from "../components/Banner.vue"
 import Disambiguation from "../components/Disambiguation.vue"
 import Buddy_Match from "../components/Buddy_Match.vue"
 
-const props = defineProps(['list_loading', 'cities_list'])
+const props = defineProps(['list_loading', 'cities_list', 'last_submitted_value'])
 
 let disambiguation = ref(false)
 // true if we are seeing the screen that tells the user who the buddy is
@@ -31,7 +31,7 @@ let match_found = ref(false)
 // true if the user has just inputted a value that does not coorespond to any city
 let city_not_found = ref(false)
 // the most recent value submitted by the user
-let last_submitted_value = ref("")
+// let last_submitted_value = ref("")
 // the list of city entries whose name matches the inputted 'target' city
 let possible_target_cities = ref([])
 // entries include the id and population
@@ -42,7 +42,7 @@ let { submit_query } = use_submit_query()
 let { delete_dupes } = use_delete_dupes()
 
 const last_submitted_value_formatted = computed(() => {
-  return format_city_name(last_submitted_value.value)
+  return format_city_name(props.last_submitted_value)
 })
 
 // method called when the user clicks the 'search for buddy' button
@@ -51,7 +51,7 @@ async function input_submit(input)  {
   //look for any cities that share a name with the inputted value.
   possible_target_cities.value = await find_possible_matches(input)
   city_not_found.value = false
-  last_submitted_value.value = input
+  // last_submitted_value.value = input
   // if there were no cities found with the same name, show a message stating that the city couldn't be found
   if (possible_target_cities.value.length == 0) {
     city_not_found.value = true
@@ -137,6 +137,11 @@ async function find_buddy() {
   }
   return buddy_entry
 }
+
+watch(()=>props.last_submitted_value, async (new_input) => {
+  await input_submit(new_input)
+})
+
 // correctly format the name of a city according to capitalization rules
 function format_city_name(str) {
   // if these words appear in a city name, they are always uncapitalized, unless they are the lsit of last word of the city name.

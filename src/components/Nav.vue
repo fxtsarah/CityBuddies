@@ -41,7 +41,7 @@
             justify-content: space-between;
         }
         h1 {
-            font-size: 7.5vw;
+            font-size: min(7.5vw, 40px);
             margin-top: 5px;
         }
     }

@@ -3,13 +3,10 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { watch, onMounted } from 'vue'
 import {use_submit_query} from '../composables/use_submit_query.js'
 
 const props = defineProps(['active', 'target_id', 'buddy_id', 'target_label', 'buddy_label'])
-
-let target_label = ref("")
-let buddy_label = ref("")
 
 let { submit_query } = use_submit_query()
 

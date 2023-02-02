@@ -48,7 +48,7 @@ async function id_to_label(target_id) {
   return result[0]["cityLabel"]
 }
 
-// get he country a city is located in given the city's ID
+// get the country a city is located in given the city's ID
 async function id_to_country(target_id) {
   var query = `SELECT DISTINCT ?countryLabel {
               VALUES ?city { wd:${target_id}} 

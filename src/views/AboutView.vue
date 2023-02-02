@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     
-    <Banner :list_loading="false" :include_form="false" />
+    <!-- <Banner :list_loading="false" :include_form="false" /> -->
     <div id="about_info">
       <h5>This web app determines which city is the closest to another in terms of population.</h5>
       <br>
@@ -20,11 +20,11 @@
   </div>
 </template>
 
-<script setup >
-import Banner from "../components/Banner.vue"
+<!-- <script setup >
+// import Banner from "../components/Banner.vue"
 
 
-</script>
+</script> -->
 
 <style>
 

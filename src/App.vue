@@ -1,5 +1,6 @@
 <template>
-  <router-view :list_loading = "list_loading" :cities_list = "cities_list"/>
+  <Banner :list_loading="list_loading" :include_form="true" @input_submit="input_submit"/>
+  <router-view :list_loading = "list_loading" :cities_list = "cities_list" :last_submitted_value="last_submitted_value"/>
 </template>
 
 <script setup>
@@ -8,8 +9,11 @@ import {use_submit_query} from './composables/use_submit_query.js'
 import {use_remove_euro_format} from './composables/use_remove_euro_format.js'
 import {use_delete_dupes} from './composables/use_delete_dupes.js'
 
+import Banner from "./components/Banner.vue"
+
 let cities_list = ref([])
 let list_loading = ref(true)
+let last_submitted_value = ref("")
 
 let { submit_query } = use_submit_query()
 let { remove_euro_format } = use_remove_euro_format()
@@ -19,6 +23,10 @@ onMounted(async () => {
   cities_list.value = await get_cities_list()
   list_loading.value = false
 })
+
+function input_submit(input) {
+  last_submitted_value.value = input
+}
 
 
 // get the list of all the cities. Each entry includes the ID and population.

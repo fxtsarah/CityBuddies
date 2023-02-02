@@ -14,12 +14,14 @@
 <script setup>
 
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router';
 import Nav from "./Nav.vue"
 
 const emit = defineEmits(['input_submit'])
 const props = defineProps(['list_loading', 'include_form'])
 
 let input_value = ref("")
+const router = useRouter()
 
 const form_tab_index = computed(() => {
   return props.list_loading.value ? "-1" : "0"
@@ -28,6 +30,7 @@ const form_tab_index = computed(() => {
 function input_submit() {
   emit('input_submit', input_value.value)
   input_value.value = ""
+  router.push("/")
 }
 
 </script>
