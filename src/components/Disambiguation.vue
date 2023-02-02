@@ -24,6 +24,7 @@ function chosen_target(id) {
 <style>
 #disambiguation_list {
     list-style-type: none;
+    
 }
 #disambiguation_info {
     margin-top: 25px;

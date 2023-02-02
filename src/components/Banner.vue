@@ -150,9 +150,9 @@ function input_submit() {
         color:#F6F6F6;
         background-color: #E16036;
         border: transparent;
-        /* font-size: 1vm; */
+        font-size: 2vm;
         transition: none;
-        --bs-btn-active-color: #dbdbdb;
+        --bs-btn-active-color: #F6F6F6
         --bs-btn-active-bg: transparent;
     }
     .page:hover {
