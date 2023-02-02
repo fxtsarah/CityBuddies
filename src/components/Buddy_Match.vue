@@ -88,5 +88,7 @@ watch(()=>props.buddy_entry, async (new_entry) => {
 #buddy_match_info {
     margin-top: 25px;
     width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

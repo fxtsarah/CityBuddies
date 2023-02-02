@@ -42,6 +42,9 @@ function chosen_target(id) {
     color: #519872;
     outline: none;
 }
+ul {
+  padding-left: 0;
+}
 @media screen and (max-width: 900px) {
     .city_choice {
       width: 90%;

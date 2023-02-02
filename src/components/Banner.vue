@@ -152,19 +152,19 @@ function input_submit() {
         border: transparent;
         font-size: 2vm;
         transition: none;
-        --bs-btn-active-color: #F6F6F6
+        --bs-btn-active-color: #dbdbdb;
         --bs-btn-active-bg: transparent;
     }
     .page:hover {
         background-color: transparent;
-        color:#dbdbdb;
+        color:#F6F6F6;
     }
     .page:focus {
         background-color: transparent;
-        color:#dbdbdb;
+        color:#F6F6F6;
     }
     .page.router-link-exact-active {
-        color:#dbdbdb;
+        color:#F6F6F6;
         text-decoration: underline;
     }
 
