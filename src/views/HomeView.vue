@@ -3,7 +3,7 @@
   <!-- <Banner :list_loading="props.list_loading" :include_form="true" @input_submit="input_submit"/> -->
 
   <div v-if="city_not_found" id="city_not_found">
-    <h3>Sorry, we couldn't find a city with the name {{ format_city_name(props.last_submitted_value) }}.</h3>
+    <h3>Sorry, we couldn't find a city with the name {{ last_submitted_value_formatted }}.</h3>
   </div>
 
   <Disambiguation :active="disambiguation" :target_label="last_submitted_value_formatted" :cities="possible_target_cities" @chosen_target="chosen_target" />
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed} from 'vue'
+import { ref, watch, computed, onMounted} from 'vue'
 // import the list of city names that don't follow normal capitalization rules
 import exceptions_list from '../../public/exceptions.json'
 import {use_submit_query} from '../composables/use_submit_query.js'
@@ -47,11 +47,10 @@ const last_submitted_value_formatted = computed(() => {
 
 // method called when the user clicks the 'search for buddy' button
 async function input_submit(input)  {
-
   //look for any cities that share a name with the inputted value.
   possible_target_cities.value = await find_possible_matches(input)
   city_not_found.value = false
-  // last_submitted_value.value = input
+
   // if there were no cities found with the same name, show a message stating that the city couldn't be found
   if (possible_target_cities.value.length == 0) {
     city_not_found.value = true

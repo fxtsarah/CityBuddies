@@ -1,27 +1,30 @@
 <template>
     <div id = "banner">
-    <Nav />
-    <div v-show="props.include_form" id="banner_form">
-      <div id="banner_input_and_button">
-        <input @keydown.enter="input_submit" placeholder="City name" class="form-control" :class="{ disabled_item: props.list_loading }" id="input_form" v-model="input_value" :tabindex=form_tab_index>
-        <button class="btn btn-light banner_button" :class="{ disabled_item: props.list_loading }" id="input_button" @keydown.enter="input_submit" @click="input_submit" :tabindex=form_tab_index><strong>Search For Buddy</strong></button>
-      </div>
-      <p v-if="props.list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
-    </div>
+        <div id="nav">
+            <h1 id="title">City Buddies</h1>
+            <div id="pages" >
+                <router-link to="/" class="btn btn-light banner_button page" :class="{ disabled_item: props.list_loading }">Home</router-link> 
+                <router-link to="/about" class="btn btn-light banner_button page" :class="{ disabled_item: props.list_loading }">About</router-link>
+            </div>
+        </div>
+        <div v-show="props.include_form" id="banner_form">
+            <div id="banner_input_and_button">
+                <input @keydown.enter="input_submit" placeholder="City name" class="form-control" :class="{ disabled_item: props.list_loading }" id="input_form" v-model="input_value" :tabindex=form_tab_index>
+                <button class="btn btn-light banner_button" :class="{ disabled_item: props.list_loading }" id="input_button" @keydown.enter="input_submit" @click="input_submit" :tabindex=form_tab_index><strong>Search For Buddy</strong></button>
+            </div>
+            <p v-if="props.list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
+        </div>
   </div>
 </template>
 
 <script setup>
 
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router';
-import Nav from "./Nav.vue"
 
 const emit = defineEmits(['input_submit'])
 const props = defineProps(['list_loading', 'include_form'])
 
 let input_value = ref("")
-const router = useRouter()
 
 const form_tab_index = computed(() => {
   return props.list_loading.value ? "-1" : "0"
@@ -30,7 +33,7 @@ const form_tab_index = computed(() => {
 function input_submit() {
   emit('input_submit', input_value.value)
   input_value.value = ""
-  router.push("/")
+  
 }
 
 </script>
@@ -71,14 +74,13 @@ function input_submit() {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
 }
 #input_button {
-
     color:#E16036;
     width: 250px;
     margin-left: 20px;
 }
 .banner_button {
     background-color: #F6F6F6; 
-    white-space: nowrap;   
+    white-space: nowrap;  
 }
 .banner_button:hover {
     background-color: #dbdbdb;
@@ -94,13 +96,41 @@ function input_submit() {
     pointer-events: none;
     opacity: .6;
 }
+#nav {
+    background-color: #E16036;
+    color: #F6F6F6;
+    display: flex;
+}
+
+.page {
+    background-color: #F6F6F6;
+    font-size: 16px;
+    margin: 5px;
+    width: 70px;
+}
+
+.page.router-link-exact-active {
+    color:#E16036;
+    font-weight: bold;
+}
+
+#pages {
+    margin-left: 15px;
+    justify-content: space-between;
+}
+
+#title {
+    margin-right: 10px;
+    margin-top: 0;
+}
+
 @media screen and (max-width: 900px) {
     #banner {
         padding: 3vw;
         display: block;
     }
     #input_form {
-    margin-right: 10px;
+        margin-right: 10px;
 
     }
     #banner_form {
@@ -109,5 +139,34 @@ function input_submit() {
     #banner_input_and_button {
         justify-content: space-between;
     }
+    #nav {
+        justify-content: space-between;
+    }
+    #title {
+        font-size: min(7.5vw, 40px);
+        margin-top: 5px;
+    }
+    .page {
+        color:#F6F6F6;
+        background-color: #E16036;
+        border: transparent;
+        /* font-size: 1vm; */
+        transition: none;
+        --bs-btn-active-color: #dbdbdb;
+        --bs-btn-active-bg: transparent;
+    }
+    .page:hover {
+        background-color: transparent;
+        color:#dbdbdb;
+    }
+    .page:focus {
+        background-color: transparent;
+        color:#dbdbdb;
+    }
+    .page.router-link-exact-active {
+        color:#dbdbdb;
+        text-decoration: underline;
+    }
+
 }
 </style>

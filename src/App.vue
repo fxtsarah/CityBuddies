@@ -8,6 +8,7 @@ import {ref, onMounted} from 'vue'
 import {use_submit_query} from './composables/use_submit_query.js'
 import {use_remove_euro_format} from './composables/use_remove_euro_format.js'
 import {use_delete_dupes} from './composables/use_delete_dupes.js'
+import { useRouter } from 'vue-router';
 
 import Banner from "./components/Banner.vue"
 
@@ -18,14 +19,18 @@ let last_submitted_value = ref("")
 let { submit_query } = use_submit_query()
 let { remove_euro_format } = use_remove_euro_format()
 let { delete_dupes } = use_delete_dupes()
+const router = useRouter()
+
 
 onMounted(async () => {
   cities_list.value = await get_cities_list()
   list_loading.value = false
 })
 
-function input_submit(input) {
+async function input_submit(input) {
+  await router.push("/")
   last_submitted_value.value = input
+  
 }
 
 
@@ -36,6 +41,7 @@ async function get_cities_list() {
   var cities_pop_sorted = await sort_by_pop(cities_no_dupes)
   return cities_pop_sorted
 }
+
 // get a list of all the cities from wikidata, without removing duplicate entries.
 // cities without a population, without a point in time associated with that population, 
 // or with a point in time earlier that 2000 are excluded.
