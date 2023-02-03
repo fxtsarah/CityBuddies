@@ -3,33 +3,45 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+// vue imports
+import { watch, onMounted } from 'vue'
+
+// import composables
 import {use_submit_query} from '../composables/use_submit_query.js'
 
-const props = defineProps(['active', 'target_id', 'buddy_id', 'target_label', 'buddy_label'])
-
-let target_label = ref("")
-let buddy_label = ref("")
-
+// extract functions from composables
 let { submit_query } = use_submit_query()
 
+//define props
+const props = defineProps(['active', 'target_id', 'buddy_id', 'target_label', 'buddy_label'])
+
+// map variables to be accessible from the entire component
 var map
 var layerGroup
 
+// initializes the map when the component is mounted
 onMounted(async () => {
-  map = L.map('map').setView([0, 0], 2)
+  map = L.map('map').setView([0, 0], get_zoom() )
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
   layerGroup = L.layerGroup().addTo(map)
-})  
+})
 
-// When the user makes a new search, call this function to re-center the map and get rid of the old buddy markers.
+// when the user makes a new search, call this function to re-center the map and get rid of the old buddy markers.
 async function reset_map() {
   layerGroup.clearLayers()
-  map.setView([0, 0], 2)
+  map.setView([0, 0], get_zoom() )
 }
+
+// determines how far the map should be zoomed in
+// map should be zoomed out further on mobile than on desktop
+function get_zoom() {
+  if (window.innerWidth > 900) {return 2}
+  return 1
+}
+
 // add markers on the map at the locations of the target and buddy cities
 async function add_markers() {
   var icon = L.icon({
@@ -42,10 +54,15 @@ async function add_markers() {
     shadowAnchor: [12.5, 50],  // the same for the shadow
 });
 
+  //get the longitude and latitude
   let target_latlong = await id_to_latlong(props.target_id)
   let buddy_latlong = await id_to_latlong(props.buddy_id)
+
+  // create the markers at those coordinates
   var t_marker = L.marker(target_latlong, {icon: icon}).addTo(layerGroup);
   var b_marker = L.marker(buddy_latlong, {icon: icon}).addTo(layerGroup);
+
+  // add lables to the markers
   t_marker.bindTooltip(props.target_label, {permanent: true, offset: [15, -20] });
   b_marker.bindTooltip(props.buddy_label, {permanent: true, offset: [15, -20] });
   
@@ -66,11 +83,13 @@ async function id_to_latlong(target_id) {
   return L.latLng(result[0]["lat"], result[0]["long"])
 }
 
+// whenever the target_label is changed, refresh the map with the new data.
 watch(()=>props.target_label, async (new_label) => {
   await reset_map()
   await add_markers()
 })
 
+// whenever the buddy_label is changed, refresh the map with the new data.
 watch(()=>props.buddy_label, async (new_label) => {
   await reset_map()
   await add_markers()
@@ -79,13 +98,16 @@ watch(()=>props.buddy_label, async (new_label) => {
 </script>
 
 <style>
+
 #map { 
     display: block;
     height: 500px; 
     max-height: 500px; 
-    margin-top: 60px;
-    margin-left: 60px;
-    margin-right: 60px;
+    margin-top: 50px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
     overflow: hidden
 }
+
 </style>
