@@ -12,9 +12,11 @@
 
 <script setup>
 
-const emit = defineEmits(['chosen_target'])
+// define props and emits
 const props = defineProps(['target_label', 'cities', 'active'])
+const emit = defineEmits(['chosen_target'])
 
+// emit a chosen_target event with the chosen city id when a target city is chosen
 function chosen_target(id) {
     emit("chosen_target", id)
 }
@@ -24,27 +26,24 @@ function chosen_target(id) {
 <style>
 #disambiguation_list {
     list-style-type: none;
-    
+    padding-left: 0;
 }
+
 #disambiguation_info {
     margin-top: 25px;
 }
+
 .city_choice {
     width: 55%;
     margin: auto;
     margin-bottom: 20px;
 }
-.city_choice:hover {
-    color: #519872;
-}
 
-.city_choice:focus {
+.city_choice:hover .city_choice:focus {
     color: #519872;
     outline: none;
 }
-ul {
-  padding-left: 0;
-}
+
 @media screen and (max-width: 900px) {
     .city_choice {
       width: 90%;
