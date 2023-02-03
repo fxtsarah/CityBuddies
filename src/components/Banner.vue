@@ -98,7 +98,7 @@ function input_submit() {
     white-space: nowrap;  
 }
 
-.banner_button:hover .banner_button:focus {
+.banner_button:hover, .banner_button:focus {
     background-color: #dbdbdb;
 }
 
@@ -154,7 +154,7 @@ function input_submit() {
         width: auto;
     }
 
-    #banner_input_and_button  #nav {
+    #banner_input_and_button,  #nav {
         justify-content: space-between;
     }
 
@@ -173,7 +173,7 @@ function input_submit() {
         --bs-btn-active-bg: transparent;
     }
 
-    .page:hover .page:focus {
+    .page:hover, .page:focus {
         background-color: transparent;
         color:#F6F6F6;
     }

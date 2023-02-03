@@ -39,7 +39,7 @@ function chosen_target(id) {
     margin-bottom: 20px;
 }
 
-.city_choice:hover .city_choice:focus {
+.city_choice:hover, .city_choice:focus {
     color: #519872;
     outline: none;
 }
