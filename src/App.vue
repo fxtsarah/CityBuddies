@@ -6,7 +6,7 @@
 <script setup>
 // vue imports
 import { ref, onMounted } from 'vue'
-import { use_router } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 // import components
 import Banner from "./components/Banner.vue"
@@ -20,7 +20,7 @@ import { use_delete_dupes } from './composables/use_delete_dupes.js'
 let { submit_query } = use_submit_query()
 let { remove_euro_format } = use_remove_euro_format()
 let { delete_dupes } = use_delete_dupes()
-let { router } = use_router()
+const router = useRouter()
 
 // the list of all the cities and their poplation, sorted by population
 let cities_list = ref([])
