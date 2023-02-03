@@ -27,10 +27,16 @@ body {
   
 .above_divider {
     margin-bottom: 18px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
   
 .below_divider {
     margin-top: 18px; 
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #city_not_found {

@@ -14,21 +14,28 @@ var map
 var layerGroup
 
 onMounted(async () => {
-  map = L.map('map').setView([0, 0], 2)
+  map = L.map('map').setView([0, 0], get_zoom() )
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
   layerGroup = L.layerGroup().addTo(map)
-})  
+})
 
 // When the user makes a new search, call this function to re-center the map and get rid of the old buddy markers.
 async function reset_map() {
   layerGroup.clearLayers()
-  map.setView([0, 0], 2)
+  map.setView([0, 0], get_zoom() )
 }
+
+function get_zoom() {
+  if (window.innerWidth > 900) {return 2}
+  return 1
+}
+
 // add markers on the map at the locations of the target and buddy cities
 async function add_markers() {
+  
   var icon = L.icon({
     iconUrl: 'map-marker.png',
     shadowUrl: 'marker-shadow.png',

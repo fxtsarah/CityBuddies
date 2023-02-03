@@ -90,7 +90,7 @@ function input_submit() {
 }
 #list_loading {
     font-size: 1.2rem;
-    margin-top: .5rem;
+    margin-top: .25rem;
 }
 .disabled_item {
     pointer-events: none;
@@ -167,6 +167,7 @@ function input_submit() {
         color:#F6F6F6;
         text-decoration: underline;
     }
+
 
 }
 </style>
