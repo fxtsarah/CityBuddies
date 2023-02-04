@@ -25,7 +25,7 @@ Once a selection has been made, the application will inform the user which city 
 
 The web app also works on mobile
 
-![Mobile](images/mobile.jpg)
+![Mobile](images/mobile Medium.jpeg)
 
 
 ## Project setup
