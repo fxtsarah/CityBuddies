@@ -25,7 +25,7 @@ Once a selection has been made, the application will inform the user which city 
 
 The webb app also works on mobile
 
-![Mobile](images/mobile.jpgs)
+![Mobile](images/mobile.jpg)
 
 
 ## Project setup
