@@ -38,8 +38,7 @@ async function reset_map() {
 // determines how far the map should be zoomed in
 // map should be zoomed out further on mobile than on desktop
 function get_zoom() {
-  if (window.innerWidth > 900) {return 2}
-  return 1
+  return (window.innerWidth > 900) ? 2 : 1
 }
 
 // add markers on the map at the locations of the target and buddy cities
