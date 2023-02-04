@@ -23,7 +23,7 @@ Once a selection has been made, the application will inform the user which city 
 
 ![Buddy_Match](images/buddy_match.png)
 
-The web app also works on mobile
+The web app also works on mobile.
 
 ![Mobile](images/mobile.jpeg)
 
