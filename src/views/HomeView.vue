@@ -107,27 +107,50 @@ async function find_possible_matches(target_label) {
 // method called when a target city is chosen, 
 // either automatically because there was only one city that matched the inputted name,
 // or manually because the user selected the city from the disambiguation page
-async function chosen_target(target_id) {
+function chosen_target(target_id) {
   disambiguation.value = false
   target_city_entry.value = Object.values(props.cities_list).filter(entry => String(entry["value"]) == String(target_id))[0]
-  buddy_city_entry.value = await find_buddy()
+  console.log("5 buddies: " + JSON.stringify(find_buddies(5)))
+  buddy_city_entry.value = find_buddy(props.cities_list)
   match_found.value = true
 }
 
+// return of list of the 'amt' cities closet in population to the target city entry
+function find_buddies(amt) {
+  console.log("find_buddies called")
+  let list = props.cities_list.slice()
+  let buddies = []
+  for (let i = 0; i < amt; i++){
+    console.log(i)
+    let buddy = find_buddy(list)
+    buddies.push(buddy)
+    list = remove(list, buddy)
+  }
+  return buddies
+}
+
+function remove(list, item) {
+  let index = list.indexOf(item);
+  if (index > -1) {
+    list.splice(index, 1);
+  }
+  return list;
+}
+
 // method called when the exact target city id is known and the program wants to find that city's buddy.
-async function find_buddy() {
+function find_buddy(list) {
   let buddy_entry = null
 
   // find the index of the target city entry in the list of all the city entries
-  var target_city_index = props.cities_list.indexOf(target_city_entry.value)
+  var target_city_index = list.indexOf(target_city_entry.value)
 
   // edge cases for when the city is at the from or back of the list and only has one neighbor.
   if (target_city_index == 0) {
-    buddy_entry = props.cities_list[1]
+    buddy_entry = list[1]
   }
 
-  else if (target_city_index == props.cities_list.length - 1) {
-    buddy_entry = props.cities_list[props.cities_list.length - 2]
+  else if (target_city_index == list.length - 1) {
+    buddy_entry = list[list.length - 2]
   }
 
   else {
@@ -137,8 +160,8 @@ async function find_buddy() {
     var bigger_neighbor_index = target_city_index + 1
     var smaller_neighbor_index = target_city_index - 1
 
-    var bigger_neighbor_entry = props.cities_list[bigger_neighbor_index]
-    var smaller_neighbor_entry = props.cities_list[smaller_neighbor_index]
+    var bigger_neighbor_entry = list[bigger_neighbor_index]
+    var smaller_neighbor_entry = list[smaller_neighbor_index]
 
     var target_city_pop = parseInt(target_city_entry.value["population"])
     var bigger_neighbor_pop = parseInt(bigger_neighbor_entry["population"])
@@ -170,7 +193,7 @@ function format_city_name(str) {
   // if a word begins with any of these prefixes, then the prefix is uncapitalized, and the first character after the prefix is capitalized.
   // Unless the word in question is the first word of the city name - then the first character of the prexif is also capitalized
   var prefixes_2char = ['d\'', 'l\'', "mc", "o\'"]
-  var prefixes_3char = ['al-','el-',  'ez-']
+  var prefixes_3char = ['al-','el-', 'ez-']
   var prefixes_4char = ['ash-']
 
   // if any of these words appear after a hyphen, they are uncapitalized.

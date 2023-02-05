@@ -8,7 +8,7 @@
         <h4>Population of {{buddy_label}}, {{buddy_country}}: <strong>{{buddy_pop}}</strong></h4>
       </div>
     </div>
-    <Map :active="show" :target_id="props.target_entry.value" :buddy_id="props.buddy_entry.value" :target_label="target_label"  :buddy_label="buddy_label"/>
+    <Map :active="show" :target_id="props.target_entry.value" :target_label="target_label"  :buddies="buddy_dict"/>
   </div>
 </template>
 
@@ -48,6 +48,11 @@ let buddy_loaded = ref(true)
 // AND both the target and buddy information have been generated correctly.
 const show = computed(() => {
   return props.active && target_loaded.value && buddy_loaded.value
+})
+
+// formats the buddy as in id, label dictionary
+const buddy_dict = computed(() => {
+  return [{"id": props.buddy_entry.value, "label": buddy_label.value }]
 })
 
 // get the name of a city given its ID
