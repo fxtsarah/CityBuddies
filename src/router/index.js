@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import NotFoundView from '../views/404View.vue'
 import AboutView from '../views/AboutView.vue'
+import Disambiguation from '../components/Disambiguation.vue'
+import Buddy_Match from '../components/Buddy_Match.vue'
 
 const routes = [
   // Home View: Where the user is directed after submitting an input. Shows the user who is buddies with the inputted city
@@ -9,7 +11,17 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    children: [
+      {
+        path: 'disambiguation/:target_label',
+        component: Disambiguation
+      },
+      {
+        path: 'match/:target_id',
+        component: Buddy_Match
+      }
+    ]
   },
   // About: Describes what the website is, how to use it, and very generally how it works.
   {

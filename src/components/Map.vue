@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ invisible: !props.active }" id="map"></div>
+  <div id="map" :class="{ invisible: !props.active }"></div>
 </template>
 
 <script setup>
@@ -68,8 +68,8 @@ async function add_markers() {
 
 function add_marker(latlong, label) {
   var icon = L.icon({
-    iconUrl: 'map-marker.png',
-    shadowUrl: 'marker-shadow.png',
+    iconUrl: '/map-marker.png',
+    shadowUrl: '/marker-shadow.png',
 
     iconSize:     [25, 40], // size of the icon
     shadowSize:   [40, 50], // size of the shadow

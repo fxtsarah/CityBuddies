@@ -3,31 +3,36 @@
     <h3>Sorry, we couldn't find a city with the name {{ last_submitted_value_formatted }}.</h3>
   </div>
 
-  <Disambiguation :active="disambiguation" :target_label="last_submitted_value_formatted" :cities="possible_target_cities" @chosen_target="chosen_target" />
+  <!-- <Disambiguation :active="disambiguation" :target_label="last_submitted_value_formatted" :cities="possible_target_cities" @chosen_target="chosen_target" />
 
   <Buddy_Match :active="match_found" :target_entry="target_city_entry" :buddy_entry="buddy_city_entry" />
-  
+   -->
+
+   <!-- :target_label="last_submitted_value_formatted" -->
+   <router-view :cities="possible_target_cities"  @chosen_target="chosen_target" :target_entry="target_city_entry" :buddy_entry="buddy_city_entry"/>
 </template>
 
 <script setup>
 // vue imports
-import { ref, watch, computed, onMounted} from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useRouter } from 'vue-router';
 
 // import the list of city names that don't follow normal capitalization rules
 import exceptions_list from '../../public/exceptions.json'
 
 // import components
 import Banner from "../components/Banner.vue"
-import Disambiguation from "../components/Disambiguation.vue"
+// import Disambiguation from "../components/Disambiguation.vue"
 import Buddy_Match from "../components/Buddy_Match.vue"
 
 // import composables
 import {use_submit_query} from '../composables/use_submit_query.js'
 import {use_delete_dupes} from '../composables/use_delete_dupes.js'
 
-// extract fucntions from composables
+// extract functions from composables
 let { submit_query } = use_submit_query()
 let { delete_dupes } = use_delete_dupes()
+const router = useRouter()
 
 // define props
 const props = defineProps(['list_loading', 'cities_list', 'last_submitted_value'])
@@ -62,17 +67,20 @@ async function input_submit(input)  {
     city_not_found.value = true
     match_found.value = false
     disambiguation.value = false
+    router.push('/')
   }
 
   // if there is only one city found with the same name, automatically choose that city as the target and search for its buddy
   else if (possible_target_cities.value.length == 1) {
     await chosen_target(possible_target_cities.value[0]["value"])
+    router.push(`/match/${target_city_entry.value.value}`)
   }
 
   // if there are multiple cities found with the same name, allow the user to select which one they want before searching for a buddy
   else {
     disambiguation.value = true
     match_found.value = false
+    router.push(`/disambiguation/${props.last_submitted_value}`)
   }
 }
 
@@ -108,20 +116,18 @@ async function find_possible_matches(target_label) {
 // either automatically because there was only one city that matched the inputted name,
 // or manually because the user selected the city from the disambiguation page
 function chosen_target(target_id) {
+  router.push(`/match/${target_id}`)
   disambiguation.value = false
   target_city_entry.value = Object.values(props.cities_list).filter(entry => String(entry["value"]) == String(target_id))[0]
-  console.log("5 buddies: " + JSON.stringify(find_buddies(5)))
   buddy_city_entry.value = find_buddy(props.cities_list)
   match_found.value = true
 }
 
 // return of list of the 'amt' cities closet in population to the target city entry
 function find_buddies(amt) {
-  console.log("find_buddies called")
   let list = props.cities_list.slice()
   let buddies = []
   for (let i = 0; i < amt; i++){
-    console.log(i)
     let buddy = find_buddy(list)
     buddies.push(buddy)
     list = remove(list, buddy)

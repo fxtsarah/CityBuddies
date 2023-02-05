@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <div v-show="props.include_form" id="banner_form">
+        <div id="banner_form">
             <div id="banner_input_and_button">
                 <input @keydown.enter="input_submit" placeholder="City name" class="form-control" :class="{ disabled_item: props.list_loading }" id="input_form" v-model="input_value" :tabindex=banner_tab_index>
 
@@ -28,7 +28,7 @@
 import { ref, computed } from 'vue'
 
 // define props and emits
-const props = defineProps(['list_loading', 'include_form'])
+const props = defineProps(['list_loading'])
 const emit = defineEmits(['input_submit'])
 
 // the current value of the input box

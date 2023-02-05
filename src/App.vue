@@ -1,5 +1,5 @@
 <template>
-  <Banner :list_loading="list_loading" :include_form="true" @input_submit="input_submit"/>
+  <Banner :list_loading="list_loading" @input_submit="input_submit"/>
   <router-view :list_loading = "list_loading" :cities_list = "cities_list" :last_submitted_value="last_submitted_value"/>
 </template>
 
