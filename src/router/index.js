@@ -4,6 +4,7 @@ import NotFoundView from '../views/404View.vue'
 import AboutView from '../views/AboutView.vue'
 import Disambiguation from '../components/Disambiguation.vue'
 import Buddy_Match from '../components/Buddy_Match.vue'
+import City_Not_Found from '../components/City_Not_Found.vue'
 
 const routes = [
   // Home View: Where the user is directed after submitting an input. Shows the user who is buddies with the inputted city
@@ -18,9 +19,13 @@ const routes = [
         component: Disambiguation
       },
       {
+        path: 'city-not-found/:target_label',
+        component: City_Not_Found
+      },
+      {
         path: 'match/:target_id',
         component: Buddy_Match
-      }
+      }, 
     ]
   },
   // About: Describes what the website is, how to use it, and very generally how it works.

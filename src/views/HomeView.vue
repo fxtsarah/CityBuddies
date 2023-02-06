@@ -1,29 +1,18 @@
 <template>
-  <div v-if="city_not_found" id="city_not_found">
-    <h3>Sorry, we couldn't find a city with the name {{ last_submitted_value_formatted }}.</h3>
-  </div>
-
-  <!-- <Disambiguation :active="disambiguation" :target_label="last_submitted_value_formatted" :cities="possible_target_cities" @chosen_target="chosen_target" />
-
-  <Buddy_Match :active="match_found" :target_entry="target_city_entry" :buddy_entry="buddy_city_entry" />
-   -->
-
-   <!-- :target_label="last_submitted_value_formatted" -->
-   <router-view :cities="possible_target_cities"  @chosen_target="chosen_target" :target_entry="target_city_entry" :buddy_entry="buddy_city_entry"/>
+   <router-view @chosen_target="chosen_target" :buddy_entry="buddy_city_entry"/>
 </template>
 
 <script setup>
 // vue imports
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router';
+import { use_find_buddy } from '../composables/use_find_buddy'
+
+// import state
+import { state } from '../stores/store.js'
 
 // import the list of city names that don't follow normal capitalization rules
 import exceptions_list from '../../public/exceptions.json'
-
-// import components
-import Banner from "../components/Banner.vue"
-// import Disambiguation from "../components/Disambiguation.vue"
-import Buddy_Match from "../components/Buddy_Match.vue"
 
 // import composables
 import {use_submit_query} from '../composables/use_submit_query.js'
@@ -32,55 +21,40 @@ import {use_delete_dupes} from '../composables/use_delete_dupes.js'
 // extract functions from composables
 let { submit_query } = use_submit_query()
 let { delete_dupes } = use_delete_dupes()
+let { find_buddy } = use_find_buddy()
 const router = useRouter()
 
-// define props
-const props = defineProps(['list_loading', 'cities_list', 'last_submitted_value'])
-
-// true if we are seeing the screen where the user can select from all the cities of the imputted name
-let disambiguation = ref(false)
-// true if we are seeing the screen that tells the user who the buddy is
-let match_found = ref(false)
-// true if the user has just inputted a value that does not coorespond to any city
-let city_not_found = ref(false)
-
-// the list of city entries whose name matches the inputted 'target' city
-let possible_target_cities = ref([])
-
 // entries include the id and population
-let target_city_entry = ref({"value":"", "population":0})
+// let target_city_entry = ref({"value":"", "population":0})
 let buddy_city_entry = ref({"value":"", "population":0})
 
-// Get the last submitted value and format it with correct capitalization.
-const last_submitted_value_formatted = computed(() => {
-  return format_city_name(props.last_submitted_value)
-})
+
+function last_submitted_value_formatted() {
+  return format_city_name(state.last_submitted_value)
+}
 
 // method called when the user clicks the 'search for buddy' button
 async function input_submit(input)  {
+  
   //look for any cities that share a name with the inputted value.
-  possible_target_cities.value = await find_possible_matches(input)
-  city_not_found.value = false
+  state.possible_target_cities = await find_possible_matches(input)
 
   // if there were no cities found with the same name, show a message stating that the city couldn't be found
-  if (possible_target_cities.value.length == 0) {
-    city_not_found.value = true
-    match_found.value = false
-    disambiguation.value = false
-    router.push('/')
+  if (state.possible_target_cities.length == 0) {
+    let label = last_submitted_value_formatted()
+    router.push(`/city-not-found/${label}`)
   }
 
   // if there is only one city found with the same name, automatically choose that city as the target and search for its buddy
-  else if (possible_target_cities.value.length == 1) {
-    await chosen_target(possible_target_cities.value[0]["value"])
-    router.push(`/match/${target_city_entry.value.value}`)
+  else if (state.possible_target_cities.length == 1) {
+    await chosen_target(state.possible_target_cities[0]["value"])
+    router.push(`/match/${state.target_city_entry.value}`)
   }
 
   // if there are multiple cities found with the same name, allow the user to select which one they want before searching for a buddy
   else {
-    disambiguation.value = true
-    match_found.value = false
-    router.push(`/disambiguation/${props.last_submitted_value}`)
+    let label = last_submitted_value_formatted()
+    router.push(`/disambiguation/${label}`)
   }
 }
 
@@ -117,77 +91,13 @@ async function find_possible_matches(target_label) {
 // or manually because the user selected the city from the disambiguation page
 function chosen_target(target_id) {
   router.push(`/match/${target_id}`)
-  disambiguation.value = false
-  target_city_entry.value = Object.values(props.cities_list).filter(entry => String(entry["value"]) == String(target_id))[0]
-  buddy_city_entry.value = find_buddy(props.cities_list)
-  match_found.value = true
+  state.target_city_entry = Object.values(state.cities_list).filter(entry => String(entry["value"]) == String(target_id))[0]
+  buddy_city_entry.value = find_buddy(state.cities_list)
 }
 
-// return of list of the 'amt' cities closet in population to the target city entry
-function find_buddies(amt) {
-  let list = props.cities_list.slice()
-  let buddies = []
-  for (let i = 0; i < amt; i++){
-    let buddy = find_buddy(list)
-    buddies.push(buddy)
-    list = remove(list, buddy)
-  }
-  return buddies
-}
-
-function remove(list, item) {
-  let index = list.indexOf(item);
-  if (index > -1) {
-    list.splice(index, 1);
-  }
-  return list;
-}
-
-// method called when the exact target city id is known and the program wants to find that city's buddy.
-function find_buddy(list) {
-  let buddy_entry = null
-
-  // find the index of the target city entry in the list of all the city entries
-  var target_city_index = list.indexOf(target_city_entry.value)
-
-  // edge cases for when the city is at the from or back of the list and only has one neighbor.
-  if (target_city_index == 0) {
-    buddy_entry = list[1]
-  }
-
-  else if (target_city_index == list.length - 1) {
-    buddy_entry = list[list.length - 2]
-  }
-
-  else {
-    // if the city is not at the very front or very back of the list, then it has two possible buddies:
-    // the two city entries adjacent to it. Find which of these two neighbors is closest in population
-    // to the target city -> that is the buddy.
-    var bigger_neighbor_index = target_city_index + 1
-    var smaller_neighbor_index = target_city_index - 1
-
-    var bigger_neighbor_entry = list[bigger_neighbor_index]
-    var smaller_neighbor_entry = list[smaller_neighbor_index]
-
-    var target_city_pop = parseInt(target_city_entry.value["population"])
-    var bigger_neighbor_pop = parseInt(bigger_neighbor_entry["population"])
-    var smaller_neighbor_pop = parseInt(smaller_neighbor_entry["population"])
-
-    var bigger_neighbor_diff = bigger_neighbor_pop - target_city_pop
-    var smaller_neighbor_diff = target_city_pop - smaller_neighbor_pop
-
-    if (bigger_neighbor_diff < smaller_neighbor_diff) {
-        buddy_entry = bigger_neighbor_entry
-    }
-    else{
-        buddy_entry = smaller_neighbor_entry
-    }
-  }
-  return buddy_entry
-}
 
 // whenever the last_submitted_value changes, assume the new value was just submitted and process it.
-watch(()=>props.last_submitted_value, async (new_input) => {
+watch(()=>state.last_submitted_value, async (new_input) => {
   await input_submit(new_input)
 })
 

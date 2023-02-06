@@ -26,10 +26,14 @@
 
 // vue imports
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router';
 
-// define props and emits
+import { state } from '../stores/store.js'
+
+const router = useRouter()
+
+// define props
 const props = defineProps(['list_loading'])
-const emit = defineEmits(['input_submit'])
 
 // the current value of the input box
 let input_value = ref("")
@@ -40,10 +44,9 @@ const banner_tab_index = computed(() => {
   return props.list_loading.value ? "-1" : "0"
 })
 
-// when the user submits their input, 
-// emit an input_submit event with the input value and clear the input box
-function input_submit() {
-  emit('input_submit', input_value.value)
+async function input_submit() {
+  await router.push("/")
+  state.last_submitted_value = input_value.value
   input_value.value = ""
 }
 

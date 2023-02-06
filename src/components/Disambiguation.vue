@@ -3,7 +3,7 @@
     <h3 class="above_divider">Choose which <strong>{{ target_label }}</strong> you want to search for:</h3>
     <div class="divider"></div>
     <ul class="below_divider" id="disambiguation_list">
-      <li v-for="entry in props.cities" :key="entry" @keydown.enter="chosen_target(entry.value)" @click="chosen_target(entry.value)" class ="city_choice" tabindex="0" >
+      <li v-for="entry in state.possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value)" @click="chosen_target(entry.value)" class ="city_choice" tabindex="0" >
         <h4>{{entry.description}}</h4>
       </li>
     </ul>
@@ -12,13 +12,13 @@
 
 <script setup>
 
-import { useRoute } from 'vue-router'
-
 // vue imports
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { state } from '../stores/store.js'
 
 // define props and emits
-const props = defineProps(['cities'])
 const emit = defineEmits(['chosen_target'])
 
 const route = useRoute()
@@ -29,7 +29,6 @@ function chosen_target(id) {
 }
 
 const target_label = computed(() => {
-  console.log("computing target label")
   return route.params.target_label
 })
 
