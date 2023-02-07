@@ -26,6 +26,7 @@ body {
 }
   
 .above_divider {
+    margin-top: 25px;
     margin-bottom: 18px;
     width: 90%;
     margin-left: auto;
@@ -37,6 +38,17 @@ body {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    width: 55%;
+    margin: auto;
+    margin-bottom: 20px;
 }
 
 

@@ -55,20 +55,20 @@ async function add_markers() {
 
   // add target marker
   let target_latlong = await id_to_latlong(props.target_id)
-  add_marker(target_latlong, props.target_label)
+  add_marker(target_latlong, props.target_label, true)
 
   // add buddy markers
   for (let i = 0; i < props.buddies.length; i++) {
     let buddy = props.buddies[i]
     let buddy_latlong = await id_to_latlong(buddy.id)
-    add_marker(buddy_latlong, buddy.label)
+    add_marker(buddy_latlong, buddy.label, false)
   }
   
 }
 
-function add_marker(latlong, label) {
+function add_marker(latlong, label, isTarget) {
   var icon = L.icon({
-    iconUrl: '/map-marker.png',
+    iconUrl: isTarget ? '/map-marker-orange.png' : '/map-marker-green.png' ,
     shadowUrl: '/marker-shadow.png',
 
     iconSize:     [25, 40], // size of the icon

@@ -35,20 +35,6 @@ const target_label = computed(() => {
 </script>
 
 <style>
-#disambiguation_list {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-#disambiguation_info {
-    margin-top: 25px;
-}
-
-.city_choice {
-    width: 55%;
-    margin: auto;
-    margin-bottom: 20px;
-}
 
 .city_choice:hover, .city_choice:focus {
     color: #519872;

@@ -1,5 +1,5 @@
 <template>
-  <Banner :list_loading="list_loading" />
+  <Banner />
   <router-view />
 </template>
 
@@ -25,14 +25,14 @@ let { remove_euro_format } = use_remove_euro_format()
 let { delete_dupes } = use_delete_dupes()
 const router = useRouter()
 
-// true if the cities list had not yet been generated 
-let list_loading = ref(true)
+// // true if the cities list had not yet been generated 
+// let list_loading = ref(true)
 
 // When the app is mounted, calculate the cities list.
 // After the list is calculated, set list_loading to false.
 onMounted(async () => {
   state.cities_list = await get_cities_list()
-  list_loading.value = false
+  state.list_loading = false
 })
 
 // get the list of all the cities. Each entry includes the ID and population.

@@ -5,6 +5,11 @@ import AboutView from '../views/AboutView.vue'
 import Disambiguation from '../components/Disambiguation.vue'
 import Buddy_Match from '../components/Buddy_Match.vue'
 import City_Not_Found from '../components/City_Not_Found.vue'
+import Other_Buddies from '../components/Other_Buddies.vue'
+import Search from '../components/Search.vue'
+
+import { use_submit_query } from '../composables/use_submit_query.js'
+let { submit_query } = use_submit_query()
 
 const routes = [
   // Home View: Where the user is directed after submitting an input. Shows the user who is buddies with the inputted city
@@ -16,16 +21,70 @@ const routes = [
     children: [
       {
         path: 'disambiguation/:target_label',
-        component: Disambiguation
+        name: 'disambiguation',
+        component: Disambiguation,
+        children: [
+          {
+            path: '',
+            name: "disamb-to-search",
+            component: Disambiguation,
+            redirect: to => {
+              return { name: 'search', params: { target_label: to.params.target_label } }
+          }
+        }
+        ]
       },
       {
         path: 'city-not-found/:target_label',
-        component: City_Not_Found
+        name: 'city-not-found',
+        component: City_Not_Found,
+        children: [
+          {
+            path: '',
+            name: "not-found-to-search",
+            component: Disambiguation,
+            redirect: to => {
+              return { name: 'search', params: { target_label: to.params.target_label } }
+          }
+        }
+        ]
       },
       {
-        path: 'match/:target_id',
-        component: Buddy_Match
-      }, 
+        path: 'match/:target_id/:buddy_id',
+        name: 'match',
+        component: Buddy_Match,
+        children: [
+          {
+            path: '',
+            name: "match-to-search",
+            component: Disambiguation,
+            beforeEnter: async (to, from) => {
+              return { name: 'search', params: { target_label: await id_to_label(to.params.target_id) } }
+            }
+          }
+        ]
+      },
+      
+      {
+        path: 'other-buddies/:target_id',
+        name: 'other-buddies',
+        component: Other_Buddies,
+        children: [
+          {
+            path: '',
+            name: "other-buddies-to-search",
+            component: Disambiguation,
+            redirect: async to => {
+              return { name: 'search', params: { target_label: await id_to_label(to.params.target_id) } }
+          }
+        }
+        ]
+      },
+      {
+        path: 'search/:target_label',
+        name: 'search',
+        component: Search
+      }
     ]
   },
   // About: Describes what the website is, how to use it, and very generally how it works.
@@ -46,5 +105,15 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+// get the name of a city given its ID
+async function id_to_label(target_id) {
+  var query = `SELECT DISTINCT ?cityLabel {
+                VALUES ?city { wd:${target_id}} 
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+                }`
+  var result = await submit_query(query)
+  return result[0]["cityLabel"]
+}
 
 export default router
