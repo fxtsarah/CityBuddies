@@ -11,8 +11,9 @@ export function use_id_to_country() {
                     wd:${target_id} wdt:P17 ?country .
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     }`
+                    
         var result = await submit_query(query)
         return result[0]["countryLabel"]
   }
-return { id_to_country }
+  return { id_to_country }
 }

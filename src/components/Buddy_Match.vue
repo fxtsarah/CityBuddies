@@ -1,16 +1,17 @@
 <template>
-  <div>
-    <div id="buddy_match_info" v-if="info_loaded">
-      <h3 class="above_divider"><strong>{{ target_label }}</strong> is buddies with <strong>{{ buddy_label }}</strong></h3>
-      <div class="divider"></div>
-      <div class="below_divider">
-        <h4>Population of {{ target_label }}, {{ target_country }}: <strong>{{ target_pop }}</strong></h4>
-        <h4>Population of {{ buddy_label }}, {{ buddy_country }}: <strong>{{ buddy_pop }}</strong></h4>
-      </div>
-      <router-link :to="{ name: 'other-buddies', params: { target_id: route.params.target_id } }" id="to_other_buddies">See other cities with a similar population to {{ target_label }}</router-link>
+    <div>
+        <router-view />
+        <div id="buddy_match_info" v-if="info_loaded">
+            <h3 class="above_divider"><strong>{{ target_label }}</strong> is buddies with <strong>{{ buddy_label }}</strong></h3>
+            <div class="divider"></div>
+            <div class="below_divider">
+                <h4>Population of {{ target_label }}, {{ target_country }}: <strong>{{ target_pop }}</strong></h4>
+                <h4>Population of {{ buddy_label }}, {{ buddy_country }}: <strong>{{ buddy_pop }}</strong></h4>
+            </div>
+            <router-link :to="{ name: 'other-buddies', params: { target_id: route.params.target_id } }" id="to_other_buddies">See other cities with a similar population to {{ target_label }}</router-link>
+        </div>
+        <Map :active="info_loaded" :target_id="route.params.target_id" :target_label="target_label" :buddies="buddy_dict" />
     </div>
-    <Map :active="info_loaded" :target_id="route.params.target_id" :target_label="target_label" :buddies="buddy_dict" />
-  </div>
 </template>
 
 <script setup>
@@ -48,19 +49,19 @@ let info_loaded = ref(false)
 
 // formats the buddy as in id, label dictionary
 const buddy_dict = computed(() => {
-  return [{"id": route.params.buddy_id, "label": buddy_label.value }]
+    return [{"id": route.params.buddy_id, "label": buddy_label.value }]
 })
 
 onMounted(async () => {
-  target_label.value = await id_to_label(route.params.target_id)
-  target_country.value = await id_to_country(route.params.target_id)
-  target_pop.value = format_population(id_to_pop(route.params.target_id))
+    target_label.value = await id_to_label(route.params.target_id)
+    target_country.value = await id_to_country(route.params.target_id)
+    target_pop.value = format_population(id_to_pop(route.params.target_id))
 
-  buddy_label.value = await id_to_label(route.params.buddy_id)
-  buddy_country.value = await id_to_country(route.params.buddy_id)
-  buddy_pop.value = format_population(id_to_pop(route.params.buddy_id))
+    buddy_label.value = await id_to_label(route.params.buddy_id)
+    buddy_country.value = await id_to_country(route.params.buddy_id)
+    buddy_pop.value = format_population(id_to_pop(route.params.buddy_id))
 
-  info_loaded.value = true
+    info_loaded.value = true
 })
 
 </script>
@@ -74,7 +75,7 @@ onMounted(async () => {
 }
 
 #to_other_buddies {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 </style>

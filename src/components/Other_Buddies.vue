@@ -48,13 +48,13 @@ let target_population = ref("")
 let info_loaded = ref(false)
 
 onMounted( async () => {
-  buddies_list.value = await find_buddies_label(5)
+    buddies_list.value = await find_buddies_label(5)
 
-  target_label.value = await id_to_label(route.params.target_id)
-  target_country.value = await id_to_country(route.params.target_id)
-  target_population.value = format_population(id_to_pop(route.params.target_id))
+    target_label.value = await id_to_label(route.params.target_id)
+    target_country.value = await id_to_country(route.params.target_id)
+    target_population.value = format_population(id_to_pop(route.params.target_id))
 
-  info_loaded.value = true
+    info_loaded.value = true
 })
 
 // return of list of the 'amt' cities closest in population to the target city
@@ -71,22 +71,22 @@ async function find_buddies_label(amt) {
 // return of list of the 'amt' cities closest in population to the target city
 // the list contains the id's of the buddies
 function find_buddies_id(amt) {
-  let list = state.cities_list.slice()
-  let buddies = []
-  for (let i = 0; i < amt; i++){
-    let buddy = find_buddy(list, route.params.target_id)
-    buddies.push(buddy)
-    list = remove(list, buddy)
-  }
-  return buddies
+    let list = state.cities_list.slice()
+    let buddies = []
+    for (let i = 0; i < amt; i++){
+        let buddy = find_buddy(list, route.params.target_id)
+        buddies.push(buddy)
+        list = remove(list, buddy)
+    }
+    return buddies
 }
 
 function remove(list, item) {
-  let index = list.indexOf(item);
-  if (index > -1) {
-    list.splice(index, 1);
-  }
-  return list;
+    let index = list.indexOf(item);
+    if (index > -1) {
+        list.splice(index, 1);
+    }
+    return list;
 }
 
 </script>

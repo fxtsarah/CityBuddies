@@ -31,6 +31,5 @@ export function use_find_possible_matches() {
         var no_dupes = await delete_dupes(result)
         return no_dupes
     }
-  
-return { find_possible_matches }
+    return { find_possible_matches }
 }
