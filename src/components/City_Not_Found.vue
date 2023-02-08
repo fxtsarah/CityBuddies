@@ -5,9 +5,9 @@
 <script setup>
 
 // vue imports
-import { state } from '../stores/store.js'
 import { useRoute } from 'vue-router'
 
+// extract route
 const route = useRoute()
 
 </script>

@@ -4,9 +4,9 @@
 </template>
 
 <script setup>
+
 // vue imports
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router';
 
 // import state
 import { state } from './stores/store.js'
@@ -23,10 +23,6 @@ import { use_delete_dupes } from './composables/use_delete_dupes.js'
 let { submit_query } = use_submit_query()
 let { remove_euro_format } = use_remove_euro_format()
 let { delete_dupes } = use_delete_dupes()
-const router = useRouter()
-
-// // true if the cities list had not yet been generated 
-// let list_loading = ref(true)
 
 // When the app is mounted, calculate the cities list.
 // After the list is calculated, set list_loading to false.

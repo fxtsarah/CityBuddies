@@ -66,6 +66,9 @@ async function add_markers() {
   
 }
 
+// add a single marker to the map with the given coordinate and label.
+// if the marker represents the target city, the marker is orange. 
+// otherwise, the marker is green.
 function add_marker(latlong, label, isTarget) {
   var icon = L.icon({
     iconUrl: isTarget ? '/map-marker-orange.png' : '/map-marker-green.png' ,
@@ -75,7 +78,8 @@ function add_marker(latlong, label, isTarget) {
     shadowSize:   [40, 50], // size of the shadow
     iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
     shadowAnchor: [12.5, 50],  // the same for the shadow
-});
+  });
+  
   var marker = L.marker(latlong, {icon: icon}).addTo(layerGroup);
   marker.bindTooltip(label, {permanent: true, offset: [15, -20] });
 

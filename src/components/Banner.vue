@@ -34,8 +34,6 @@ import { state } from '../stores/store.js'
 
 const router = useRouter()
 
-// define props
-
 // the current value of the input box
 let input_value = ref("")
 
@@ -46,7 +44,6 @@ const banner_tab_index = computed(() => {
 })
 
 async function input_submit() {
-  state.last_submitted_value = format_city_name(input_value.value)
   await router.push({ name: 'search', params: { target_label: format_city_name(input_value.value) } })
   input_value.value = ""
 }

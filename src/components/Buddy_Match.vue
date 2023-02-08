@@ -18,23 +18,22 @@
 // vue imports
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { state } from "../stores/store.js"
 
 // import components
 import Map from "./Map.vue"
-import Other_Buddies from "./Other_Buddies.vue"
 
 // import composables
-import {use_submit_query} from '../composables/use_submit_query.js'
-import {use_remove_euro_format} from '../composables/use_remove_euro_format.js'
+import { use_format_population } from '../composables/use_format_population.js'
+import { use_id_to_label } from '../composables/use_id_to_label.js'
+import { use_id_to_country } from '../composables/use_id_to_country.js'
+import { use_id_to_pop } from '../composables/use_id_to_pop.js'
 
 // extract functions from composables
-let { submit_query } = use_submit_query()
-let { remove_euro_format } = use_remove_euro_format()
+let { format_population } = use_format_population()
+let { id_to_label } = use_id_to_label()
+let { id_to_country } = use_id_to_country()
+let { id_to_pop } = use_id_to_pop()
 const route = useRoute()
-
-// define props
-const props = defineProps(['buddy_entry'])
 
 let target_label = ref("")
 let target_country = ref("")
@@ -44,6 +43,7 @@ let buddy_label = ref("")
 let buddy_country = ref("")
 let buddy_pop = ref("")
 
+// true if the target and buddy information has not been loaded yet
 let info_loaded = ref(false)
 
 // formats the buddy as in id, label dictionary
@@ -51,40 +51,14 @@ const buddy_dict = computed(() => {
   return [{"id": route.params.buddy_id, "label": buddy_label.value }]
 })
 
-// TODO maybe make composable
-// get the name of a city given its ID
-async function id_to_label(target_id) {
-  var query = `SELECT DISTINCT ?cityLabel {
-                VALUES ?city { wd:${target_id}} 
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-                }`
-  var result = await submit_query(query)
-  return result[0]["cityLabel"]
-}
-
-// get the country a city is located in given the city's ID
-async function id_to_country(target_id) {
-  var query = `SELECT DISTINCT ?countryLabel {
-              VALUES ?city { wd:${target_id}} 
-              ?city wdt:P17 ?country .
-              SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-              }`
-  var result = await submit_query(query)
-  return result[0]["countryLabel"]
-}
-
 onMounted(async () => {
   target_label.value = await id_to_label(route.params.target_id)
   target_country.value = await id_to_country(route.params.target_id)
-  // target_pop.value = Number(remove_euro_format(state.target_city_entry.population)).toLocaleString("en-US")
-  target_pop.value = "population!"
-  console.log("target stuff loaded")
+  target_pop.value = format_population( await id_to_pop(route.params.target_id))
 
   buddy_label.value = await id_to_label(route.params.buddy_id)
   buddy_country.value = await id_to_country(route.params.buddy_id)
-  // buddy_pop.value = Number(remove_euro_format(props.buddy_entry.population)).toLocaleString("en-US")
-  buddy_pop.value = "population!"
-  console.log("buddy stuff loaded")
+  buddy_pop.value = format_population( await id_to_pop(route.params.buddy_id))
 
   info_loaded.value = true
 })

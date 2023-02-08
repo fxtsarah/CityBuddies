@@ -1,9 +1,9 @@
 <template>
   <div id="disambiguation_info">
-    <h3 class="above_divider">Choose which <strong>{{ target_label }}</strong> you want to search for:</h3>
+    <h3 class="above_divider">Choose which <strong>{{ route.params.target_label }}</strong> you want to search for:</h3>
     <div class="divider"></div>
     <ul class="below_divider" id="disambiguation_list">
-      <li v-for="entry in state.possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value)" @click="chosen_target(entry.value)" class ="city_choice" tabindex="0" >
+      <li v-for="entry in possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value, router)" @click="chosen_target(entry.value, router)" class ="city_choice" tabindex="0" >
         <h4>{{entry.description}}</h4>
       </li>
     </ul>
@@ -13,23 +13,27 @@
 <script setup>
 
 // vue imports
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-import { state } from '../stores/store.js'
+// import composables
+import { use_chosen_target } from '../composables/use_chosen_target.js'
+import { use_find_possible_matches }  from '../composables/use_find_possible_matches.js'
 
-// define props and emits
-const emit = defineEmits(['chosen_target'])
+// extract functions from composables
+let { chosen_target } = use_chosen_target()
+let { find_possible_matches } = use_find_possible_matches()
 
+// extract route
 const route = useRoute()
+const router = useRouter()
 
-// emit a chosen_target event with the chosen city id when a target city is chosen
-function chosen_target(id) {
-    emit("chosen_target", id)
-}
+// The pist of city ID and descriptions that match the target label
+let possible_target_cities = ref([])
 
-const target_label = computed(() => {
-  return route.params.target_label
+// update possible_target_cities with the target label's matches when the component is mounted
+onMounted(async () => {
+    possible_target_cities.value = await find_possible_matches(route.params.target_label)
 })
 
 </script>

@@ -17,6 +17,5 @@ export function use_remove_euro_format() {
       }
       return num
     }
-
     return { remove_euro_format }
 }
