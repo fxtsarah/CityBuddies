@@ -1,9 +1,9 @@
 <template>
-  <div id="disambiguation_info" v-if="props.active">
-    <h3 class="above_divider">Choose which <strong>{{ props.target_label }}</strong> you want to search for:</h3>
+  <div id="disambiguation_info">
+    <h3 class="above_divider">Choose which <strong>{{ route.params.target_label }}</strong> you want to search for:</h3>
     <div class="divider"></div>
     <ul class="below_divider" id="disambiguation_list">
-      <li v-for="entry in props.cities" :key="entry" @keydown.enter="chosen_target(entry.value)" @click="chosen_target(entry.value)" class ="city_choice" tabindex="0" >
+      <li v-for="entry in possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value, router)" @click="chosen_target(entry.value, router)" class ="city_choice" tabindex="0" >
         <h4>{{entry.description}}</h4>
       </li>
     </ul>
@@ -12,32 +12,33 @@
 
 <script setup>
 
-// define props and emits
-const props = defineProps(['target_label', 'cities', 'active'])
-const emit = defineEmits(['chosen_target'])
+// vue imports
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-// emit a chosen_target event with the chosen city id when a target city is chosen
-function chosen_target(id) {
-    emit("chosen_target", id)
-}
+// import composables
+import { use_chosen_target } from '../composables/use_chosen_target.js'
+import { use_find_possible_matches }  from '../composables/use_find_possible_matches.js'
+
+// extract functions from composables
+let { chosen_target } = use_chosen_target()
+let { find_possible_matches } = use_find_possible_matches()
+
+// extract route
+const route = useRoute()
+const router = useRouter()
+
+// The pist of city ID and descriptions that match the target label
+let possible_target_cities = ref([])
+
+// update possible_target_cities with the target label's matches when the component is mounted
+onMounted(async () => {
+    possible_target_cities.value = await find_possible_matches(route.params.target_label)
+})
 
 </script>
 
 <style>
-#disambiguation_list {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-#disambiguation_info {
-    margin-top: 25px;
-}
-
-.city_choice {
-    width: 55%;
-    margin: auto;
-    margin-bottom: 20px;
-}
 
 .city_choice:hover, .city_choice:focus {
     color: #519872;

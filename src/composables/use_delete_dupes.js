@@ -12,8 +12,7 @@ export function use_delete_dupes() {
                 list_no_dupes.push(entry["city"])
             } 
         }
-    return list_no_dupes    
+        return list_no_dupes    
     }
-
     return { delete_dupes }
 }

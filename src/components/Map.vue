@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ invisible: !props.active }" id="map"></div>
+  <div id="map" :class="{ invisible: !props.active }"></div>
 </template>
 
 <script setup>
@@ -12,8 +12,8 @@ import {use_submit_query} from '../composables/use_submit_query.js'
 // extract functions from composables
 let { submit_query } = use_submit_query()
 
-//define props
-const props = defineProps(['active', 'target_id', 'buddy_id', 'target_label', 'buddy_label'])
+// define props
+const props = defineProps(['active', 'target_id', 'target_label', 'buddies'])
 
 // map variables to be accessible from the entire component
 var map
@@ -53,18 +53,36 @@ async function add_markers() {
     shadowAnchor: [12.5, 50],  // the same for the shadow
 });
 
-  //get the longitude and latitude
+  // add target marker
   let target_latlong = await id_to_latlong(props.target_id)
-  let buddy_latlong = await id_to_latlong(props.buddy_id)
+  add_marker(target_latlong, props.target_label, true)
 
-  // create the markers at those coordinates
-  var t_marker = L.marker(target_latlong, {icon: icon}).addTo(layerGroup);
-  var b_marker = L.marker(buddy_latlong, {icon: icon}).addTo(layerGroup);
-
-  // add lables to the markers
-  t_marker.bindTooltip(props.target_label, {permanent: true, offset: [15, -20] });
-  b_marker.bindTooltip(props.buddy_label, {permanent: true, offset: [15, -20] });
+  // add buddy markers
+  for (let i = 0; i < props.buddies.length; i++) {
+    let buddy = props.buddies[i]
+    let buddy_latlong = await id_to_latlong(buddy.id)
+    add_marker(buddy_latlong, buddy.label, false)
+  }
   
+}
+
+// add a single marker to the map with the given coordinate and label.
+// if the marker represents the target city, the marker is orange. 
+// otherwise, the marker is green.
+function add_marker(latlong, label, isTarget) {
+  var icon = L.icon({
+    iconUrl: isTarget ? '/map-marker-orange.png' : '/map-marker-green.png' ,
+    shadowUrl: '/marker-shadow.png',
+
+    iconSize:     [25, 40], // size of the icon
+    shadowSize:   [40, 50], // size of the shadow
+    iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
+    shadowAnchor: [12.5, 50],  // the same for the shadow
+  });
+  
+  var marker = L.marker(latlong, {icon: icon}).addTo(layerGroup);
+  marker.bindTooltip(label, {permanent: true, offset: [15, -20] });
+
 }
 
 // get the latitude and longitude of a city given its ID.
@@ -88,8 +106,8 @@ watch(()=>props.target_label, async (new_label) => {
   await add_markers()
 })
 
-// whenever the buddy_label is changed, refresh the map with the new data.
-watch(()=>props.buddy_label, async (new_label) => {
+// whenever the buddies are changed, refresh the map with the new data.
+watch(()=>props.buddies, async (new_buddies) => {
   await reset_map()
   await add_markers()
 })

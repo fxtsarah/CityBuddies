@@ -1,12 +1,15 @@
 <template>
-  <Banner :list_loading="list_loading" :include_form="true" @input_submit="input_submit"/>
-  <router-view :list_loading = "list_loading" :cities_list = "cities_list" :last_submitted_value="last_submitted_value"/>
+  <Banner />
+  <router-view />
 </template>
 
 <script setup>
+
 // vue imports
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router';
+
+// import state
+import { state } from './stores/store.js'
 
 // import components
 import Banner from "./components/Banner.vue"
@@ -20,30 +23,13 @@ import { use_delete_dupes } from './composables/use_delete_dupes.js'
 let { submit_query } = use_submit_query()
 let { remove_euro_format } = use_remove_euro_format()
 let { delete_dupes } = use_delete_dupes()
-const router = useRouter()
-
-// the list of all the cities and their poplation, sorted by population
-let cities_list = ref([])
-
-// true if the cities list had not yet been generated 
-let list_loading = ref(true)
-
-// contains the last value that the user submitted
-let last_submitted_value = ref("")
 
 // When the app is mounted, calculate the cities list.
 // After the list is calculated, set list_loading to false.
 onMounted(async () => {
-  cities_list.value = await get_cities_list()
-  list_loading.value = false
+  state.cities_list = await get_cities_list()
+  state.list_loading = false
 })
-
-// when an input_event event is emitted, first direct the user to the home page,
-// then update the last submitted value with the new input.
-async function input_submit(input) {
-  await router.push("/")
-  last_submitted_value.value = input
-}
 
 // get the list of all the cities. Each entry includes the ID and population.
 async function get_cities_list() {
@@ -87,6 +73,3 @@ return list
 }
 
 </script>
-
-
-
