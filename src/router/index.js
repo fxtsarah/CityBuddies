@@ -39,6 +39,7 @@ const routes = [
             name: "disamb-to-search",
             component: Disambiguation,
             redirect: to => {
+              console.log("redirecting from diamb page")
               return { name: 'search', params: { target_label: to.params.target_label } }
           }
         }
@@ -56,6 +57,7 @@ const routes = [
             name: "not-found-to-search",
             component: City_Not_Found,
             redirect: to => {
+              console.log("redirecting from not found page")
               return { name: 'search', params: { target_label: to.params.target_label } }
           }
         }
@@ -73,6 +75,7 @@ const routes = [
             name: "match-to-search",
             component: Buddy_Match,
             beforeEnter: async (to, from) => {
+              console.log("redirecting from buddy match page")
               return { name: 'search', params: { target_label: await id_to_label(to.params.target_id) } }
             }
           }
@@ -90,6 +93,7 @@ const routes = [
             name: "other-buddies-to-search",
             component: Other_Buddies,
             beforeEnter: async (to, from) => {
+              console.log("redirecting from other buddies page")
               return { name: 'search', params: { target_label: await id_to_label(to.params.target_id) } }
             }
         }
