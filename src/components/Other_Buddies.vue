@@ -52,7 +52,7 @@ onMounted( async () => {
 
   target_label.value = await id_to_label(route.params.target_id)
   target_country.value = await id_to_country(route.params.target_id)
-  target_population.value = format_population(await id_to_pop(route.params.target_id))
+  target_population.value = format_population(id_to_pop(route.params.target_id))
 
   info_loaded.value = true
 })

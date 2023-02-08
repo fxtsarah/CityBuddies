@@ -54,11 +54,11 @@ const buddy_dict = computed(() => {
 onMounted(async () => {
   target_label.value = await id_to_label(route.params.target_id)
   target_country.value = await id_to_country(route.params.target_id)
-  target_pop.value = format_population( await id_to_pop(route.params.target_id))
+  target_pop.value = format_population(id_to_pop(route.params.target_id))
 
   buddy_label.value = await id_to_label(route.params.buddy_id)
   buddy_country.value = await id_to_country(route.params.buddy_id)
-  buddy_pop.value = format_population( await id_to_pop(route.params.buddy_id))
+  buddy_pop.value = format_population(id_to_pop(route.params.buddy_id))
 
   info_loaded.value = true
 })
