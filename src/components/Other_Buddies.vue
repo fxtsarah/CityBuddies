@@ -99,10 +99,6 @@ function remove(list, item) {
 
 <style>
 
-/* #other_buddies {
-    padding-left: 0;
-} */
-
 @media screen and (max-width: 900px) {
     .other-buddy {
         width: 90%;
