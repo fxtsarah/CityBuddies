@@ -147,7 +147,7 @@ function format_city_name(str) {
             new_string = new_string + (String(word).charAt(0).toUpperCase() + String(word).slice(1))
         } 
     }
-    return new_string
+    return new_string.trimEnd()
 }
 
 </script>

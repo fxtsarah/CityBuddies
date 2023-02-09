@@ -3,7 +3,7 @@
         <h3 class="above_divider"><strong>{{ target_label }}, {{ target_country }}: {{ target_population }}</strong></h3>
         <div class="divider"></div>
         <ul class="below_divider" id="other_buddies">
-            <li v-for="entry in buddies_list" :key="entry" tabindex="0">
+            <li v-for="entry in buddies_list" :key="entry" tabindex="0" class="other-buddy">
                 <h4>{{ entry.label }}, {{ entry.country }}: {{ format_population(entry.population)}}</h4>
             </li>
         </ul>
@@ -96,3 +96,12 @@ function remove(list, item) {
 }
 
 </script>
+
+<style>
+@media screen and (max-width: 900px) {
+    .other-buddy {
+        width: 90%;
+        margin-bottom: 25px;
+    }
+}
+</style>
