@@ -40,10 +40,6 @@ onMounted(async () => {
 
 <style>
 
-#disambiguation-list {
-    padding-left: 0
-}
-
 .city_choice {
     cursor: pointer;
 }
