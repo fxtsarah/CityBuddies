@@ -26,7 +26,7 @@ onMounted(async () => {
 async function input_submit(input)  {
 
     // look for any cities that share a name with the inputted value.
-    var possible_target_cities = await find_possible_matches(input)
+    let possible_target_cities = await find_possible_matches(input)
 
     // if there were no cities found with the same name, show a message stating that the city couldn't be found
     if (possible_target_cities.length == 0) {

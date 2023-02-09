@@ -11,9 +11,9 @@ export function use_find_possible_matches() {
     async function find_possible_matches(target_label) {
 
         // escape any quotes present in the input so the query doesn't break
-        var no_quotes = target_label.replace("\'", "\\'");
+        let no_quotes = target_label.replace("\'", "\\'");
             
-        var query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
+        let query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
                     WHERE
                     { 
                     ?city wdt:P31/wdt:P279* wd:Q515 .
@@ -25,10 +25,10 @@ export function use_find_possible_matches() {
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     } ORDER BY DESC (?population)`
             
-        var result = await submit_query(query)
+        let result = await submit_query(query)
     
         // remove duplicate cities from the result
-        var no_dupes = await delete_dupes(result)
+        let no_dupes = await delete_dupes(result)
         return no_dupes
     }
     return { find_possible_matches }

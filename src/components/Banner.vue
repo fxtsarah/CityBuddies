@@ -49,23 +49,23 @@ async function input_submit() {
 // correctly format the name of a city according to capitalization rules
 function format_city_name(str) {
     // if these words appear in a city name, they are always uncapitalized, unless they are the lsit of last word of the city name.
-    var uncapped = ['dem', 'auf', 'pod', 'u', 'i', 'dos', 'das', 'da', 'do', 'the', 'on', 'or', 'din', 'cu', 'sub', 'lui', 'cel', 'adh', 'lu\'', 'du', 'vor', 'den', 'aan', 'bei', 'unter', 'and', 'der', 'y', 'upon', 'e', 'in', 'im', 'dei', 'op', 'los', 'del', 'nad', 'di', 'of', 'es', 'de', 'na', 'v', 'ob', 'am', 'las', 'el', 'la']
+    let uncapped = ['dem', 'auf', 'pod', 'u', 'i', 'dos', 'das', 'da', 'do', 'the', 'on', 'or', 'din', 'cu', 'sub', 'lui', 'cel', 'adh', 'lu\'', 'du', 'vor', 'den', 'aan', 'bei', 'unter', 'and', 'der', 'y', 'upon', 'e', 'in', 'im', 'dei', 'op', 'los', 'del', 'nad', 'di', 'of', 'es', 'de', 'na', 'v', 'ob', 'am', 'las', 'el', 'la']
 
     // if a word begins with any of these prefixes, then the prefix is uncapitalized, and the first character after the prefix is capitalized.
     // Unless the word in question is the first word of the city name - then the first character of the prexif is also capitalized
-    var prefixes_2char = ['d\'', 'l\'', "mc", "o\'"]
-    var prefixes_3char = ['al-','el-', 'ez-']
-    var prefixes_4char = ['ash-']
+    let prefixes_2char = ['d\'', 'l\'', "mc", "o\'"]
+    let prefixes_3char = ['al-','el-', 'ez-']
+    let prefixes_4char = ['ash-']
 
     // if any of these words appear after a hyphen, they are uncapitalized.
-    var uncapped_hypen = ['sur', 'real', 'sous', 'à', 'de', 'en', 'e', 'i', 'on', 'ye', 'au', 'o', 'a', 'the', 'by', 'les', '-']
+    let uncapped_hypen = ['sur', 'real', 'sous', 'à', 'de', 'en', 'e', 'i', 'on', 'ye', 'au', 'o', 'a', 'the', 'by', 'les', '-']
 
-    var str_lower = String(str).toLowerCase()
-    var str_array = str_lower.split(/(\s+)/)
-    var new_string = ""
+    let str_lower = String(str).toLowerCase()
+    let str_array = str_lower.split(/(\s+)/)
+    let new_string = ""
 
     // if the inputted string matches any of the cities that don't follow the capitalization rules, output the excpetion that it matched
-    var filtered_list = Object.values(exceptions_list).filter(entry => String(entry["cityLabel"]).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
+    let filtered_list = Object.values(exceptions_list).filter(entry => String(entry["cityLabel"]).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
 
     if (filtered_list.length == 1) {
         return filtered_list[0]["cityLabel"]
@@ -73,7 +73,7 @@ function format_city_name(str) {
 
     // go through each word (seperated by spaces) and capitalize it according to capitalization rules
     for (let i = 0; i < str_array.length; i++) {
-        var word = str_array[i]
+        let word = str_array[i]
 
         // handles words that are always uncapitalized unless they are the first or last word
         if (i != 0 && i != str_array.length - 1 && uncapped.includes(word) ) {
@@ -82,19 +82,19 @@ function format_city_name(str) {
 
         // handles prefixes
         else if ( word.length >= 4 && (prefixes_2char.includes(String(word).substring(0, 2)))) {
-            var addition = String(word).substring(0, 2) + String(word).charAt(2).toUpperCase() + String(word).slice(3)
+            let addition = String(word).substring(0, 2) + String(word).charAt(2).toUpperCase() + String(word).slice(3)
             if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
             new_string = new_string + addition
         } 
 
         else if (word.length >= 5 && (prefixes_3char.includes(String(word).substring(0, 3)))) {
-            var addition = new_string + String(word).substring(0, 3) + String(word).charAt(3).toUpperCase() + String(word).slice(4)
+            let addition = new_string + String(word).substring(0, 3) + String(word).charAt(3).toUpperCase() + String(word).slice(4)
             if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
             new_string = new_string + addition
         } 
 
         else if (word.length >= 6 && (prefixes_4char.includes(String(word).substring(0, 4)))) {
-            var addition = new_string + String(word).substring(0, 4) + String(word).charAt(4).toUpperCase() + String(word).slice(5)
+            let addition = new_string + String(word).substring(0, 4) + String(word).charAt(4).toUpperCase() + String(word).slice(5)
             if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
             new_string = new_string + addition
         }
@@ -102,10 +102,10 @@ function format_city_name(str) {
         // handles hyphens. Each chunk that the hypen seperates should have its first character capitalized,
         // unless that chunk is in the uncapped_hyphen list
         else if (word.includes("-")){
-            var word_array = word.split(/(-)/g)
-            var addition = ""
+            let word_array = word.split(/(-)/g)
+            let addition = ""
             for (let j = 0; j < word_array.length; j++) {
-                var hyphen_chunk = word_array[j]
+                let hyphen_chunk = word_array[j]
                 if (uncapped_hypen.includes(hyphen_chunk)) {
                     addition = addition + hyphen_chunk
                 }
@@ -123,18 +123,18 @@ function format_city_name(str) {
 
         // If a word has a slash in the middle, capitalize the first character of the chunks of either side of the slash.
         else if(String(word).includes("/")) {
-            var word_array = word.split("/")
-            var first_chunk = String(word_array[0]).charAt(0).toUpperCase() + String(word_array[0]).slice(1)
-            var second_chunk = String(word_array[1]).charAt(0).toUpperCase() + String(word_array[1]).slice(1)
+            let word_array = word.split("/")
+            let first_chunk = String(word_array[0]).charAt(0).toUpperCase() + String(word_array[0]).slice(1)
+            let second_chunk = String(word_array[1]).charAt(0).toUpperCase() + String(word_array[1]).slice(1)
             new_string = new_string + first_chunk + "/" + second_chunk
         }
 
         // dots work the same as hypens, but there are no exceptions for the chunk to remain uncapitalized.
         else if (word.includes(".")) {
-            var word_array = word.split(/(.)/g)
-            var addition = ""
+            let word_array = word.split(/(.)/g)
+            let addition = ""
             for (let j = 0; j < word_array.length; j++) {
-                var dot_chunk = word_array[j]
+                let dot_chunk = word_array[j]
                 addition = addition + String(dot_chunk).charAt(0).toUpperCase() + String(dot_chunk).slice(1)
             }
             new_string = new_string + addition

@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+
 // vue imports
 import { watch, onMounted } from 'vue'
 
@@ -16,8 +17,8 @@ let { submit_query } = use_submit_query()
 const props = defineProps(['active', 'target_id', 'target_label', 'buddies'])
 
 // map variables to be accessible from the entire component
-var map
-var layerGroup
+let map
+let layerGroup
 
 // initializes the map when the component is mounted
 onMounted(async () => {
@@ -43,16 +44,6 @@ function get_zoom() {
 
 // add markers on the map at the locations of the target and buddy cities
 async function add_markers() {
-    var icon = L.icon({
-    iconUrl: 'map-marker.png',
-    shadowUrl: 'marker-shadow.png',
-
-    iconSize:     [25, 40], // size of the icon
-    shadowSize:   [40, 50], // size of the shadow
-    iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
-    shadowAnchor: [12.5, 50],  // the same for the shadow
-    });
-
     // add target marker
     let target_latlong = await id_to_latlong(props.target_id)
     add_marker(target_latlong, props.target_label, true)
@@ -69,24 +60,24 @@ async function add_markers() {
 // if the marker represents the target city, the marker is orange. 
 // otherwise, the marker is green.
 function add_marker(latlong, label, isTarget) {
-    var icon = L.icon({
-    iconUrl: isTarget ? '/map-marker-orange.png' : '/map-marker-green.png' ,
-    shadowUrl: '/marker-shadow.png',
+    let icon = L.icon({
+        iconUrl: isTarget ? '/map-marker-orange.png' : '/map-marker-green.png' ,
+        shadowUrl: '/marker-shadow.png',
 
-    iconSize:     [25, 40], // size of the icon
-    shadowSize:   [40, 50], // size of the shadow
-    iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
-    shadowAnchor: [12.5, 50],  // the same for the shadow
+        iconSize:     [25, 40], // size of the icon
+        shadowSize:   [40, 50], // size of the shadow
+        iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12.5, 50],  // the same for the shadow
     });
 
-    var marker = L.marker(latlong, {icon: icon}).addTo(layerGroup);
+    let marker = L.marker(latlong, {icon: icon}).addTo(layerGroup);
     marker.bindTooltip(label, {permanent: true, offset: [15, -20] });
 
 }
 
 // get the latitude and longitude of a city given its ID.
 async function id_to_latlong(target_id) {
-    var query = `SELECT ?city ?long ?lat
+    let query = `SELECT ?city ?long ?lat
                 WHERE
                 {
                 VALUES ?city { wd:${target_id}} 
@@ -95,7 +86,7 @@ async function id_to_latlong(target_id) {
                 ?coordinate_node wikibase:geoLongitude ?long.
                 ?coordinate_node wikibase:geoLatitude ?lat.  
                 }`
-    var result = await submit_query(query)
+    let result = await submit_query(query)
     return L.latLng(result[0]["lat"], result[0]["long"])
 }
 

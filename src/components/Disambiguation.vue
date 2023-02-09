@@ -3,8 +3,8 @@
         <h3 class="above_divider">Choose which <strong>{{ route.params.target_label }}</strong> you want to search for:</h3>
         <div class="divider"></div>
         <ul class="below_divider" id="disambiguation_list">
-            <li v-for="entry in possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value, router)" @click="chosen_target(entry.value, router)" class ="city_choice" tabindex="0" >
-            <h4>{{entry.description}}</h4>
+            <li v-for="entry in possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value, router)" @click="chosen_target(entry.value, router)" clas ="city_choice" tabindex="0" >
+                <h4>{{ entry.description }}</h4>
             </li>
         </ul>
     </div>
@@ -18,9 +18,11 @@ import { useRoute, useRouter } from 'vue-router'
 
 // import composables
 import { use_find_possible_matches }  from '../composables/use_find_possible_matches.js'
+import { use_chosen_target }  from '../composables/use_chosen_target.js'
 
 // extract functions from composables
 let { find_possible_matches } = use_find_possible_matches()
+let { chosen_target } = use_chosen_target()
 
 // extract route
 const route = useRoute()

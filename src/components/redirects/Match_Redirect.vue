@@ -20,7 +20,7 @@ const route = useRoute()
 
 // As soon as the search route is mounted, act as if the the target id has just been chosen
 onMounted(async () => {
-    var is_city = await is_city_id(route.params.target_id)
+    let is_city = await is_city_id(route.params.target_id)
     is_city ? chosen_target(route.params.target_id, router) : router.push(({ name: '404' }))
 })
 

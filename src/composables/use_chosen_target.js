@@ -12,7 +12,8 @@ export function use_chosen_target() {
     // either automatically because there was only one city that matched the inputted name,
     // or manually because the user selected the city from the disambiguation page
     function chosen_target(target_id, router) {
-        router.push({ name: 'match', params: { target_id: target_id, buddy_id: find_buddy(state.cities_list, target_id).value } })
+        let buddy_id = find_buddy(state.cities_list, target_id).value
+        router.push({ name: 'match', params: { target_id: target_id, buddy_id: buddy_id } })
     }
     return { chosen_target }
 }

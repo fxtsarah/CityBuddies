@@ -35,9 +35,9 @@ onMounted(async () => {
 
 // get the list of all the cities. Each entry includes the ID and population.
 async function get_cities_list() {
-  var cities_dupes = await get_cities_dupes()
-  var cities_no_dupes = await delete_dupes(cities_dupes)
-  var cities_pop_sorted = await sort_by_pop(cities_no_dupes)
+  let cities_dupes = await get_cities_dupes()
+  let cities_no_dupes = await delete_dupes(cities_dupes)
+  let cities_pop_sorted = await sort_by_pop(cities_no_dupes)
   return cities_pop_sorted
 }
 
@@ -47,7 +47,7 @@ async function get_cities_list() {
 // Sort these cities by the date at which their population was recorded so that when we remove duplicates,
 // we keep the most recent population from every city.
 async function get_cities_dupes() {
-  var query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
+  let query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
                 ?city wdt:P31/wdt:P279* wd:Q515 . 
                 ?city p:P1082 ?populationStatement . 
                 ?populationStatement ps:P1082 ?cityPopulation.
@@ -61,7 +61,7 @@ async function get_cities_dupes() {
                 //   ?city rdfs:label ?enLabel .                    
                 //   filter(langMatches(lang(?enLabel),"en"))   
                 // }
-  var result = await submit_query(query)
+  let result = await submit_query(query)
   return result
 }
 

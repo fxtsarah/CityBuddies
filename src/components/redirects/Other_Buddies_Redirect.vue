@@ -17,7 +17,7 @@ const router = useRouter()
 const route = useRoute()
 
 onMounted(async () => {
-    var is_city = await is_city_id(route.params.target_id)
+    let is_city = await is_city_id(route.params.target_id)
     is_city ? router.push(( { name:'other-buddies', params: { target_id: route.params.target_id } } )) : router.push(({ name: '404' }))
 })
 

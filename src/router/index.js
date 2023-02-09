@@ -10,12 +10,19 @@ import Search from '../components/Search.vue'
 import Match_Redirect from '../components/redirects/Match_Redirect.vue'
 import Other_Buddies_Redirect from '../components/redirects/Other_Buddies_Redirect.vue'
 
+import { use_id_to_label } from '../composables/use_id_to_label.js'
+
+let { id_to_label } = use_id_to_label()
+
 const routes = [
     // Home View: The main landing page for the user.
     {
     path: '/',
     name: 'home',
     component: HomeView,
+    meta: {
+        title: "Home"
+    },
     children: 
         [
             // Search: Where the user is directed after submitting an input. Searches for cities that match the user's input
@@ -87,6 +94,9 @@ const routes = [
                         path: '',
                         name: "other-buddies-to-search",
                         component: Other_Buddies_Redirect,
+                        meta: {
+                            title: "Other Buddies"
+                        }
                     }
                 ]
             }
@@ -96,19 +106,42 @@ const routes = [
     {
         path: '/about',
         name: 'about',
-        component: AboutView
+        component: AboutView,
+        meta: {
+            title: "About"
+        },
     },
     // 404: Landing page for any other routes
     {
         path: '/:catchAll(.*)*',
         name: '404',
-        component: NotFoundView
+        component: NotFoundView,
+        meta: {
+            title: "404"
+        }
     }
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
+})
+
+router.beforeEach(async (to, from, next) => {
+    let title = ""
+
+    if (to.params.target_label) {
+        title = to.params.target_label
+    }
+    else if (to.params.target_id) {
+        title = await id_to_label(to.params.target_id)
+    }
+    else {
+        title = to.meta.title
+    }
+
+    document.title = `${title} | CityBuddies`
+    next()
 })
 
 export default router

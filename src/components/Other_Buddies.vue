@@ -73,7 +73,7 @@ async function find_buddies_label(amt) {
 function find_buddies_id(amt) {
     let list = state.cities_list.slice()
     let buddies = []
-    for (let i = 0; i < amt; i++){
+    for (let i = 0; i < amt; i++) {
         let buddy = find_buddy(list, route.params.target_id)
         buddies.push(buddy)
         list = remove(list, buddy)
@@ -81,6 +81,7 @@ function find_buddies_id(amt) {
     return buddies
 }
 
+// removes an item from the list wihtout modifying the original list
 function remove(list, item) {
     let index = list.indexOf(item);
     if (index > -1) {
