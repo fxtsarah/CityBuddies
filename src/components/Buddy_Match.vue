@@ -10,7 +10,7 @@
             </div>
             <router-link :to="{ name: 'other-buddies', params: { target_id: route.params.target_id } }" id="to_other_buddies">See other cities with a similar population to {{ target_label }}</router-link>
         </div>
-        <Map :active="info_loaded" :target_id="route.params.target_id" :target_label="target_label" :buddies="buddy_dict" />
+        <Map :active="!info_loading" :target_id="route.params.target_id" :target_label="target_label" :buddies="buddy_dict" />
     </div>
 </template>
 
