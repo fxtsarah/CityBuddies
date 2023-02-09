@@ -57,6 +57,10 @@ onMounted(async () => {
     .city_choice {
         width: 90%;
         margin-bottom: 25px;
+        padding-left: 0;
     }
+    #disambiguation-list {
+    padding-left: 0
+}
 }
 </style>

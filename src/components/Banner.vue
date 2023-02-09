@@ -245,11 +245,8 @@ function format_city_name(str) {
 
 @media screen and (max-width: 900px) {
     #banner {
-        /* padding: 1rem; */
         height: min(36vw, 10.5rem);
         padding: 3vw;
-        /* height: auto;
-        padding-bottom: 1.5rem; */
         display: block;
     }
 
