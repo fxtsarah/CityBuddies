@@ -40,9 +40,9 @@ onMounted(async () => {
 
 <style>
 
-#disambiguation-list {
+/* #disambiguation-list {
     padding-left: 0
-}
+} */
 
 .city_choice {
     cursor: pointer;
@@ -55,12 +55,10 @@ onMounted(async () => {
 
 @media screen and (max-width: 900px) {
     .city_choice {
+        margin: auto;
         width: 90%;
         margin-bottom: 25px;
-        padding-left: 0;
     }
-    #disambiguation-list {
-    padding-left: 0
-}
+
 }
 </style>
