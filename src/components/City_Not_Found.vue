@@ -7,7 +7,7 @@
 // vue imports
 import { useRoute } from 'vue-router'
 
-// extract route
+// extract router info
 const route = useRoute()
 
 </script>

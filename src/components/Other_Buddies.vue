@@ -1,5 +1,5 @@
 <template>
-    <div v-if="info_loaded">
+    <div v-if="!info_loading">
         <h3 class="above_divider"><strong>{{ target_label }}, {{ target_country }}: {{ target_population }}</strong></h3>
         <div class="divider"></div>
         <ul class="below_divider" id="other_buddies">
@@ -8,7 +8,7 @@
             </li>
         </ul>
     </div>
-    <Map :active="info_loaded" :target_id="route.params.target_id" :target_label="target_label" :buddies="buddies_list"/>
+    <Map :active="!info_loading" :target_id="route.params.target_id" :target_label="target_label" :buddies="buddies_list"/>
 </template>
 
 <script setup>
@@ -37,15 +37,20 @@ let { id_to_label } = use_id_to_label()
 let { id_to_country } = use_id_to_country()
 let { id_to_pop } = use_id_to_pop()
 
+// extract router info
 const route = useRoute()
 
+// the list of all the buddies to be shown on the map
+// each buddy entry contains an id, label, country, and population
 let buddies_list = ref([])
 
+// target city info
 let target_label = ref("")
 let target_country = ref("")
 let target_population = ref("")
 
-let info_loaded = ref(false)
+// true if the target and buddy information has not loaded yet
+let info_loading = ref(true)
 
 onMounted( async () => {
     buddies_list.value = await find_buddies_label(5)
@@ -54,7 +59,7 @@ onMounted( async () => {
     target_country.value = await id_to_country(route.params.target_id)
     target_population.value = format_population(id_to_pop(route.params.target_id))
 
-    info_loaded.value = true
+    info_loading.value = false
 })
 
 // return of list of the 'amt' cities closest in population to the target city

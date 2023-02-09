@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+
 // vue imports
 import { onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
@@ -13,6 +14,7 @@ import { use_is_city_id } from '../../composables/use_is_city_id.js'
 // extract functions from composables
 let { is_city_id } = use_is_city_id()
 
+// extract router info
 const router = useRouter()
 const route = useRoute()
 

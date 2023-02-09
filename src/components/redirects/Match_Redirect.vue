@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+
 // vue imports
 import { onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
@@ -15,6 +16,7 @@ import { use_is_city_id } from '../../composables/use_is_city_id.js'
 let { chosen_target } = use_chosen_target()
 let { is_city_id } = use_is_city_id()
 
+// extract router info
 const router = useRouter()
 const route = useRoute()
 

@@ -24,11 +24,11 @@ import { use_chosen_target }  from '../composables/use_chosen_target.js'
 let { find_possible_matches } = use_find_possible_matches()
 let { chosen_target } = use_chosen_target()
 
-// extract route
+// extract router info
 const route = useRoute()
 const router = useRouter()
 
-// The pist of city ID and descriptions that match the target label
+// The list of city ID's and descriptions that match the target label
 let possible_target_cities = ref([])
 
 // update possible_target_cities with the target label's matches when the component is mounted
@@ -49,6 +49,6 @@ onMounted(async () => {
     .city_choice {
         width: 90%;
         margin-bottom: 25px;
-  }
+    }
 }
 </style>

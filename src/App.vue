@@ -29,16 +29,16 @@ let list_loading = ref(true)
 // When the app is mounted, calculate the cities list.
 // After the list is calculated, set list_loading to false.
 onMounted(async () => {
-  state.cities_list = await get_cities_list()
-  list_loading.value = false
+    state.cities_list = await get_cities_list()
+    list_loading.value = false
 })
 
 // get the list of all the cities. Each entry includes the ID and population.
 async function get_cities_list() {
-  let cities_dupes = await get_cities_dupes()
-  let cities_no_dupes = await delete_dupes(cities_dupes)
-  let cities_pop_sorted = await sort_by_pop(cities_no_dupes)
-  return cities_pop_sorted
+    let cities_dupes = await get_cities_dupes()
+    let cities_no_dupes = await delete_dupes(cities_dupes)
+    let cities_pop_sorted = await sort_by_pop(cities_no_dupes)
+    return cities_pop_sorted
 }
 
 // get a list of all the cities from wikidata, without removing duplicate entries.
@@ -47,30 +47,30 @@ async function get_cities_list() {
 // Sort these cities by the date at which their population was recorded so that when we remove duplicates,
 // we keep the most recent population from every city.
 async function get_cities_dupes() {
-  let query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
+    let query = `SELECT DISTINCT ?city ?cityPopulation WHERE { 
                 ?city wdt:P31/wdt:P279* wd:Q515 . 
                 ?city p:P1082 ?populationStatement . 
                 ?populationStatement ps:P1082 ?cityPopulation.
                 ?populationStatement pq:P585 ?date
                 SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } 
                 FILTER("2000-01-01"^^xsd:dateTime <= ?date)
-              } 
-              ORDER BY DESC(?date)`
-              // this code excludes cities that don't have a label, although it makes the program run more slowly.
+                } 
+                ORDER BY DESC(?date)`
+                // this code excludes cities that don't have a label, although it makes the program run more slowly.
                 // filter exists {                          
                 //   ?city rdfs:label ?enLabel .                    
                 //   filter(langMatches(lang(?enLabel),"en"))   
                 // }
-  let result = await submit_query(query)
-  return result
+    let result = await submit_query(query)
+    return result
 }
 
 // sorts a list of all the cities by population
 async function sort_by_pop(list) {
-  list.sort(
-    (first, second) => { 
-      return remove_euro_format(first.population) - remove_euro_format(second.population) }
-  );
+    list.sort(
+        (first, second) => { 
+        return remove_euro_format(first.population) - remove_euro_format(second.population) }
+    );
 return list
 }
 

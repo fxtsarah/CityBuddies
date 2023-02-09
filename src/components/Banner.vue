@@ -27,6 +27,7 @@ import exceptions_list from '../../public/exceptions.json'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 
+// extract router info
 const router = useRouter()
 
 // define props
@@ -41,6 +42,7 @@ const banner_tab_index = computed(() => {
     return props.list_loading ? "-1" : "0"
 })
 
+// when a value is submitted, clear the imput bos and pass the value onto the Search component
 async function input_submit() {
     await router.push({ name: 'search', params: { target_label: format_city_name(input_value.value) } })
     input_value.value = ""

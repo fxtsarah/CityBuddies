@@ -1,7 +1,7 @@
 <template>
     <div>
         <router-view />
-        <div id="buddy_match_info" v-if="info_loaded">
+        <div id="buddy_match_info" v-if="!info_loading">
             <h3 class="above_divider"><strong>{{ target_label }}</strong> is buddies with <strong>{{ buddy_label }}</strong></h3>
             <div class="divider"></div>
             <div class="below_divider">
@@ -34,8 +34,11 @@ let { format_population } = use_format_population()
 let { id_to_label } = use_id_to_label()
 let { id_to_country } = use_id_to_country()
 let { id_to_pop } = use_id_to_pop()
+
+// extract route info
 const route = useRoute()
 
+// target and buddy city info
 let target_label = ref("")
 let target_country = ref("")
 let target_pop = ref("")
@@ -44,14 +47,15 @@ let buddy_label = ref("")
 let buddy_country = ref("")
 let buddy_pop = ref("")
 
-// true if the target and buddy information has not been loaded yet
-let info_loaded = ref(false)
+// true if the target and buddy information has not loaded yet
+let info_loading = ref(false)
 
 // formats the buddy as in id, label dictionary
 const buddy_dict = computed(() => {
     return [{"id": route.params.buddy_id, "label": buddy_label.value }]
 })
 
+// on mount, calculate the target and buddy city info with the ID's in the params
 onMounted(async () => {
     target_label.value = await id_to_label(route.params.target_id)
     target_country.value = await id_to_country(route.params.target_id)
@@ -61,7 +65,7 @@ onMounted(async () => {
     buddy_country.value = await id_to_country(route.params.buddy_id)
     buddy_pop.value = format_population(id_to_pop(route.params.buddy_id))
 
-    info_loaded.value = true
+    info_loading.value = false
 })
 
 </script>

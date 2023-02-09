@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+
 // vue imports
 import { onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
@@ -14,6 +15,8 @@ import { use_chosen_target } from '../composables/use_chosen_target.js'
 // extract functions from composables
 let { find_possible_matches } = use_find_possible_matches()
 let { chosen_target } = use_chosen_target()
+
+// extract router info
 const router = useRouter()
 const route = useRoute()
 
