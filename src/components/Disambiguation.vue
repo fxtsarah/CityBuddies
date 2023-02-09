@@ -3,7 +3,7 @@
         <h3 class="above_divider">Choose which <strong>{{ route.params.target_label }}</strong> you want to search for:</h3>
         <div class="divider"></div>
         <ul class="below_divider" id="disambiguation_list">
-            <li v-for="entry in possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value, router)" @click="chosen_target(entry.value, router)" clas ="city_choice" tabindex="0" >
+            <li v-for="entry in possible_target_cities" :key="entry" @keydown.enter="chosen_target(entry.value, router)" @click="chosen_target(entry.value, router)" class ="city_choice" tabindex="0" >
                 <h4>{{ entry.description }}</h4>
             </li>
         </ul>
@@ -39,6 +39,10 @@ onMounted(async () => {
 </script>
 
 <style>
+
+.city_choice {
+    cursor: pointer;
+}
 
 .city_choice:hover, .city_choice:focus {
     color: #519872;
