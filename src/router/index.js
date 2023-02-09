@@ -45,7 +45,7 @@ const routes = [
                     // Redirects back to the Seach route if the disambiguation page was access via direct link
                     {
                         path: '',
-                        name: "disamb-to-search",
+                        name: "disambiguation-redirect",
                         component: Disambiguation,
                         redirect: to => {
                             return { name: 'search', params: { target_label: to.params.target_label } }
@@ -62,7 +62,7 @@ const routes = [
                     // Redirects back to the Seach route if the not found page was access via direct link
                     {
                         path: '',
-                        name: "not-found-to-search",
+                        name: "not-found-redirect",
                         component: City_Not_Found,
                         redirect: to => {
                             return { name: 'search', params: { target_label: to.params.target_label } }
@@ -79,8 +79,11 @@ const routes = [
                     // Recalculates the city buddy if the match page was access via direct link
                     {
                         path: '',
-                        name: "match-to-search",
-                        component: Match_Redirect,
+                        name: "match-child",
+                        component: Buddy_Match,
+                        redirect: to => {
+                            return { name: 'match-redirect', params: { target_id: to.params.target_id } }
+                        }
                     }
                 ]
             },
@@ -93,13 +96,23 @@ const routes = [
                     // Recalculates the other buddies if the other buddies page was access via direct link
                     {
                         path: '',
-                        name: "other-buddies-to-search",
-                        component: Other_Buddies_Redirect,
-                        meta: {
-                            title: "Other Buddies"
+                        name: "other-buddies-child",
+                        component: Other_Buddies,
+                        redirect: to => {
+                            return { name: 'other-buddies-redirect', params: { target_id: to.params.target_id } }
                         }
                     }
                 ]
+            }, 
+            {
+                path: 'match-redirect/:target_id',
+                name: "match-redirect",
+                component: Match_Redirect,
+            },
+            {
+                path: 'other-buddies-redirect/:target_id',
+                name: "other-buddies-redirect",
+                component: Other_Buddies_Redirect,
             }
         ]
     },

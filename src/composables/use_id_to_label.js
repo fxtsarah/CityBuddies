@@ -11,8 +11,14 @@ export function use_id_to_label() {
                     VALUES ?city { wd:${target_id}} 
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     }`
-        let result = await submit_query(query)
-        return result[0]["cityLabel"]
+        try {
+            let result = await submit_query(query)
+            return result[0]["cityLabel"]
+        }
+        catch(error) {
+            throw new Error(error)
+        }
+        
     }
     return { id_to_label }
 }

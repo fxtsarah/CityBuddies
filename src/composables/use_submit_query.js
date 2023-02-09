@@ -11,9 +11,15 @@ export function use_submit_query() {
         })
 
         const url = wdk.sparqlQuery(sparql)
-        const results = await axios.get(url)
-        let simplifiedResults = wbk.simplify.sparqlResults(results.data)
-        return simplifiedResults
+        try {
+            const results = await axios.get(url)
+            let simplifiedResults = wbk.simplify.sparqlResults(results.data)
+            return simplifiedResults
+        }
+        catch(error) {
+            throw new Error(`Error from Wikidata: ${error}` )
+        }
+        
     }
 
   return { submit_query }

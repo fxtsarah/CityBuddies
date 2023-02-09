@@ -24,12 +24,16 @@ export function use_find_possible_matches() {
                                         
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     } ORDER BY DESC (?population)`
-            
-        let result = await submit_query(query)
-    
-        // remove duplicate cities from the result
-        let no_dupes = await delete_dupes(result)
-        return no_dupes
+        
+        try {
+            let result = await submit_query(query)
+            // remove duplicate cities from the result
+            let no_dupes = await delete_dupes(result)
+            return no_dupes
+        }
+        catch(error) {
+            throw new Error(error)
+        }
     }
     return { find_possible_matches }
 }
