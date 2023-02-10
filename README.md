@@ -6,7 +6,7 @@ _The 'using-backend' branch contains a version of the website that utilizes Node
 
 ## Live site
 
-Visit the website live at https://citybuddies.netlify.app/ (runs the main branch)
+Visit the website live at https://citybuddies.netlify.app/
 
 ## Functionality
 
