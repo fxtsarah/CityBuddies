@@ -13,47 +13,48 @@
 
 <script setup>
 
-// vue imports
+// Vue imports.
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-// import state
+// Import state.
 import { state } from '../stores/store.js'
 
-// import composables
+// Import composables.
 import { useFindBuddy } from '../composables/useFindBuddy.js'
 import { useFormatPopulation } from '../composables/useFormatPopulation.js'
 import { useIdToLabel } from '../composables/useIdToLabel.js'
 import { useIdToCountry } from '../composables/useIdToCountry.js'
 import { useIdToPop } from '../composables/useIdToPop.js'
 
-// import components
+// Import components.
 import Map from "./Map.vue"
 
-// extract functions from composables
+// Extract functions from composables.
 let { findBuddy } = useFindBuddy()
 let { formatPopulation } = useFormatPopulation()
 let { idToLabel } = useIdToLabel()
 let { idToCountry } = useIdToCountry()
 let { idToPop } = useIdToPop()
 
-// extract router info
+// Extract router info.
 const route = useRoute()
 
-// the list of all the buddies to be shown on the map
-// each buddy entry contains an id, label, country, and population
+// The list of all the buddies to be shown on the map.
+// Each buddy entry contains an id, label, country, and population.
 let buddiesList = ref([])
 
-// target city info
+// Target city info.
 let targetLabel = ref("")
 let targetCountry = ref("")
 let targetPopulation = ref("")
 
-// true if the target and buddy information has not loaded yet
+// True if the target and buddy information has not loaded yet.
 let infoLoading = ref(true)
 
-onMounted( async () => {
-    buddiesList.value = await findBuddiesLabel(5)
+// Updates the target city info and generates the buddies lest when the component is mounted.
+onMounted(async () => {
+    buddiesList.value = await findBuddies(5)
 
     targetLabel.value = await idToLabel(route.params.targetId)
     targetCountry.value = await idToCountry(route.params.targetId)
@@ -62,31 +63,29 @@ onMounted( async () => {
     infoLoading.value = false
 })
 
-// return of list of the 'amt' cities closest in population to the target city
-// the list contains the labels of the buddies
-async function findBuddiesLabel(amt) {
-    let buddiesId = findBuddiesId(amt)
-    let buddiesLabel = []
-    for (let i = 0; i < buddiesId.length; i++) {
-        buddiesLabel.push({id: buddiesId[i].value,  label: await idToLabel(buddiesId[i].value), country: await idToCountry(buddiesId[i].value),  population: buddiesId[i].population})
-    }
-    return buddiesLabel
-}
-
-// return of list of the 'amt' cities closest in population to the target city
-// the list contains the id's of the buddies
-function findBuddiesId(amt) {
+// Return of list of the 'amt' cities closest in population to the target city.
+async function findBuddies(amt) {
     let list = state.citiesList.slice()
     let buddies = []
     for (let i = 0; i < amt; i++) {
+        // Get the city that is closest in population to the target city that has not yet been chosen.
         let buddy = findBuddy(list, route.params.targetId)
-        buddies.push(buddy)
+
+        // Add the ID, Label, country, and population information to the list of buddies
+        let buddyId = buddy.value
+        let buddyLabel = await idToLabel(buddyId)
+        let buddyCountry = await idToCountry(buddyId)
+        let buddyPop = buddy.population
+        let buddyInfo = {id: buddyId, label: buddyLabel, country: buddyCountry,  population: buddyPop}
+        buddies.push(buddyInfo)
+
+        // Remove the city that was just added from the list so we don't add it again
         list = remove(list, buddy)
     }
     return buddies
 }
 
-// removes an item from the list wihtout modifying the original list
+// Removes an item from the list wihtout modifying the original list.
 function remove(list, item) {
     let index = list.indexOf(item);
     if (index > -1) {

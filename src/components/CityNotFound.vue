@@ -4,10 +4,10 @@
   
 <script setup>
 
-// vue imports
+// Vue imports.
 import { useRoute } from 'vue-router'
 
-// extract router info
+// Extract router info.
 const route = useRoute()
 
 </script>

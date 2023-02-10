@@ -1,14 +1,14 @@
 export function useFindBuddy() {
-    // method called when the exact target city id is known and the program wants to find that city's buddy.
+    // Method called when the exact target city ID is known and the program wants to find that city's buddy.
     function findBuddy(list, targetId) {
 
         let buddyEntry = null
         let targetEntry = Object.values(list).filter(entry => String(entry.value) == String(targetId))[0]
 
-        // find the index of the target city entry in the list of all the city entries
+        // Find the index of the target city entry in the list of all the city entries.
         let targetCityIndex = list.indexOf(targetEntry)
 
-        // edge cases for when the city is at the from or back of the list and only has one neighbor.
+        // Edge cases for when the city is at the from or back of the list and only has one neighbor.
         if (targetCityIndex == 0) {
             buddyEntry = list[1]
         }
@@ -18,9 +18,9 @@ export function useFindBuddy() {
         }
 
         else {
-            // if the city is not at the very front or very back of the list, then it has two possible buddies:
-            // the two city entries adjacent to it. Find which of these two neighbors is closest in population
-            // to the target city -> that is the buddy.
+            // If the city is not at the very front or very back of the list, then it has two possible buddies:
+            // the two city entries adjacent to it. 
+            // Find which of these two neighbors is closest in population to the target city -> that is the buddy.
             let biggerNeighborIndex = targetCityIndex + 1
             let smallerNeighborIndex = targetCityIndex - 1
 

@@ -1,7 +1,7 @@
-// vue imports
+// Vue imports.
 import { createRouter, createWebHistory } from 'vue-router'
 
-// import views and components
+// Import views and components.
 import HomeView from '../views/HomeView.vue'
 import NotFoundView from '../views/404View.vue'
 import AboutView from '../views/AboutView.vue'
@@ -13,13 +13,13 @@ import Search from '../components/Search.vue'
 import MatchRedirect from '../components/redirects/MatchRedirect.vue'
 import OtherBuddiesRedirect from '../components/redirects/OtherBuddiesRedirect.vue'
 
-// import composables
+// Import composables.
 import { useIdToLabel } from '../composables/useIdToLabel.js'
 
-// extract functions from composables
+// Extract functions from composables.
 let { idToLabel } = useIdToLabel()
 
-// define routes
+// Define routes.
 const routes = [
     // Home View: The main landing page for the user.
     {
@@ -30,13 +30,13 @@ const routes = [
             title: "Home"
         },
         children: [
-            // Search: Where the user is directed after submitting an input. Searches for cities that match the user's input
+            // Search: Where the user is directed after submitting an input. Searches for cities that match the user's input.
             {
                 path: 'search/:targetLabel',
                 name: 'search',
                 component: Search
             },
-            // Disambiguation: When there are multiple cities with the inputted name, allow the user to choose which city they want
+            // Disambiguation: When there are multiple cities with the inputted name, allow the user to choose which city they want.
             {
                 path: 'disambiguation/:targetLabel',
                 name: 'disambiguation',
@@ -70,13 +70,13 @@ const routes = [
                     }
                 ]
             },
-            // Match: Displays which city is closesnt in population to the inputted city
+            // Match: Displays which city is closesnt in population to the inputted city.
             {
                 path: 'match/:targetId/:buddyId',
                 name: 'match',
                 component: BuddyMatch,
                 children: [
-                    // Recalculates the city buddy if the match page was access via direct link
+                    // Recalculates the city buddy if the match page was access via direct link.
                     {
                         path: '',
                         name: "match-child",
@@ -87,13 +87,13 @@ const routes = [
                     }
                 ]
             },
-            // Other Buddies: Displays the closest 5 cities in population to the inputted city
+            // Other Buddies: Displays the closest 5 cities in population to the inputted city.
             {
                 path: 'other-buddies/:targetId',
                 name: 'other-buddies',
                 component: OtherBuddies,
                 children: [
-                    // Recalculates the other buddies if the other buddies page was access via direct link
+                    // Recalculates the other buddies if the other buddies page was access via direct link.
                     {
                         path: '',
                         name: "other-buddies-child",
@@ -104,11 +104,15 @@ const routes = [
                     }
                 ]
             }, 
+            // Match Redirect: Ensures that the target ID is a valid city and has the correct buddy before showing the Match screen.
+            // Used when Match is accessed using a direct link.
             {
                 path: 'match-redirect/:targetId',
                 name: "match-redirect",
                 component: MatchRedirect,
             },
+            // Other Buddies Redirect: Ensures that the target ID is a valid city before showing the Other Buddies screen.
+            // Used when Other Buddies is accessed using a direct link.
             {
                 path: 'other-buddies-redirect/:targetId',
                 name: "other-buddies-redirect",
@@ -125,7 +129,7 @@ const routes = [
             title: "About"
         },
     },
-    // 404: Landing page for any other routes
+    // 404: Landing page for any other routes.
     {
         path: '/:catchAll(.*)*',
         name: '404',
@@ -136,13 +140,13 @@ const routes = [
     }
 ]
 
-// define router
+// Define router.
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
 
-// determine the title for the routes
+// Determine the title for the routes.
 router.beforeEach(async (to, from, next) => {
     let title = ""
 

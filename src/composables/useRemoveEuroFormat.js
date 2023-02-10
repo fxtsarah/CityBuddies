@@ -1,6 +1,6 @@
 export function useRemoveEuroFormat() {
-    // many of the cities have populations where decimal points replace commas
-    // this function takes those numbers that JS assumed were floats and translates them back into integers
+    // Many of the cities have populations where decimal points replace commas.
+    // This function takes those numbers that JS assumed were floats and translates them back into integers.
     function removeEuroFormat(num) {
         let numStr = String(num)
 

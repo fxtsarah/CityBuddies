@@ -12,26 +12,26 @@
 
 <script setup>
 
-// vue imports
+// Vue imports.
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-// import composables
+// Import composables.
 import { useFindPossibleMatches }  from '../composables/useFindPossibleMatches.js'
 import { useChosenTarget }  from '../composables/useChosenTarget.js'
 
-// extract functions from composables
+// Extract functions from composables.
 let { findPossibleMatches } = useFindPossibleMatches()
 let { chosenTarget } = useChosenTarget()
 
-// extract router info
+// Extract router info.
 const route = useRoute()
 const router = useRouter()
 
-// The list of city ID's and descriptions that match the target label
+// The list of city ID's and descriptions that match the target label.
 let possibleTargetCities = ref([])
 
-// updateC with the target label's matches when the component is mounted
+// Updates the list of possible cities when the component is mounted.
 onMounted(async () => {
     possibleTargetCities.value = await findPossibleMatches(route.params.targetLabel)
 })

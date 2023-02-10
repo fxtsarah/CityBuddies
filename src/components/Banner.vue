@@ -19,29 +19,29 @@
 
 <script setup>
 
-// import the list of city names that don't follow normal capitalization rules
+// Import the list of city names that don't follow normal capitalization rules
 import exceptionsList from '../../public/exceptions.json'
 
-// vue imports
+// Vue imports
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 
-// extract router info
+// Extract router info.
 const router = useRouter()
 
-// define props
+// Define props.
 const props = defineProps(['listLoading'])
 
-// the current value of the input box
+// Rhe current value of the input box,
 let inputValue = ref("")
 
-// determines whether or not the banner elements should be tabbale. 
-// elemnts should only be tabbale if the cities list is not currently loading.
+// Determines whether or not the banner elements should be tabbale. 
+// Elements should only be tabbale if the cities list is not currently loading.
 const bannerTabIndex = computed(() => {
     return props.listLoading ? "-1" : "0"
 })
 
-// when a value is submitted, clear the imput bos and pass the value onto the Search component
+// When a value is submitted, clear the input box and pass the value onto the Search component
 async function inputSubmit() {
     await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
     inputValue.value = ""
@@ -64,7 +64,7 @@ function formatCityName(str) {
     let strLower = String(str).toLowerCase()
     let strArray = strLower.split(/(\s+)/)
 
-    // The formatted city name
+    // The formatted city name.
     let formatted = ""
 
     // If the inputted string matches any of the cities that don't follow the capitalization rules, output the excpetion that it matched.
@@ -77,11 +77,12 @@ function formatCityName(str) {
     // Go through each word (seperated by spaces) and capitalize it according to capitalization rules.
     for (let i = 0; i < strArray.length; i++) {
         let word = strArray[i]
+
+        // The current word formatted correctly.
         let formattedWord = ""
 
         // Handles words that are always uncapitalized unless they are the first or last word.
         if (i != 0 && i != strArray.length - 1 && uncapped.includes(word) ) {
-            // formatted = formatted + String(word)
             formattedWord = String(word)
         } 
 
@@ -90,44 +91,43 @@ function formatCityName(str) {
         // Handles 2-character prefixes.
         else if (word.length >= 4 && (prefixes_2char.includes(String(word).substring(0, 2)))) {
             formattedWord = String(word).substring(0, 2) + String(word).charAt(2).toUpperCase() + String(word).slice(3)
+            // Only if this is the first word, capitalize the first letter.
             if (i == 0) { 
-                formattedWord = String(formattedWord).charAt(0).toUpperCase() + String(formattedWord).slice(1)
+                formattedWord = capitalizeFirstLetter(formattedWord)
             }
-            // formatted = formatted + formattedWord
         } 
 
         // Handles 3-character prefixes.
         else if (word.length >= 5 && (prefixes_3char.includes(String(word).substring(0, 3)))) {
             formattedWord = String(word).substring(0, 3) + String(word).charAt(3).toUpperCase() + String(word).slice(4)
+            // Only if this is the first word, capitalize the first letter.
             if (i == 0) { 
-                formattedWord = String(formattedWord).charAt(0).toUpperCase() + String(formattedWord).slice(1)
+                formattedWord = capitalizeFirstLetter(formattedWord)
             }
-            // formatted = formatted + formattedWord
         } 
 
+        // Handles 4-character prefixes.
         else if (word.length >= 6 && (prefixes_4char.includes(String(word).substring(0, 4)))) {
             formattedWord = String(word).substring(0, 4) + String(word).charAt(4).toUpperCase() + String(word).slice(5)
+            // Only if this is the first word, capitalize the first letter.
             if (i == 0) { 
-                formattedWord = String(formattedWord).charAt(0).toUpperCase() + String(formattedWord).slice(1)
+                formattedWord = capitalizeFirstLetter(formattedWord)
             }
-            // formatted = formatted + formattedWord
         }
 
         // Handles hyphens. Each chunk that the hypen seperates should have its first character capitalized,
         // unless that chunk is in the uncapped_hyphen list.
         else if (word.includes("-")){
             let wordArray = word.split(/(-)/g)
-            // let formattedWord = ""
             for (let j = 0; j < wordArray.length; j++) {
                 let hyphenChunk = wordArray[j]
                 if (uncappedHypen.includes(hyphenChunk)) {
                     formattedWord = formattedWord + hyphenChunk
                 }
                 else {
-                    formattedWord = formattedWord + String(hyphenChunk).charAt(0).toUpperCase() + String(hyphenChunk).slice(1)
+                    formattedWord = formattedWord + capitalizeFirstLetter(hyphenChunk)
                 }
             }
-            // formatted = formatted + formattedWord
         }
 
         // If a word starts with an open parenthesis, capitalize the second character.
@@ -138,29 +138,33 @@ function formatCityName(str) {
         // If a word has a slash in the middle, capitalize the first character of the chunks of either side of the slash.
         else if(String(word).includes("/")) {
             let wordArray = word.split("/")
-            let firstChunk = String(wordArray[0]).charAt(0).toUpperCase() + String(wordArray[0]).slice(1)
-            let secondChunk = String(wordArray[1]).charAt(0).toUpperCase() + String(wordArray[1]).slice(1)
+            let firstChunk = capitalizeFirstLetter(wordArray[0])
+            let secondChunk = capitalizeFirstLetter(wordArray[1])
             formattedWord = firstChunk + "/" + secondChunk
         }
 
-        // dots work the same as hypens, but there are no exceptions for the chunk to remain uncapitalized.
+        // Dots work the same as hypens, but there are no exceptions for the chunk to remain uncapitalized.
         else if (word.includes(".")) {
             let wordArray = word.split(/(.)/g)
-            // let formattedWord = ""
             for (let j = 0; j < wordArray.length; j++) {
                 let dotChunk = wordArray[j]
-                formattedWord = formattedWord + String(dotChunk).charAt(0).toUpperCase() + String(dotChunk).slice(1)
+                formattedWord = formattedWord + capitalizeFirstLetter(dotChunk)
             }
             // formatted = formatted + formattedWord
         }
 
         // if none of the above are true, then each word has its first letter capitalized with the rest uncapitalized.
         else {
-            formattedWord = (String(word).charAt(0).toUpperCase() + String(word).slice(1))
+            formattedWord = capitalizeFirstLetter(word)
         } 
         formatted = formatted + formattedWord
     }
     return formatted.trimEnd()
+}
+
+// Capitalize the first character of a string
+function capitalizeFirstLetter(str) {
+    return String(str).toUpperCase() + String(str).slice(1)
 }
 
 </script>

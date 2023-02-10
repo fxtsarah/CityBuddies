@@ -5,25 +5,26 @@
 
 <script setup>
 
-// vue imports
+// Vue imports.
 import { ref, onMounted } from 'vue'
 
-// import state
+// Import state.
 import { state } from './stores/store.js'
 
-// import components
+// Import components.
 import Banner from "./components/Banner.vue"
 
-// import composables
+// Import composables.
 import { useSubmitQuery } from './composables/useSubmitQuery.js'
 import { useRemoveEuroFormat } from './composables/useRemoveEuroFormat.js'
 import { useDeleteDupes } from './composables/useDeleteDupes.js'
 
-// extract functions from composables and router
+// Extract functions from composables and router.
 let { submitQuery } = useSubmitQuery()
 let { removeEuroFormat } = useRemoveEuroFormat()
 let { deleteDupes } = useDeleteDupes()
 
+// True if the citiesList has not finished generating yet.
 let listLoading = ref(true)
 
 // When the app is mounted, calculate the cities list.
@@ -33,7 +34,7 @@ onMounted(async () => {
     listLoading.value = false
 })
 
-// get the list of all the cities. Each entry includes the ID and population.
+// Get the list of all the cities. Each entry includes the ID and population.
 async function getCitiesList() {
     let citiesDupes = await getCitiesDupes()
     let citiesNoDupes = await deleteDupes(citiesDupes)
@@ -41,8 +42,8 @@ async function getCitiesList() {
     return citiesPopSorted
 }
 
-// get a list of all the cities from wikidata, without removing duplicate entries.
-// cities without a population, without a point in time associated with that population, 
+// Get a list of all the cities from wikidata, without removing duplicate entries.
+// Cities without a population, without a point in time associated with that population, 
 // or with a point in time earlier that 2000 are excluded.
 // Sort these cities by the date at which their population was recorded so that when we remove duplicates,
 // we keep the most recent population from every city.
@@ -56,7 +57,7 @@ async function getCitiesDupes() {
                 FILTER("2000-01-01"^^xsd:dateTime <= ?date)
                 } 
                 ORDER BY DESC(?date)`
-                // this code excludes cities that don't have a label, although it makes the program run more slowly.
+                // This code excludes cities that don't have a label, although it makes the program run more slowly.
                 // filter exists {                          
                 //   ?city rdfs:label ?enLabel .                    
                 //   filter(langMatches(lang(?enLabel),"en"))   
@@ -65,13 +66,13 @@ async function getCitiesDupes() {
     return result
 }
 
-// sorts a list of all the cities by population
+// Sorts a list of all the cities by population.
 async function sortByPop(list) {
     list.sort(
         (first, second) => { 
         return removeEuroFormat(first.population) - removeEuroFormat(second.population) }
     );
-return list
+    return list
 }
 
 </script>

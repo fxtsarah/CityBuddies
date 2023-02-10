@@ -2,15 +2,15 @@
 import { useSubmitQuery } from './useSubmitQuery.js'
 import { useDeleteDupes } from './useDeleteDupes.js'
 
-// extract functions from composables
+// Extract functions from composables.
 let { submitQuery } = useSubmitQuery()
 let { deleteDupes } = useDeleteDupes()
 
 export function useFindPossibleMatches() {
-    // Given a string, output all the cities with a label or alternate label that matches the input
+    // Given a string, output all the cities with a label or alternate label that matches the input.
     async function findPossibleMatches(targetLabel) {
 
-        // escape any quotes present in the input so the query doesn't break
+        // Escape any quotes present in the input so the query doesn't break.
         let noQuotes = targetLabel.replace("\'", "\\'");
             
         let query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
@@ -27,7 +27,7 @@ export function useFindPossibleMatches() {
         
         try {
             let result = await submitQuery(query)
-            // remove duplicate cities from the result
+            // Remove duplicate cities from the result.
             let noDupes = await deleteDupes(result)
             return noDupes
         }

@@ -16,29 +16,29 @@
 
 <script setup>
 
-// vue imports
+// Vue imports.
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
-// import components
+// Import components.
 import Map from "./Map.vue"
 
-// import composables
+// Import composables.
 import { useFormatPopulation } from '../composables/useFormatPopulation.js'
 import { useIdToLabel } from '../composables/useIdToLabel.js'
 import { useIdToCountry } from '../composables/useIdToCountry.js'
 import { useIdToPop } from '../composables/useIdToPop.js'
 
-// extract functions from composables
+// Extract functions from composables.
 let { formatPopulation } = useFormatPopulation()
 let { idToLabel } = useIdToLabel()
 let { idToCountry } = useIdToCountry()
 let { idToPop } = useIdToPop()
 
-// extract route info
+// Extract route info.
 const route = useRoute()
 
-// target and buddy city info
+// Target and buddy city info.
 let targetLabel = ref("")
 let targetCountry = ref("")
 let targetPop = ref("")
@@ -47,15 +47,16 @@ let buddyLabel = ref("")
 let buddyCountry = ref("")
 let buddyPop = ref("")
 
-// true if the target and buddy information has not loaded yet
+// True if the target and buddy information has not loaded yet.
 let infoLoading = ref(false)
 
-// formats the buddy as in id, label dictionary
+// Formats the buddy as a dictionary containing the ID and label.
+// Used to by the Map component.
 const buddyDict = computed(() => {
     return [{"id": route.params.buddyId, "label": buddyLabel.value}]
 })
 
-// on mount, calculate the target and buddy city info with the ID's in the params
+// On mount, calculate the target and buddy city info with the ID's in the params.
 onMounted(async () => {
     targetLabel.value = await idToLabel(route.params.targetId)
     targetCountry.value = await idToCountry(route.params.targetId)
