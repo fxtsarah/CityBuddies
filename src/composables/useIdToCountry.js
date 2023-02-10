@@ -13,7 +13,7 @@ export function useIdToCountry() {
                     }`
         try {
             let result = await submitQuery(query)
-            return result[0]["countryLabel"]
+            return result[0].countryLabel
         }
         catch(error) {
             throw new Error(error)

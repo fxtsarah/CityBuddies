@@ -27,7 +27,7 @@ const routes = [
         name: 'home',
         component: HomeView,
         meta: {
-            title: "Home"
+            title: 'Home'
         },
         children: [
             // Search: Where the user is directed after submitting an input. Searches for cities that match the user's input.
@@ -45,7 +45,7 @@ const routes = [
                     // Redirects back to the Seach route if the disambiguation page was access via direct link
                     {
                         path: '',
-                        name: "disambiguation-redirect",
+                        name: 'disambiguation-redirect',
                         component: Disambiguation,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
@@ -62,7 +62,7 @@ const routes = [
                     // Redirects back to the Seach route if the not found page was access via direct link
                     {
                         path: '',
-                        name: "not-found-redirect",
+                        name: 'not-found-redirect',
                         component: CityNotFound,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
@@ -79,7 +79,7 @@ const routes = [
                     // Recalculates the city buddy if the match page was access via direct link.
                     {
                         path: '',
-                        name: "match-child",
+                        name: 'match-child',
                         component: BuddyMatch,
                         redirect: to => {
                             return { name: 'match-redirect', params: { targetId: to.params.targetId } }
@@ -96,7 +96,7 @@ const routes = [
                     // Recalculates the other buddies if the other buddies page was access via direct link.
                     {
                         path: '',
-                        name: "other-buddies-child",
+                        name: 'other-buddies-child',
                         component: OtherBuddies,
                         redirect: to => {
                             return { name: 'other-buddies-redirect', params: { targetId: to.params.targetId } }
@@ -108,14 +108,14 @@ const routes = [
             // Used when Match is accessed using a direct link.
             {
                 path: 'match-redirect/:targetId',
-                name: "match-redirect",
+                name: 'match-redirect',
                 component: MatchRedirect,
             },
             // Other Buddies Redirect: Ensures that the target ID is a valid city before showing the Other Buddies screen.
             // Used when Other Buddies is accessed using a direct link.
             {
                 path: 'other-buddies-redirect/:targetId',
-                name: "other-buddies-redirect",
+                name: 'other-buddies-redirect',
                 component: OtherBuddiesRedirect,
             }
         ]
@@ -126,7 +126,7 @@ const routes = [
         name: 'about',
         component: AboutView,
         meta: {
-            title: "About"
+            title: 'About'
         },
     },
     // 404: Landing page for any other routes.
@@ -135,7 +135,7 @@ const routes = [
         name: '404',
         component: NotFoundView,
         meta: {
-            title: "404"
+            title: '404'
         }
     }
 ]
@@ -148,7 +148,7 @@ const router = createRouter({
 
 // Determine the title for the routes.
 router.beforeEach(async (to, from, next) => {
-    let title = ""
+    let title = ''
 
     if (to.params.targetLabel) {
         title = to.params.targetLabel

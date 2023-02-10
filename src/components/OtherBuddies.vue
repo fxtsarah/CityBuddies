@@ -1,14 +1,14 @@
 <template>
-    <div v-if="!infoLoading">
-        <h3 class="aboveDivider"><strong>{{ targetLabel }}, {{ targetCountry }}: {{ targetPopulation }}</strong></h3>
-        <div class="divider"></div>
-        <ul class="belowDivider" id="otherBuddies">
-            <li v-for="entry in buddiesList" :key="entry" tabindex="0" class="other-buddy">
+    <div v-if='!infoLoading'>
+        <h3 class='above-divider'><strong>{{ targetLabel }}, {{ targetCountry }}: {{ targetPopulation }}</strong></h3>
+        <div class='divider'></div>
+        <ul class='below-divider'>
+            <li v-for='entry in buddiesList' :key='entry' tabindex='0' class='other-buddy'>
                 <h4>{{ entry.label }}, {{ entry.country }}: {{ formatPopulation(entry.population)}}</h4>
             </li>
         </ul>
     </div>
-    <Map :active="!infoLoading" :targetId="route.params.targetId" :targetLabel="targetLabel" :buddies="buddiesList"/>
+    <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddiesList'/>
 </template>
 
 <script setup>
@@ -28,7 +28,7 @@ import { useIdToCountry } from '../composables/useIdToCountry.js'
 import { useIdToPop } from '../composables/useIdToPop.js'
 
 // Import components.
-import Map from "./Map.vue"
+import Map from './Map.vue'
 
 // Extract functions from composables.
 let { findBuddy } = useFindBuddy()
@@ -45,9 +45,9 @@ const route = useRoute()
 let buddiesList = ref([])
 
 // Target city info.
-let targetLabel = ref("")
-let targetCountry = ref("")
-let targetPopulation = ref("")
+let targetLabel = ref('')
+let targetCountry = ref('')
+let targetPopulation = ref('')
 
 // True if the target and buddy information has not loaded yet.
 let infoLoading = ref(true)
@@ -99,7 +99,7 @@ function remove(list, item) {
 <style>
 
 @media screen and (max-width: 900px) {
-    .otherBuddy {
+    .other-buddy {
         width: 90%;
         margin-bottom: 25px;
     }

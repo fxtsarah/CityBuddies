@@ -23,8 +23,8 @@ const route = useRoute()
 // If the targetId is a valid city, then generate the match page for that ID.
 // Act as if the ID has just been chosen.
 // If not, go to the 404 page.
-onMounted(async () => {
-    let isCity = await isCityId(route.params.targetId)
+onMounted(() => {
+    let isCity = isCityId(route.params.targetId)
     isCity ? chosenTarget(route.params.targetId, router) : router.push(({ name: '404' }))
 })
 

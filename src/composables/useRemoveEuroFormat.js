@@ -4,12 +4,12 @@ export function useRemoveEuroFormat() {
     function removeEuroFormat(num) {
         let numStr = String(num)
 
-        if (numStr.includes(".")) {
-            let numArray = numStr.split(".")
+        if (numStr.includes('.')) {
+            let numArray = numStr.split('.')
             let arrLen = numArray.length
             let digitsInLastChunk = numArray[arrLen - 1].length
             let zerosNeeded = 3 - digitsInLastChunk
-            let zeros = "0".repeat(zerosNeeded)
+            let zeros = '0'.repeat(zerosNeeded)
             let lastChunkUpdated = numArray[arrLen - 1].concat(zeros)
             numArray[arrLen - 1] = lastChunkUpdated
             let finalStr = numArray.join('')

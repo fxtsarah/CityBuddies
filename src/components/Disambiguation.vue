@@ -1,9 +1,9 @@
 <template>
-    <div id="disambiguationInfo">
-        <h3 class="aboveDivider">Choose which <strong>{{ route.params.targetLabel }}</strong> you want to search for:</h3>
-        <div class="divider"></div>
-        <ul class="belowDivider" id="disambiguationList">
-            <li v-for="entry in possibleTargetCities" :key="entry" @keydown.enter="chosenTarget(entry.value, router)" @click="chosenTarget(entry.value, router)" class ="cityChoice" tabindex="0" >
+    <div>
+        <h3 class='above-divider'>Choose which <strong>{{ route.params.targetLabel }}</strong> you want to search for:</h3>
+        <div class='divider'></div>
+        <ul class='below-divider'>
+            <li v-for='entry in possibleTargetCities' :key='entry' @keydown.enter='chosenTarget(entry.value, router)' @click='chosenTarget(entry.value, router)' class ='city-choice' tabindex='0' >
                 <h4>{{ entry.description }}</h4>
             </li>
         </ul>
@@ -40,17 +40,17 @@ onMounted(async () => {
 
 <style>
 
-.cityChoice {
+.city-choice {
     cursor: pointer;
 }
 
-.cityChoice:hover, .city_choice:focus {
+.city-choice:hover, .city-choice:focus {
     color: #519872;
     outline: none;
 }
 
 @media screen and (max-width: 900px) {
-    .cityChoice {
+    .city-choice {
         margin: auto;
         width: 90%;
         margin-bottom: 25px;

@@ -1,11 +1,11 @@
 // Import requirements to get a Sparql query.
-const axios = require("axios")
-const wbk = require("wikibase-sdk")
+const axios = require('axios')
+const wbk = require('wikibase-sdk')
 
 export function useSubmitQuery() {
-  // Takes in SPARQL code as a parameter and sends the code to query.wikidata.org.
-  // Simplifies the response from wikidata before returning it.
-  async function submitQuery(sparql) {
+    // Takes in SPARQL code as a parameter and sends the code to query.wikidata.org.
+    // Simplifies the response from wikidata before returning it.
+    async function submitQuery(sparql) {
         const wdk = wbk({
             instance: 'https://www.wikidata.org',
             sparqlEndpoint: 'https://query.wikidata.org/sparql'
@@ -21,6 +21,5 @@ export function useSubmitQuery() {
             throw new Error(`Error from Wikidata: ${error}` )
         }
     }
-
-  return { submitQuery }
+    return { submitQuery }
 }

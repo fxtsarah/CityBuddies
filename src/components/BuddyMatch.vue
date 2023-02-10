@@ -1,16 +1,16 @@
 <template>
     <div>
         <router-view />
-        <div id="buddyMatchInfo" v-if="!infoLoading">
-            <h3 class="aboveDivider"><strong>{{ targetLabel }}</strong> is buddies with <strong>{{ buddyLabel }}</strong></h3>
-            <div class="divider"></div>
-            <div class="belowDivider">
+        <div id='buddyMatchInfo' v-if='!infoLoading'>
+            <h3 class='aboveDivider'><strong>{{ targetLabel }}</strong> is buddies with <strong>{{ buddyLabel }}</strong></h3>
+            <div class='divider'></div>
+            <div class='belowDivider'>
                 <h4>Population of {{ targetLabel }}, {{ targetCountry }}: <strong>{{ targetPop }}</strong></h4>
                 <h4>Population of {{ buddyLabel }}, {{ buddyCountry }}: <strong>{{ buddyPop }}</strong></h4>
             </div>
-            <router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }" id="toOtherBuddies">See other cities with a similar population to {{ targetLabel }}</router-link>
+            <router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }" id='toOtherBuddies'>See other cities with a similar population to {{ targetLabel }}</router-link>
         </div>
-        <Map :active="!infoLoading" :targetId="route.params.targetId" :targetLabel="targetLabel" :buddies="buddyDict" />
+        <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddyDict' />
     </div>
 </template>
 
@@ -21,7 +21,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 // Import components.
-import Map from "./Map.vue"
+import Map from './Map.vue'
 
 // Import composables.
 import { useFormatPopulation } from '../composables/useFormatPopulation.js'
@@ -39,21 +39,21 @@ let { idToPop } = useIdToPop()
 const route = useRoute()
 
 // Target and buddy city info.
-let targetLabel = ref("")
-let targetCountry = ref("")
-let targetPop = ref("")
+let targetLabel = ref('')
+let targetCountry = ref('')
+let targetPop = ref('')
 
-let buddyLabel = ref("")
-let buddyCountry = ref("")
-let buddyPop = ref("")
+let buddyLabel = ref('')
+let buddyCountry = ref('')
+let buddyPop = ref('')
 
 // True if the target and buddy information has not loaded yet.
-let infoLoading = ref(false)
+let infoLoading = ref(true)
 
 // Formats the buddy as a dictionary containing the ID and label.
 // Used to by the Map component.
 const buddyDict = computed(() => {
-    return [{"id": route.params.buddyId, "label": buddyLabel.value}]
+    return [{'id': route.params.buddyId, 'label': buddyLabel.value}]
 })
 
 // On mount, calculate the target and buddy city info with the ID's in the params.

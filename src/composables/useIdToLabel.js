@@ -13,7 +13,7 @@ export function useIdToLabel() {
                     }`
         try {
             let result = await submitQuery(query)
-            return result[0]["cityLabel"]
+            return result[0].cityLabel
         }
         catch(error) {
             throw new Error(error)

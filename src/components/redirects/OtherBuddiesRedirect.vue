@@ -20,8 +20,8 @@ const route = useRoute()
 
 // If the targetId is a valid city, then generate the other-buddies page for that ID.
 // If not, go to the 404 page.
-onMounted(async () => {
-    let isCity = await isCityId(route.params.targetId)
+onMounted(() => {
+    let isCity = isCityId(route.params.targetId)
     isCity ? router.push(( { name:'other-buddies', params: { targetId: route.params.targetId } } )) : router.push(({ name: '404' }))
 })
 

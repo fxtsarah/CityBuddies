@@ -1,5 +1,5 @@
 <template>
-  <div id="map" :class="{ invisible: !props.active }"></div>
+  <div id='map' :class='{ invisible: !props.active }'></div>
 </template>
 
 <script setup>
@@ -44,11 +44,11 @@ function getZoom() {
 
 // Add markers on the map at the locations of the target and buddy cities.
 async function addMarkers() {
-    // Add target marker
+    // Add target marker.
     let targetLatlong = await idToLatlong(props.targetId)
     addMarker(targetLatlong, props.targetLabel, true)
 
-    // Add buddy markers
+    // Add buddy markers.
     for (let i = 0; i < props.buddies.length; i++) {
         let buddy = props.buddies[i]
         let buddyLatlong = await idToLatlong(buddy.id)
@@ -86,17 +86,17 @@ async function idToLatlong(targetId) {
                 ?coordinate_node wikibase:geoLatitude ?lat.  
                 }`
     let result = await submitQuery(query)
-    return L.latLng(result[0]["lat"], result[0]["long"])
+    return L.latLng(result[0].lat, result[0].long)
 }
 
 // Whenever the targetLabel is changed, refresh the map with the new data.
-watch(()=>props.targetLabel, async (newLabel) => {
+watch(() => props.targetLabel, async (newLabel) => {
     await resetMap()
     await addMarkers()
 })
 
 // Whenever the buddies are changed, refresh the map with the new data.
-watch(()=>props.buddies, async (newBuddies) => {
+watch(() => props.buddies, async (newBuddies) => {
     await resetMap()
     await addMarkers()
 })

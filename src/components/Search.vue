@@ -39,7 +39,7 @@ async function inputSubmit(input)  {
 
     // If there is only one city found with the same name, automatically choose that city as the target and search for its buddy.
     else if (possibleTargetCities.length == 1) {
-        chosenTarget(possibleTargetCities[0]["value"], router)
+        chosenTarget(possibleTargetCities[0].value, router)
     }
 
     // If there are multiple cities found with the same name, allow the user to select which one they want before searching for a buddy.

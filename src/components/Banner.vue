@@ -1,18 +1,18 @@
 <template>
-    <div id = "banner">
-        <div id="nav">
-            <h1 id="title">City Buddies</h1>
-            <div id="pages">
-                <router-link :to="{ name: 'home' }" class="btn btn-light bannerButton page" :class="{ disabledItem: props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
-                <router-link :to="{ name: 'about' }" class="btn btn-light bannerButton page" :class="{ disabledItem: props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
+    <div id='banner'>
+        <div id='nav'>
+            <h1 id='title'>City Buddies</h1>
+            <div id='pages'>
+                <router-link :to="{ name: 'home' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
+                <router-link :to="{ name: 'about' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
             </div>
         </div>
-        <div id="bannerForm">
-            <div id="bannerInputAndButton">
-                <input @keydown.enter="inputSubmit" placeholder="City name" class="form-control" :class="{ disabledItem: props.listLoading }" id="inputForm" v-model="inputValue" :tabindex=bannerTabIndex>
-                <button class="btn btn-light bannerButton" :class="{ disabledItem: props.listLoading }" id="inputButton" @keydown.enter="inputSubmit" @click="inputSubmit" :tabindex=bannerTabIndex><strong>Search For Buddy</strong></button>
+        <div id='banner-form'>
+            <div id='banner-input-and-button'>
+                <input @keydown.enter="inputSubmit" placeholder='City name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
+                <button class='btn btn-light banner-button' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex><strong>Search For Buddy</strong></button>
             </div>
-            <p v-if="props.listLoading" id="listLoading"><i>The cities list is loading, please wait...</i></p>
+            <p v-if='props.listLoading' id='list-loading'><i>The cities list is loading, please wait...</i></p>
         </div> 
   </div>
 </template>
@@ -38,13 +38,13 @@ let inputValue = ref("")
 // Determines whether or not the banner elements should be tabbale. 
 // Elements should only be tabbale if the cities list is not currently loading.
 const bannerTabIndex = computed(() => {
-    return props.listLoading ? "-1" : "0"
+    return props.listLoading ? '-1' : '0'
 })
 
 // When a value is submitted, clear the input box and pass the value onto the Search component
 async function inputSubmit() {
     await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
-    inputValue.value = ""
+    inputValue.value = ''
 }
 
 // Correctly format the name of a city according to capitalization rules.
@@ -54,7 +54,7 @@ function formatCityName(str) {
 
     // If a word begins with any of these prefixes, then the prefix is uncapitalized, and the first character after the prefix is capitalized.
     // However, if the word in question is the first word of the city name, then the first character of the prefix is also capitalized.
-    let prefixes_2char = ['d\'', 'l\'', "mc", "o\'"]
+    let prefixes_2char = ['d\'', 'l\'', 'mc', 'o\'']
     let prefixes_3char = ['al-','el-', 'ez-']
     let prefixes_4char = ['ash-']
 
@@ -68,10 +68,10 @@ function formatCityName(str) {
     let formatted = ""
 
     // If the inputted string matches any of the cities that don't follow the capitalization rules, output the excpetion that it matched.
-    let filteredList = Object.values(exceptionsList).filter(entry => String(entry["cityLabel"]).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
+    let filteredList = Object.values(exceptionsList).filter(entry => String(entry.cityLabel).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
 
     if (filteredList.length == 1) {
-        return filteredList[0]["cityLabel"]
+        return filteredList[0].cityLabel
     }
 
     // Go through each word (seperated by spaces) and capitalize it according to capitalization rules.
@@ -131,16 +131,16 @@ function formatCityName(str) {
         }
 
         // If a word starts with an open parenthesis, capitalize the second character.
-        else if(String(word).charAt(0) == "(") {
-            formattedWord =  "(" + String(word).charAt(1).toUpperCase() + String(word).slice(2)
+        else if(String(word).charAt(0) == '(') {
+            formattedWord =  '(' + String(word).charAt(1).toUpperCase() + String(word).slice(2)
         }
 
         // If a word has a slash in the middle, capitalize the first character of the chunks of either side of the slash.
-        else if(String(word).includes("/")) {
-            let wordArray = word.split("/")
+        else if(String(word).includes('/')) {
+            let wordArray = word.split('/')
             let firstChunk = capitalizeFirstLetter(wordArray[0])
             let secondChunk = capitalizeFirstLetter(wordArray[1])
-            formattedWord = firstChunk + "/" + secondChunk
+            formattedWord = firstChunk + '/' + secondChunk
         }
 
         // Dots work the same as hypens, but there are no exceptions for the chunk to remain uncapitalized.
@@ -150,10 +150,9 @@ function formatCityName(str) {
                 let dotChunk = wordArray[j]
                 formattedWord = formattedWord + capitalizeFirstLetter(dotChunk)
             }
-            // formatted = formatted + formattedWord
         }
 
-        // if none of the above are true, then each word has its first letter capitalized with the rest uncapitalized.
+        // If none of the above are true, then each word has its first letter capitalized with the rest uncapitalized.
         else {
             formattedWord = capitalizeFirstLetter(word)
         } 
@@ -164,7 +163,7 @@ function formatCityName(str) {
 
 // Capitalize the first character of a string
 function capitalizeFirstLetter(str) {
-    return String(str).toUpperCase() + String(str).slice(1)
+    return String(str).charAt(0).toUpperCase() + String(str).slice(1)
 }
 
 </script>
@@ -180,54 +179,54 @@ function capitalizeFirstLetter(str) {
     justify-content: space-between;
 }
 
-#bannerText {
+#banner-text {
     text-align: left;
     caret-color: transparent;
     width: 40%;    
 }
   
-#bannerForm {
+#banner-form {
     margin-top: 5px;
     display: block;
 }
 
-#bannerInputAndButton {
+#banner-input-and-button {
     display: flex;
 }
 
-#inputForm {
+#input-form {
     margin-right: 20px;
     max-width: 300px; 
     min-width: 60px;
     caret-color: black;
 }
 
-#inputForm:focus {
+#input-form:focus {
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
 }
 
-#inputButton {
+#input-button {
     color:#E16036;
     width: 250px;
     margin-left: 20px;
 }
 
-.bannerButton {
+.banner-button {
     background-color: #F6F6F6; 
     white-space: nowrap;  
 }
 
-.bannerButton:hover, .bannerButton:focus {
+.banner-button:hover, .banner-button:focus {
     background-color: #dbdbdb;
 }
 
-#listLoading {
+#list-loading {
     font-size: 1.2rem;
     margin-top: .25rem;
 }
 
-.disabledItem {
+.disabled-item {
     pointer-events: none;
     opacity: .6;
 }
@@ -267,15 +266,15 @@ function capitalizeFirstLetter(str) {
         display: block;
     }
 
-    #inputForm {
+    #input-form {
         margin-right: 10px;
     }
 
-    #bannerForm {
+    #banner-form {
         width: auto;
     }
 
-    #bannerInputAndButton, #nav {
+    #banner-input-and-button, #nav {
         justify-content: space-between;
     }
 
