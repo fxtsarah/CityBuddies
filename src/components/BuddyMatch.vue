@@ -1,14 +1,14 @@
 <template>
     <div>
         <router-view />
-        <div id='buddyMatchInfo' v-if='!infoLoading'>
-            <h3 class='aboveDivider'><strong>{{ targetLabel }}</strong> is buddies with <strong>{{ buddyLabel }}</strong></h3>
+        <div id='buddy-match-info' v-if='!infoLoading'>
+            <h3 class='above-divider'><strong>{{ targetLabel }}</strong> is buddies with <strong>{{ buddyLabel }}</strong></h3>
             <div class='divider'></div>
-            <div class='belowDivider'>
+            <div class='below-divider'>
                 <h4>Population of {{ targetLabel }}, {{ targetCountry }}: <strong>{{ targetPop }}</strong></h4>
                 <h4>Population of {{ buddyLabel }}, {{ buddyCountry }}: <strong>{{ buddyPop }}</strong></h4>
             </div>
-            <router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }" id='toOtherBuddies'>See other cities with a similar population to {{ targetLabel }}</router-link>
+            <router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }" id='to-other-buddies'>See other cities with a similar population to {{ targetLabel }}</router-link>
         </div>
         <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddyDict' />
     </div>
@@ -73,13 +73,13 @@ onMounted(async () => {
 
 <style>
 
-#buddyMatchInfo {
+#buddy-match-info {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
 
-#toOtherBuddies {
+#to-other-buddies {
     font-size: 16px;
 }
 
