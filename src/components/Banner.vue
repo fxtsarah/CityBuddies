@@ -2,18 +2,17 @@
     <div id = "banner">
         <div id="nav">
             <h1 id="title">City Buddies</h1>
-            <div id="pages" >
-                <router-link :to="{ name: 'home' }" class="btn btn-light banner_button page" :class="{ disabled_item: props.list_loading }" :tabindex=banner_tab_index>Home</router-link> 
-                <router-link :to="{ name: 'about' }" class="btn btn-light banner_button page" :class="{ disabled_item: props.list_loading }" :tabindex=banner_tab_index >About</router-link>
+            <div id="pages">
+                <router-link :to="{ name: 'home' }" class="btn btn-light bannerButton page" :class="{ disabledItem: props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
+                <router-link :to="{ name: 'about' }" class="btn btn-light bannerButton page" :class="{ disabledItem: props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
             </div>
         </div>
-
-        <div id="banner_form">
-            <div id="banner_input_and_button">
-                <input @keydown.enter="input_submit" placeholder="City name" class="form-control" :class="{ disabled_item: props.list_loading }" id="input_form" v-model="input_value" :tabindex=banner_tab_index>
-                <button class="btn btn-light banner_button" :class="{ disabled_item: props.list_loading }" id="input_button" @keydown.enter="input_submit" @click="input_submit" :tabindex=banner_tab_index><strong>Search For Buddy</strong></button>
+        <div id="bannerForm">
+            <div id="bannerInputAndButton">
+                <input @keydown.enter="inputSubmit" placeholder="City name" class="form-control" :class="{ disabledItem: props.listLoading }" id="inputForm" v-model="inputValue" :tabindex=bannerTabIndex>
+                <button class="btn btn-light bannerButton" :class="{ disabledItem: props.listLoading }" id="inputButton" @keydown.enter="inputSubmit" @click="inputSubmit" :tabindex=bannerTabIndex><strong>Search For Buddy</strong></button>
             </div>
-            <p v-if="props.list_loading" id="list_loading"><i>The cities list is loading, please wait...</i></p>
+            <p v-if="props.listLoading" id="listLoading"><i>The cities list is loading, please wait...</i></p>
         </div> 
   </div>
 </template>
@@ -21,7 +20,7 @@
 <script setup>
 
 // import the list of city names that don't follow normal capitalization rules
-import exceptions_list from '../../public/exceptions.json'
+import exceptionsList from '../../public/exceptions.json'
 
 // vue imports
 import { ref, computed } from 'vue'
@@ -31,123 +30,137 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 
 // define props
-const props = defineProps(['list_loading'])
+const props = defineProps(['listLoading'])
 
 // the current value of the input box
-let input_value = ref("")
+let inputValue = ref("")
 
 // determines whether or not the banner elements should be tabbale. 
 // elemnts should only be tabbale if the cities list is not currently loading.
-const banner_tab_index = computed(() => {
-    return props.list_loading ? "-1" : "0"
+const bannerTabIndex = computed(() => {
+    return props.listLoading ? "-1" : "0"
 })
 
 // when a value is submitted, clear the imput bos and pass the value onto the Search component
-async function input_submit() {
-    await router.push({ name: 'search', params: { target_label: format_city_name(input_value.value) } })
-    input_value.value = ""
+async function inputSubmit() {
+    await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
+    inputValue.value = ""
 }
 
-// correctly format the name of a city according to capitalization rules
-function format_city_name(str) {
-    // if these words appear in a city name, they are always uncapitalized, unless they are the lsit of last word of the city name.
+// Correctly format the name of a city according to capitalization rules.
+function formatCityName(str) {
+    // If these words appear in a city name, they are always uncapitalized, unless they are the lsit of last word of the city name.
     let uncapped = ['dem', 'auf', 'pod', 'u', 'i', 'dos', 'das', 'da', 'do', 'the', 'on', 'or', 'din', 'cu', 'sub', 'lui', 'cel', 'adh', 'lu\'', 'du', 'vor', 'den', 'aan', 'bei', 'unter', 'and', 'der', 'y', 'upon', 'e', 'in', 'im', 'dei', 'op', 'los', 'del', 'nad', 'di', 'of', 'es', 'de', 'na', 'v', 'ob', 'am', 'las', 'el', 'la']
 
-    // if a word begins with any of these prefixes, then the prefix is uncapitalized, and the first character after the prefix is capitalized.
-    // Unless the word in question is the first word of the city name - then the first character of the prexif is also capitalized
+    // If a word begins with any of these prefixes, then the prefix is uncapitalized, and the first character after the prefix is capitalized.
+    // However, if the word in question is the first word of the city name, then the first character of the prefix is also capitalized.
     let prefixes_2char = ['d\'', 'l\'', "mc", "o\'"]
     let prefixes_3char = ['al-','el-', 'ez-']
     let prefixes_4char = ['ash-']
 
-    // if any of these words appear after a hyphen, they are uncapitalized.
-    let uncapped_hypen = ['sur', 'real', 'sous', 'à', 'de', 'en', 'e', 'i', 'on', 'ye', 'au', 'o', 'a', 'the', 'by', 'les', '-']
+    // If any of these words appear after a hyphen, they are uncapitalized.
+    let uncappedHypen = ['sur', 'real', 'sous', 'à', 'de', 'en', 'e', 'i', 'on', 'ye', 'au', 'o', 'a', 'the', 'by', 'les', '-']
 
-    let str_lower = String(str).toLowerCase()
-    let str_array = str_lower.split(/(\s+)/)
-    let new_string = ""
+    let strLower = String(str).toLowerCase()
+    let strArray = strLower.split(/(\s+)/)
 
-    // if the inputted string matches any of the cities that don't follow the capitalization rules, output the excpetion that it matched
-    let filtered_list = Object.values(exceptions_list).filter(entry => String(entry["cityLabel"]).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
+    // The formatted city name
+    let formatted = ""
 
-    if (filtered_list.length == 1) {
-        return filtered_list[0]["cityLabel"]
+    // If the inputted string matches any of the cities that don't follow the capitalization rules, output the excpetion that it matched.
+    let filteredList = Object.values(exceptionsList).filter(entry => String(entry["cityLabel"]).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
+
+    if (filteredList.length == 1) {
+        return filteredList[0]["cityLabel"]
     }
 
-    // go through each word (seperated by spaces) and capitalize it according to capitalization rules
-    for (let i = 0; i < str_array.length; i++) {
-        let word = str_array[i]
+    // Go through each word (seperated by spaces) and capitalize it according to capitalization rules.
+    for (let i = 0; i < strArray.length; i++) {
+        let word = strArray[i]
+        let formattedWord = ""
 
-        // handles words that are always uncapitalized unless they are the first or last word
-        if (i != 0 && i != str_array.length - 1 && uncapped.includes(word) ) {
-            new_string = new_string + String(word)
+        // Handles words that are always uncapitalized unless they are the first or last word.
+        if (i != 0 && i != strArray.length - 1 && uncapped.includes(word) ) {
+            // formatted = formatted + String(word)
+            formattedWord = String(word)
         } 
 
-        // handles prefixes
-        else if ( word.length >= 4 && (prefixes_2char.includes(String(word).substring(0, 2)))) {
-            let addition = String(word).substring(0, 2) + String(word).charAt(2).toUpperCase() + String(word).slice(3)
-            if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
-            new_string = new_string + addition
+        // Handles prefixes.
+
+        // Handles 2-character prefixes.
+        else if (word.length >= 4 && (prefixes_2char.includes(String(word).substring(0, 2)))) {
+            formattedWord = String(word).substring(0, 2) + String(word).charAt(2).toUpperCase() + String(word).slice(3)
+            if (i == 0) { 
+                formattedWord = String(formattedWord).charAt(0).toUpperCase() + String(formattedWord).slice(1)
+            }
+            // formatted = formatted + formattedWord
         } 
 
+        // Handles 3-character prefixes.
         else if (word.length >= 5 && (prefixes_3char.includes(String(word).substring(0, 3)))) {
-            let addition = new_string + String(word).substring(0, 3) + String(word).charAt(3).toUpperCase() + String(word).slice(4)
-            if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
-            new_string = new_string + addition
+            formattedWord = String(word).substring(0, 3) + String(word).charAt(3).toUpperCase() + String(word).slice(4)
+            if (i == 0) { 
+                formattedWord = String(formattedWord).charAt(0).toUpperCase() + String(formattedWord).slice(1)
+            }
+            // formatted = formatted + formattedWord
         } 
 
         else if (word.length >= 6 && (prefixes_4char.includes(String(word).substring(0, 4)))) {
-            let addition = new_string + String(word).substring(0, 4) + String(word).charAt(4).toUpperCase() + String(word).slice(5)
-            if (i == 0) { addition = String(addition).charAt(0).toUpperCase() + String(addition).slice(1)}
-            new_string = new_string + addition
+            formattedWord = String(word).substring(0, 4) + String(word).charAt(4).toUpperCase() + String(word).slice(5)
+            if (i == 0) { 
+                formattedWord = String(formattedWord).charAt(0).toUpperCase() + String(formattedWord).slice(1)
+            }
+            // formatted = formatted + formattedWord
         }
 
-        // handles hyphens. Each chunk that the hypen seperates should have its first character capitalized,
-        // unless that chunk is in the uncapped_hyphen list
+        // Handles hyphens. Each chunk that the hypen seperates should have its first character capitalized,
+        // unless that chunk is in the uncapped_hyphen list.
         else if (word.includes("-")){
-            let word_array = word.split(/(-)/g)
-            let addition = ""
-            for (let j = 0; j < word_array.length; j++) {
-                let hyphen_chunk = word_array[j]
-                if (uncapped_hypen.includes(hyphen_chunk)) {
-                    addition = addition + hyphen_chunk
+            let wordArray = word.split(/(-)/g)
+            // let formattedWord = ""
+            for (let j = 0; j < wordArray.length; j++) {
+                let hyphenChunk = wordArray[j]
+                if (uncappedHypen.includes(hyphenChunk)) {
+                    formattedWord = formattedWord + hyphenChunk
                 }
                 else {
-                    addition = addition + String(hyphen_chunk).charAt(0).toUpperCase() + String(hyphen_chunk).slice(1)
+                    formattedWord = formattedWord + String(hyphenChunk).charAt(0).toUpperCase() + String(hyphenChunk).slice(1)
                 }
             }
-            new_string = new_string + addition
+            // formatted = formatted + formattedWord
         }
 
         // If a word starts with an open parenthesis, capitalize the second character.
         else if(String(word).charAt(0) == "(") {
-            new_string = new_string + "(" + String(word).charAt(1).toUpperCase() + String(word).slice(2)
+            formattedWord =  "(" + String(word).charAt(1).toUpperCase() + String(word).slice(2)
         }
 
         // If a word has a slash in the middle, capitalize the first character of the chunks of either side of the slash.
         else if(String(word).includes("/")) {
-            let word_array = word.split("/")
-            let first_chunk = String(word_array[0]).charAt(0).toUpperCase() + String(word_array[0]).slice(1)
-            let second_chunk = String(word_array[1]).charAt(0).toUpperCase() + String(word_array[1]).slice(1)
-            new_string = new_string + first_chunk + "/" + second_chunk
+            let wordArray = word.split("/")
+            let firstChunk = String(wordArray[0]).charAt(0).toUpperCase() + String(wordArray[0]).slice(1)
+            let secondChunk = String(wordArray[1]).charAt(0).toUpperCase() + String(wordArray[1]).slice(1)
+            formattedWord = firstChunk + "/" + secondChunk
         }
 
         // dots work the same as hypens, but there are no exceptions for the chunk to remain uncapitalized.
         else if (word.includes(".")) {
-            let word_array = word.split(/(.)/g)
-            let addition = ""
-            for (let j = 0; j < word_array.length; j++) {
-                let dot_chunk = word_array[j]
-                addition = addition + String(dot_chunk).charAt(0).toUpperCase() + String(dot_chunk).slice(1)
+            let wordArray = word.split(/(.)/g)
+            // let formattedWord = ""
+            for (let j = 0; j < wordArray.length; j++) {
+                let dotChunk = wordArray[j]
+                formattedWord = formattedWord + String(dotChunk).charAt(0).toUpperCase() + String(dotChunk).slice(1)
             }
-            new_string = new_string + addition
+            // formatted = formatted + formattedWord
         }
 
         // if none of the above are true, then each word has its first letter capitalized with the rest uncapitalized.
         else {
-            new_string = new_string + (String(word).charAt(0).toUpperCase() + String(word).slice(1))
+            formattedWord = (String(word).charAt(0).toUpperCase() + String(word).slice(1))
         } 
+        formatted = formatted + formattedWord
     }
-    return new_string.trimEnd()
+    return formatted.trimEnd()
 }
 
 </script>
@@ -163,54 +176,54 @@ function format_city_name(str) {
     justify-content: space-between;
 }
 
-#banner_text {
+#bannerText {
     text-align: left;
     caret-color: transparent;
     width: 40%;    
 }
   
-#banner_form {
+#bannerForm {
     margin-top: 5px;
     display: block;
 }
 
-#banner_input_and_button {
+#bannerInputAndButton {
     display: flex;
 }
 
-#input_form {
+#inputForm {
     margin-right: 20px;
     max-width: 300px; 
     min-width: 60px;
     caret-color: black;
 }
 
-#input_form:focus {
+#inputForm:focus {
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
 }
 
-#input_button {
+#inputButton {
     color:#E16036;
     width: 250px;
     margin-left: 20px;
 }
 
-.banner_button {
+.bannerButton {
     background-color: #F6F6F6; 
     white-space: nowrap;  
 }
 
-.banner_button:hover, .banner_button:focus {
+.bannerButton:hover, .bannerButton:focus {
     background-color: #dbdbdb;
 }
 
-#list_loading {
+#listLoading {
     font-size: 1.2rem;
     margin-top: .25rem;
 }
 
-.disabled_item {
+.disabledItem {
     pointer-events: none;
     opacity: .6;
 }
@@ -250,15 +263,15 @@ function format_city_name(str) {
         display: block;
     }
 
-    #input_form {
+    #inputForm {
         margin-right: 10px;
     }
 
-    #banner_form {
+    #bannerForm {
         width: auto;
     }
 
-    #banner_input_and_button,  #nav {
+    #bannerInputAndButton, #nav {
         justify-content: space-between;
     }
 

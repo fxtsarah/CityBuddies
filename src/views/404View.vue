@@ -1,10 +1,10 @@
 <template>
-    <h1 id="msg-404">404: Page Not Found</h1>
+    <h1 id="msg404">404: Page Not Found</h1>
 </template>
 
 <style>
 
-#msg-404 {
+#msg404 {
   margin-top: 10px;
 }
 

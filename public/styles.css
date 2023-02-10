@@ -24,7 +24,7 @@ body {
     margin: auto;
 }
   
-.above_divider {
+.aboveDivider {
     margin-top: 25px;
     margin-bottom: 18px;
     width: 90%;
@@ -32,7 +32,7 @@ body {
     margin-right: auto;
 }
   
-.below_divider {
+.belowDivider {
     margin-top: 18px; 
     width: 90%;
     margin-left: auto;

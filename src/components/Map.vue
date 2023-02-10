@@ -8,13 +8,13 @@
 import { watch, onMounted } from 'vue'
 
 // import composables
-import { use_submit_query } from '../composables/use_submit_query.js'
+import { useSubmitQuery } from '../composables/useSubmitQuery.js'
 
 // extract functions from composables
-let { submit_query } = use_submit_query()
+let { submitQuery } = useSubmitQuery()
 
 // define props
-const props = defineProps(['active', 'target_id', 'target_label', 'buddies'])
+const props = defineProps(['active', 'targetId', 'targetLabel', 'buddies'])
 
 // map variables to be accessible from the entire component
 let map
@@ -22,7 +22,7 @@ let layerGroup
 
 // initializes the map when the component is mounted
 onMounted(async () => {
-    map = L.map('map').setView([0, 0], get_zoom() )
+    map = L.map('map').setView([0, 0], getZoom() )
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -31,35 +31,35 @@ onMounted(async () => {
 })
 
 // when the user makes a new search, call this function to re-center the map and get rid of the old buddy markers.
-async function reset_map() {
+async function resetMap() {
     layerGroup.clearLayers()
-    map.setView([0, 0], get_zoom() )
+    map.setView([0, 0], getZoom() )
 }
 
 // determines how far the map should be zoomed in
 // map should be zoomed out further on mobile than on desktop
-function get_zoom() {
+function getZoom() {
     return (window.innerWidth > 900) ? 2 : 1
 }
 
 // add markers on the map at the locations of the target and buddy cities
-async function add_markers() {
+async function addMarkers() {
     // add target marker
-    let target_latlong = await id_to_latlong(props.target_id)
-    add_marker(target_latlong, props.target_label, true)
+    let targetLatlong = await idToLatlong(props.targetId)
+    addMarker(targetLatlong, props.targetLabel, true)
 
     // add buddy markers
     for (let i = 0; i < props.buddies.length; i++) {
         let buddy = props.buddies[i]
-        let buddy_latlong = await id_to_latlong(buddy.id)
-        add_marker(buddy_latlong, buddy.label, false)
+        let buddyLatlong = await idToLatlong(buddy.id)
+        addMarker(buddyLatlong, buddy.label, false)
     }
 }
 
 // add a single marker to the map with the given coordinate and label.
 // if the marker represents the target city, the marker is orange. 
 // otherwise, the marker is green.
-function add_marker(latlong, label, isTarget) {
+function addMarker(latlong, label, isTarget) {
     let icon = L.icon({
         iconUrl: isTarget ? '/map-marker-orange.png' : '/map-marker-green.png' ,
         shadowUrl: '/marker-shadow.png',
@@ -75,30 +75,30 @@ function add_marker(latlong, label, isTarget) {
 }
 
 // get the latitude and longitude of a city given its ID.
-async function id_to_latlong(target_id) {
+async function idToLatlong(targetId) {
     let query = `SELECT ?city ?long ?lat
                 WHERE
                 {
-                VALUES ?city { wd:${target_id}} 
+                VALUES ?city { wd:${targetId} } 
                 ?city p:P625 ?coordinate.
                 ?coordinate psv:P625 ?coordinate_node.
                 ?coordinate_node wikibase:geoLongitude ?long.
                 ?coordinate_node wikibase:geoLatitude ?lat.  
                 }`
-    let result = await submit_query(query)
+    let result = await submitQuery(query)
     return L.latLng(result[0]["lat"], result[0]["long"])
 }
 
 // whenever the target_label is changed, refresh the map with the new data.
-watch(()=>props.target_label, async (new_label) => {
-    await reset_map()
-    await add_markers()
+watch(()=>props.targetLabel, async (newLabel) => {
+    await resetMap()
+    await addMarkers()
 })
 
 // whenever the buddies are changed, refresh the map with the new data.
-watch(()=>props.buddies, async (new_buddies) => {
-    await reset_map()
-    await add_markers()
+watch(()=>props.buddies, async (newBuddies) => {
+    await resetMap()
+    await addMarkers()
 })
 
 </script>

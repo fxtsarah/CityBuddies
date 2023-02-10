@@ -1,24 +1,24 @@
 // import composables
-import { use_submit_query } from './use_submit_query.js'
+import { useSubmitQuery } from './useSubmitQuery.js'
 
 // extract functions from composables
-let { submit_query } = use_submit_query()
+let { submitQuery } = useSubmitQuery()
 
-export function use_id_to_country() {
+export function useIdToCountry() {
     // get the country a city is located in given the city's ID
-    async function id_to_country(target_id) {
+    async function idToCountry(target_id) {
         let query = `SELECT DISTINCT ?countryLabel {
                     wd:${target_id} wdt:P17 ?country .
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     }`
                     
         try {
-            let result = await submit_query(query)
+            let result = await submitQuery(query)
             return result[0]["countryLabel"]
         }
         catch(error) {
             throw new Error(error)
         }
   }
-  return { id_to_country }
+  return { idToCountry }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div id="about_info">
+    <div id="aboutInfo">
         <h5>This web app determines which city is the closest to another in terms of population.</h5>
         <br>
         <h5><strong>How to Use:</strong></h5>
@@ -18,7 +18,7 @@
 
 <style>
 
-#about_info{
+#aboutInfo{
   text-align: left;
   padding: 30px;
   margin-top: 8px;

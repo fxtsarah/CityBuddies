@@ -1,18 +1,18 @@
 // import composables
-import { use_submit_query } from './use_submit_query.js'
+import { useSubmitQuery } from './useSubmitQuery.js'
 
 // extract functions from composables
-let { submit_query } = use_submit_query()
+let { submitQuery } = useSubmitQuery()
 
-export function use_id_to_label() {
+export function useIdToLabel() {
     // get the name of a city given its ID
-    async function id_to_label(target_id) {
+    async function idToLabel(targetId) {
         let query = `SELECT DISTINCT ?cityLabel {
-                    VALUES ?city { wd:${target_id}} 
+                    VALUES ?city { wd:${targetId}} 
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     }`
         try {
-            let result = await submit_query(query)
+            let result = await submitQuery(query)
             return result[0]["cityLabel"]
         }
         catch(error) {
@@ -20,5 +20,5 @@ export function use_id_to_label() {
         }
         
     }
-    return { id_to_label }
+    return { idToLabel }
 }

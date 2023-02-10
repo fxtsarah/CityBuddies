@@ -1,39 +1,39 @@
 // import composables
-import { use_submit_query } from './use_submit_query.js'
-import { use_delete_dupes } from './use_delete_dupes.js'
+import { useSubmitQuery } from './useSubmitQuery.js'
+import { useDeleteDupes } from './useDeleteDupes.js'
 
 // extract functions from composables
-let { submit_query } = use_submit_query()
-let { delete_dupes } = use_delete_dupes()
+let { submitQuery } = useSubmitQuery()
+let { deleteDupes } = useDeleteDupes()
 
-export function use_find_possible_matches() {
+export function useFindPossibleMatches() {
     // Given a string, output all the cities with a label or alternate label that matches the input
-    async function find_possible_matches(target_label) {
+    async function findPossibleMatches(targetLabel) {
 
         // escape any quotes present in the input so the query doesn't break
-        let no_quotes = target_label.replace("\'", "\\'");
+        let noQuotes = targetLabel.replace("\'", "\\'");
             
         let query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
                     WHERE
                     { 
                     ?city wdt:P31/wdt:P279* wd:Q515 .
-                    { ?city skos:altLabel \'${no_quotes}\'@en }
+                    { ?city skos:altLabel \'${noQuotes}\'@en }
                     UNION
-                    { ?city rdfs:label \'${no_quotes}\'@en }
+                    { ?city rdfs:label \'${noQuotes}\'@en }
                     ?city wdt:P1082 ?population .
                                         
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     } ORDER BY DESC (?population)`
         
         try {
-            let result = await submit_query(query)
+            let result = await submitQuery(query)
             // remove duplicate cities from the result
-            let no_dupes = await delete_dupes(result)
-            return no_dupes
+            let noDupes = await deleteDupes(result)
+            return noDupes
         }
         catch(error) {
             throw new Error(error)
         }
     }
-    return { find_possible_matches }
+    return { findPossibleMatches }
 }

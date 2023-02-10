@@ -1,5 +1,5 @@
 <template>
-    <h3 id="city_not_found">Sorry, we couldn't find a city with the name {{ route.params.target_label }}.</h3>
+    <h3 id="cityNotFound">Sorry, we couldn't find a city with the name {{ route.params.targetLabel }}.</h3>
 </template>
   
 <script setup>
@@ -14,7 +14,7 @@ const route = useRoute()
 
 <style>
 
-#city_not_found {
+#cityNotFound {
     margin-top: 20px;
 }
 

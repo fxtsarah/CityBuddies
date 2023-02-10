@@ -1,5 +1,9 @@
 import { reactive } from 'vue'
 
 export let state = reactive({
-    cities_list: null
+    // The list of all the cities. Each entry includes the ID and population.
+    // cities without a population, without a point in time associated with that population, 
+    // or with a point in time earlier that 2000 are excluded.
+    // citiesList is null before it is generated as App.vue mounts.
+    citiesList: null
 })
