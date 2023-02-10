@@ -71,7 +71,7 @@ function addMarker(latlong, label, isTarget) {
     });
 
     let marker = L.marker(latlong, {icon: icon}).addTo(layerGroup);
-    if (!label == '') {
+    if (label) {
         marker.bindTooltip(label, {permanent: true, offset: [15, -20] });
     }
 }
