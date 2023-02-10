@@ -8,7 +8,7 @@
                 <h4>Population of {{ targetLabel }}, {{ targetCountry }}: <strong>{{ targetPop }}</strong></h4>
                 <h4>Population of {{ buddyLabel }}, {{ buddyCountry }}: <strong>{{ buddyPop }}</strong></h4>
             </div>
-            <router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }" id='to-other-buddies'>See other cities with a similar population to {{ targetLabel }}</router-link>
+            <h5><router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }">See other cities with a similar population to {{ targetLabel }}</router-link></h5>
         </div>
         <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddyDict' />
     </div>
@@ -77,10 +77,6 @@ onMounted(async () => {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-}
-
-#to-other-buddies {
-    font-size: 16px;
 }
 
 </style>

@@ -109,7 +109,7 @@ watch(() => props.buddies, async (newBuddies) => {
     display: block;
     height: 500px; 
     max-height: 500px; 
-    margin-top: 50px;
+    margin-top: 40px;
     width: 90%;
     margin-left: auto;
     margin-right: auto;

@@ -251,7 +251,6 @@ function capitalizeFirstLetter(str) {
 
 #pages {
     margin-left: 15px;
-    justify-content: space-between;
 }
 
 #title {
