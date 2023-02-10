@@ -24,9 +24,13 @@ Once a selection has been made, the application will inform the user which city 
 
 ![Buddy_Match](images/match.jpg)
 
+The user can choose to view other cities with a similar population on the map.
+
+![Buddy_Match](images/match.jpg)
+
 The web app also works on mobile.
 
-![Mobile](images/mobile.jpeg)
+![Mobile](images/other-buddies.jpg)
 
 ## Project setup
 
