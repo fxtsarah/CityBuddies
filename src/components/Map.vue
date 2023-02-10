@@ -71,7 +71,9 @@ function addMarker(latlong, label, isTarget) {
     });
 
     let marker = L.marker(latlong, {icon: icon}).addTo(layerGroup);
-    marker.bindTooltip(label, {permanent: true, offset: [15, -20] });
+    if (!label == '') {
+        marker.bindTooltip(label, {permanent: true, offset: [15, -20] });
+    }
 }
 
 // Get the latitude and longitude of a city given its ID.
