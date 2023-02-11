@@ -21,3 +21,5 @@ export function useDeleteDupes() {
     }
     return { deleteDupes }
 }
+
+// module.exports = useDeleteDupes
