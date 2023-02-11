@@ -1,6 +1,6 @@
-// // Import requirements to get a Sparql query.
-// const axios = require('axios')
-// const wbk = require('wikibase-sdk')
+// // // Import requirements to get a Sparql query.
+// // const axios = require('axios')
+// // const wbk = require('wikibase-sdk')
 
 // export function useSubmitQuery() {
 //     // Takes in SPARQL code as a parameter and sends the code to query.wikidata.org.
@@ -28,9 +28,11 @@ import Api from "../Api"
 
 export function useSubmitQuery() {
     async function submitQuery(sparql) {
-      var ret = await Api().post('submit_query', {"sparql": sparql})
+      var ret = await Api().post('submitQuery', {"sparql": sparql})
       return ret.data
   }
 
     return { submitQuery }
 }
+
+// module.exports = useSubmitQuery

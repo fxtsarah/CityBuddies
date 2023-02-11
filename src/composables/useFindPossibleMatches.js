@@ -1,4 +1,4 @@
-// import composables
+// Import Composables.
 import { useSubmitQuery } from './useSubmitQuery.js'
 import { useDeleteDupes } from './useDeleteDupes.js'
 
@@ -37,3 +37,16 @@ export function useFindPossibleMatches() {
     }
     return { findPossibleMatches }
 }
+
+// import Api from "../Api"
+
+// export function useFindPossibleMatches() {
+//     async function findPossibleMatches(targetLabel) {
+//       var ret = await Api().get(`cities/findPossibleMatches/${targetLabel}`)
+//       return ret.data
+//   }
+
+//     return { findPossibleMatches }
+// }
+
+// module.exports = useFindPossibleMatches
