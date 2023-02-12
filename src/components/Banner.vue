@@ -9,7 +9,7 @@
         </div>
         <div id='banner-form'>
             <div id='banner-input-and-button'>
-                <input @keydown.enter="inputSubmit" placeholder='City name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
+                <input @keydown.enter='inputSubmit' placeholder='City name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
                 <button class='btn btn-light banner-button' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex><strong>Search For Buddy</strong></button>
             </div>
             <p v-if='props.listLoading' id='list-loading'><i>The cities list is loading, please wait...</i></p>
@@ -33,7 +33,7 @@ const router = useRouter()
 const props = defineProps(['listLoading'])
 
 // Rhe current value of the input box,
-let inputValue = ref("")
+let inputValue = ref('')
 
 // Determines whether or not the banner elements should be tabbale. 
 // Elements should only be tabbale if the cities list is not currently loading.
@@ -65,7 +65,7 @@ function formatCityName(str) {
     let strArray = strLower.split(/(\s+)/)
 
     // The formatted city name.
-    let formatted = ""
+    let formatted = ''
 
     // If the inputted string matches any of the cities that don't follow the capitalization rules, output the excpetion that it matched.
     let filteredList = Object.values(exceptionsList).filter(entry => String(entry.cityLabel).localeCompare(String(str), undefined, { sensitivity: 'base' }) == 0)
@@ -79,7 +79,7 @@ function formatCityName(str) {
         let word = strArray[i]
 
         // The current word formatted correctly.
-        let formattedWord = ""
+        let formattedWord = ''
 
         // Handles words that are always uncapitalized unless they are the first or last word.
         if (i != 0 && i != strArray.length - 1 && uncapped.includes(word) ) {
@@ -117,7 +117,7 @@ function formatCityName(str) {
 
         // Handles hyphens. Each chunk that the hypen seperates should have its first character capitalized,
         // unless that chunk is in the uncapped_hyphen list.
-        else if (word.includes("-")){
+        else if (word.includes('-')){
             let wordArray = word.split(/(-)/g)
             for (let j = 0; j < wordArray.length; j++) {
                 let hyphenChunk = wordArray[j]
@@ -144,7 +144,7 @@ function formatCityName(str) {
         }
 
         // Dots work the same as hypens, but there are no exceptions for the chunk to remain uncapitalized.
-        else if (word.includes(".")) {
+        else if (word.includes('.')) {
             let wordArray = word.split(/(.)/g)
             for (let j = 0; j < wordArray.length; j++) {
                 let dotChunk = wordArray[j]
@@ -158,7 +158,8 @@ function formatCityName(str) {
         } 
         formatted = formatted + formattedWord
     }
-    return formatted.trimEnd()
+    // Trim the whitespace from the ends of the input.
+    return formatted.trim()
 }
 
 // Capitalize the first character of a string

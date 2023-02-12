@@ -1,6 +1,6 @@
 <template>
-  <Banner :listLoading="listLoading"/>
-  <router-view v-if="!listLoading"/>
+  <Banner :listLoading='listLoading'/>
+  <router-view v-if='!listLoading'/>
 </template>
 
 <script setup>
@@ -12,7 +12,7 @@ import { ref, onMounted } from 'vue'
 import { state } from './stores/store.js'
 
 // Import components.
-import Banner from "./components/Banner.vue"
+import Banner from './components/Banner.vue'
 
 // Import composables.
 import { useSubmitQuery } from './composables/useSubmitQuery.js'
