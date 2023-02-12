@@ -2,7 +2,7 @@
 
 This Vue JS web app determines which city is the closest to another in terms of population.
 
-_The 'using-backend' branch contains a version of the website that utilizes Node JS + Express for the backend, but does not work on MacOS. The functionality is the same as the main branch._
+_The 'backend' branch contains a version of the website that utilizes Node JS + Express for the backend, but does not work on MacOS. The functionality is the same as the main branch._
 
 ## Live site
 
