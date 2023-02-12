@@ -5,7 +5,7 @@
 <script setup>
 
 // Vue imports.
-import { watch, onMounted } from 'vue'
+import { watch, ref, onMounted } from 'vue'
 
 // Import composables.
 import { useSubmitQuery } from '../composables/useSubmitQuery.js'
@@ -20,6 +20,10 @@ const props = defineProps(['active', 'targetId', 'targetLabel', 'buddies'])
 let map
 let layerGroup
 
+// Flags to determine if targetLabel and buddies have been caluclated yet
+let targetLabelChanged = ref(false)
+let buddiesChanged = ref(false)
+
 // Initializes the map when the component is mounted.
 onMounted(async () => {
     map = L.map('map').setView([0, 0], getZoom() )
@@ -29,12 +33,6 @@ onMounted(async () => {
     }).addTo(map);
     layerGroup = L.layerGroup().addTo(map)
 })
-
-// When the user makes a new search, call this function to re-center the map and get rid of the old buddy markers.
-async function resetMap() {
-    layerGroup.clearLayers()
-    map.setView([0, 0], getZoom() )
-}
 
 // Determines how far the map should be zoomed in.
 // The map should be zoomed out further on mobile than on desktop.
@@ -93,15 +91,20 @@ async function idToLatlong(targetId) {
 
 // Whenever the targetLabel is changed, refresh the map with the new data.
 watch(() => props.targetLabel, async (newLabel) => {
-    await resetMap()
-    await addMarkers()
+    targetLabelChanged.value = true
+    if (buddiesChanged.value) {
+        await addMarkers()
+    }
 })
 
 // Whenever the buddies are changed, refresh the map with the new data.
 watch(() => props.buddies, async (newBuddies) => {
-    await resetMap()
-    await addMarkers()
+    buddiesChanged.value = true
+    if (targetLabelChanged.value) {
+        await addMarkers()
+    }
 })
+
 
 </script>
 
