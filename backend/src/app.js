@@ -1,35 +1,25 @@
-// const axios = require("axios")
-// const wbk = require("wikibase-sdk")
+console.log('Node server started')
 
-console.log("Node server started")
-
-// // allow using 'require'
-// import { createRequire } from "module";
-// const require = createRequire(import.meta.url);
-
+// Node imports.
 const express = require('express')
 const cors = require('cors')
-const body_parser = require('body-parser')
-const submitQueryRouter = require('./routers/submitQueryRouter.js')
-// const citiesRouter = require('./routers/citiesRouter.js')
 
+// Extract bodyParser to parse json
+const bodyParser = require('body-parser')
+
+// Exptract routers
+const submitQueryRouter = require('./routers/submitQueryRouter.js')
+const citiesRouter = require('./routers/citiesRouter.js')
+const idRouter = require('./routers/idRouter.js')
+
+// Apply routers and other additions to app
 const app = express()
 app.use(cors())
-app.use(body_parser.json())
+app.use(bodyParser.json())
 
 app.use('/submitQuery', submitQueryRouter)
-// app.use('/cities', citiesRouter)
+app.use('/cities', citiesRouter)
+app.use('/id', idRouter)
 
-// app.post('/submit_query', async (req, res) => {
-//     const wdk = wbk({
-//                   instance: 'https://www.wikidata.org',
-//                   sparqlEndpoint: 'https://query.wikidata.org/sparql'
-//                   })
-              
-//     const url = wdk.sparqlQuery(req.body.sparql)
-//     const results = await axios.get(url)
-//     let simplifiedResults = wbk.simplify.sparqlResults(results.data)
-//     res.send(simplifiedResults)
-// })
-
+// Tell the server to listen on the given port, or port 3000 as default.
 app.listen(process.env.port || 3000)

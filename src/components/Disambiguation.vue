@@ -55,6 +55,5 @@ onMounted(async () => {
         width: 90%;
         margin-bottom: 25px;
     }
-
 }
 </style>

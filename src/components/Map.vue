@@ -7,11 +7,8 @@
 // Vue imports.
 import { watch, onMounted } from 'vue'
 
-// Import composables.
-import { useSubmitQuery } from '../composables/useSubmitQuery.js'
-
-// Extract functions from composables.
-let { submitQuery } = useSubmitQuery()
+// Import API.
+import Api from '../Api'
 
 // Define props.
 const props = defineProps(['active', 'targetId', 'targetLabel', 'buddies'])
@@ -78,17 +75,8 @@ function addMarker(latlong, label, isTarget) {
 
 // Get the latitude and longitude of a city given its ID.
 async function idToLatlong(targetId) {
-    let query = `SELECT ?city ?long ?lat
-                WHERE
-                {
-                VALUES ?city { wd:${targetId} } 
-                ?city p:P625 ?coordinate.
-                ?coordinate psv:P625 ?coordinate_node.
-                ?coordinate_node wikibase:geoLongitude ?long.
-                ?coordinate_node wikibase:geoLatitude ?lat.  
-                }`
-    let result = await submitQuery(query)
-    return L.latLng(result[0].lat, result[0].long)
+    let latlong = (await Api().get(`id/${targetId}/latlong`)).data
+    return L.latLng(latlong.lat, latlong.long)
 }
 
 // Whenever the targetLabel is changed, refresh the map with the new data.

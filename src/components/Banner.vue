@@ -19,10 +19,10 @@
 
 <script setup>
 
-// Import the list of city names that don't follow normal capitalization rules
+// Import the list of city names that don't follow normal capitalization rules.
 import exceptionsList from '../../public/exceptions.json'
 
-// Vue imports
+// Vue imports.
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 
@@ -32,7 +32,7 @@ const router = useRouter()
 // Define props.
 const props = defineProps(['listLoading'])
 
-// Rhe current value of the input box,
+// The current value of the input box.
 let inputValue = ref("")
 
 // Determines whether or not the banner elements should be tabbale. 
@@ -41,7 +41,7 @@ const bannerTabIndex = computed(() => {
     return props.listLoading ? '-1' : '0'
 })
 
-// When a value is submitted, clear the input box and pass the value onto the Search component
+// When a value is submitted, clear the input box and pass the value onto the Search component.
 async function inputSubmit() {
     await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
     inputValue.value = ''
@@ -158,10 +158,11 @@ function formatCityName(str) {
         } 
         formatted = formatted + formattedWord
     }
-    return formatted.trimEnd()
+    // Remove whitespace from the ends of the input. 
+    return formatted.trim()
 }
 
-// Capitalize the first character of a string
+// Capitalize the first character of a string.
 function capitalizeFirstLetter(str) {
     return String(str).charAt(0).toUpperCase() + String(str).slice(1)
 }

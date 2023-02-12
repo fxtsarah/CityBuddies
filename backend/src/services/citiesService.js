@@ -1,8 +1,13 @@
-// Given a string, output all the cities with a label or alternate label that matches the input.
-exports.findPossibleMatches = async (targetLabel) => {
+// Import services.
+const submitQueryService = require('./submitQueryService.js')
 
+// Extract functions from services.
+const { submitQuery } = submitQueryService
+
+// Given a string, output all the cities with a label or alternate label that matches the input.
+exports.findPossibleMatches = async (label) => {
     // Escape any quotes present in the input so the query doesn't break.
-    let noQuotes = targetLabel.replace("\'", "\\'");
+    let noQuotes = label.replace("\'", "\\'");
         
     let query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
                 WHERE
@@ -27,10 +32,11 @@ exports.findPossibleMatches = async (targetLabel) => {
     }
 }
 
+// Get the list of all the cities. Each entry includes the ID and population.
 exports.getCitiesList = async() => {
     let citiesDupes = await getCitiesDupes()
     let citiesNoDupes = await deleteDupes(citiesDupes)
-    let citiesPopSorted = await sortByPop(citiesNoDupes)
+    let citiesPopSorted = sortByPop(citiesNoDupes)
     return citiesPopSorted
 }
 
@@ -55,16 +61,61 @@ async function getCitiesDupes() {
                 //   filter(langMatches(lang(?enLabel),"en"))   
                 // }
     let result = await submitQuery(query)
-    return result
 
-    // TODO maybe remove all euro formats in the list here?
+    // remove euro format
+    let resultNoEuro = result.map(entry => {
+        return { city: { value: entry.city.value, population: removeEuroFormat(entry.city.population)}}
+    })
+
+    return resultNoEuro
+
+}
+
+// Many of the cities have populations where decimal points replace commas.
+// This function takes those numbers that JS assumed were floats and translates them back into integers.
+function removeEuroFormat(num) {
+    let numStr = String(num)
+
+    if (numStr.includes('.')) {
+        let numArray = numStr.split('.')
+        let arrLen = numArray.length
+        let digitsInLastChunk = numArray[arrLen - 1].length
+        let zerosNeeded = 3 - digitsInLastChunk
+        let zeros = '0'.repeat(zerosNeeded)
+        let lastChunkUpdated = numArray[arrLen - 1].concat(zeros)
+        numArray[arrLen - 1] = lastChunkUpdated
+        let finalStr = numArray.join('')
+        return finalStr
+    }
+    return num
+}
+
+// Deletes duplicates from the list that get_cities_dupes() returns.
+// By only taking the first instance of every id in the list, only the most recent population record is saved,
+// since the list is sorted by population date.
+async function deleteDupes(listWithDupes) {
+    // The working list of all the cities, without any cities with the same ID.
+    let listNoDupes = []
+    // The list of the city IDs that have already been added.
+    let citiesAdded = []
+
+    // Loop though every city one, beginning with the ones that have the most recent population record.
+    for (let i = 0; i < listWithDupes.length; i++) {
+        let entry = listWithDupes[i]
+        // If a city with this ID, has not already been added, add this entry to the list.
+        if (!citiesAdded.includes(entry.city.value)) {
+            citiesAdded.push(entry.city.value)
+            listNoDupes.push(entry.city)
+        } 
+    }
+    return listNoDupes    
 }
 
 // Sorts a list of all the cities by population.
-async function sortByPop(list) {
+function sortByPop(list) {
     list.sort(
         (first, second) => { 
-        return removeEuroFormat(first.population) - removeEuroFormat(second.population) }
+        return first.population - second.population }
     );
     return list
 }
