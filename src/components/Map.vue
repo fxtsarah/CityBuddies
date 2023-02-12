@@ -89,7 +89,8 @@ async function idToLatlong(targetId) {
     return L.latLng(result[0].lat, result[0].long)
 }
 
-// Whenever the targetLabel is changed, refresh the map with the new data.
+// Whenever the targetLabel is changed, check if the buddies have also been changed.
+// If so, add the markers.
 watch(() => props.targetLabel, async (newLabel) => {
     targetLabelChanged.value = true
     if (buddiesChanged.value) {
@@ -97,14 +98,14 @@ watch(() => props.targetLabel, async (newLabel) => {
     }
 })
 
-// Whenever the buddies are changed, refresh the map with the new data.
+// Whenever the buddies are changed, check if the targetLabel has also been changed.
+// If so, add the markers.
 watch(() => props.buddies, async (newBuddies) => {
     buddiesChanged.value = true
     if (targetLabelChanged.value) {
         await addMarkers()
     }
 })
-
 
 </script>
 
