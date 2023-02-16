@@ -304,4 +304,12 @@ function capitalizeFirstLetter(str) {
     }
 
 }
+
+@media screen and (max-width: 1000px) and (min-width: 750px) {
+
+    #list-loading {
+        float: right;
+    }
+
+}
 </style>
