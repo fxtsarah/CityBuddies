@@ -49,7 +49,7 @@ onMounted(async () => {
     outline: none;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
     .city-choice {
         margin: auto;
         width: 90%;
