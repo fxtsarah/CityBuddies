@@ -259,7 +259,7 @@ function capitalizeFirstLetter(str) {
     margin-top: 0;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
     #banner {
         height: min(36vw, 10.5rem);
         padding: 3vw;
