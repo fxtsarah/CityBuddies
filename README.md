@@ -46,7 +46,7 @@ Then, for backend branch only, run:
 npm install -p ./backend
 ```
 
-### Node backend server setup
+### Node backend: Server setup
 
 For backend branch only.
 
