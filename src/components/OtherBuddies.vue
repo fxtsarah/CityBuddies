@@ -3,7 +3,7 @@
         <h3 class='above-divider'><strong>{{ targetLabel }}, {{ targetCountry }}: {{ targetPopulation }}</strong></h3>
         <div class='divider'></div>
         <ul class='below-divider'>
-            <li v-for='entry in buddiesList' :key='entry' tabindex='0' class='other-buddy'>
+            <li v-for='entry in buddiesList' :key='entry' tabindex='-1' class='other-buddy'>
                 <h4>{{ entry.label }}, {{ entry.country }}: {{ formatPopulation(entry.population)}}</h4>
             </li>
         </ul>
