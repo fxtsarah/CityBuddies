@@ -40,13 +40,33 @@ The web app also works on mobile.
 npm install
 ```
 
-### Compiles and hot-reloads for development
+Then, for backend branch only, run:
+
+```
+npm install -p ./backend
+```
+
+### Node backend server setup
+
+For backend branch only.
+
+In a **different terminal window** than the vue frontend server, run:
+
+```
+node backend/src/app.js
+```
+
+### Vue frontend: Compiles and hot-reloads for development
+
+In a **different terminal window** than the node backend server, run:
 
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Vue frontend: Compiles and minifies for production
+
+In a **different terminal window** than the node backend server, run:
 
 ```
 npm run build
