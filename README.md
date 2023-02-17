@@ -7,6 +7,7 @@ _The 'backend' branch contains a version of the website that utilizes Node JS + 
 ## Live site
 
 Visit the website live at https://citybuddies.netlify.app/
+
 Or, you can go to the GitHub Pages url for the repo and be redirected: https://sjkkolasa.github.io/CityBuddies
 
 ## Functionality
