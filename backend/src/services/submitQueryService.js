@@ -1,7 +1,7 @@
 // Import requirements to get a Sparql query.
 const axios = require('axios')
 const wbk = require('wikibase-sdk')
-const https = require("https");
+const https = require('https')
 const fs = require('fs');
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
