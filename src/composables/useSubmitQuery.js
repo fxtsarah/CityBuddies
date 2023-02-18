@@ -18,7 +18,7 @@ export function useSubmitQuery() {
             return simplifiedResults
         }
         catch(error) {
-            throw new Error(`Error from Wikidata: ${error}` )
+            throw new Error(`(from sparql) ${error.message}` )
         }
     }
     return { submitQuery }
