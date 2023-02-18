@@ -5,6 +5,7 @@ const wbk = require('wikibase-sdk')
 // Takes in SPARQL code as a parameter and sends the code to query.wikidata.org.
 // Simplifies the response from wikidata before returning it.
 exports.submitQuery = async (sparql) => {
+    console.log(`submit query called with sparql: ${sparql}`)
     const wdk = wbk({
         instance: 'https://www.wikidata.org',
         sparqlEndpoint: 'https://query.wikidata.org/sparql'
@@ -17,6 +18,6 @@ exports.submitQuery = async (sparql) => {
         return simplifiedResults
     }
     catch(error) {
-        throw new Error(`Error from Wikidata: ${error}` )
+        throw new Error(`(from sparql) ${error.message}` )
     }
 }
