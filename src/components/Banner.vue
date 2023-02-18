@@ -312,4 +312,5 @@ function capitalizeFirstLetter(str) {
     }
 
 }
+
 </style>
