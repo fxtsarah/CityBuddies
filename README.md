@@ -58,6 +58,45 @@ npm run serve
 npm run build
 ```
 
+## Project setup (for backend branch)
+
+Ensure that the Node backend and Vue frontend commands are being run in different terminals.
+
+### Node Backend
+Open a new terminal, and run:
+
+```
+cd backend
+npm install
+npm start
+```
+
+### Vue Frontend
+Open a new terminal, and run:
+
+```
+cd frontend
+npm install
+```
+
+If you want to run the program for **development**, then run:
+
+```
+npm start
+```
+
+or
+
+```
+npm run seve 
+```
+
+Otherwise, if you want to run the program for **production**, then run:
+
+```
+npm run build
+```
+
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
