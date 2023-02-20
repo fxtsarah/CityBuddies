@@ -4,7 +4,7 @@ This Vue JS web app determines which city is the closest to another in terms of 
 
 _The 'site branch' is used to for GitHub Pages only. If you would like to use this repository, use main or backend._
 
-_The 'backend' branch contains a version of the website that utilizes Node JS + Express for the backend, but does not work on MacOS. The functionality is the same as the main branch._
+_The 'backend' branch contains a version of the website that utilizes Node JS + Express for the backend. The functionality is the same as the main branch._
 
 ## Live site
 
@@ -36,7 +36,7 @@ The web app also works on mobile.
 
 ![Mobile](images/mobile.jpg)
 
-## Project setup
+## Project setup (for main branch)
 
 ```
 npm install
