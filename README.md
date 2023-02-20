@@ -57,13 +57,19 @@ cd frontend
 npm install
 ```
 
-If you want to run the program for develop, then run:
+If you want to run the program for **development**, then run:
 
 ```
-npm run serve
+npm start
 ```
 
-Otherwise, if you want to run the program for production, then run:
+or
+
+```
+npm run seve 
+```
+
+Otherwise, if you want to run the program for **production**, then run:
 
 ```
 npm run build
