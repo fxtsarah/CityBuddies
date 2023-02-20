@@ -1,9 +1,9 @@
 // Import requirements to get a Sparql query.
 const axios = require('axios')
 const wbk = require('wikibase-sdk')
-// const https = require('https')
+const https = require('https')
 
-// const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 // Takes in SPARQL code as a parameter and sends the code to query.wikidata.org.
 // Simplifies the response from wikidata before returning it.
@@ -14,9 +14,8 @@ exports.submitQuery = async (sparql) => {
     })
 
     const url = wdk.sparqlQuery(sparql)
-    console.log(`url generated: ${url}`)
     try {
-        const results = await axios.get(url)
+        const results = await axios.get(url, {httpsAgent})
         let simplifiedResults = wbk.simplify.sparqlResults(results.data)
         return simplifiedResults
     }
