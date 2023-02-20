@@ -36,7 +36,7 @@ The web app also works on mobile.
 
 ![Mobile](images/mobile.jpg)
 
-## Project setup
+## Project setup (for backend branch)
 
 Ensure that the Node backend and Vue frontend commands are being run in different terminals.
 
