@@ -5,15 +5,15 @@
     "baseUrl": "./",
     "moduleResolution": "node",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+        "@/*": [
+            "src/*"
+        ]
     },
     "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
+        "esnext",
+        "dom",
+        "dom.iterable",
+        "scripthost"
     ]
   }
 }

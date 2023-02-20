@@ -16,12 +16,10 @@ import Banner from './components/Banner.vue'
 
 // Import composables.
 import { useSubmitQuery } from './composables/useSubmitQuery.js'
-import { useRemoveEuroFormat } from './composables/useRemoveEuroFormat.js'
 import { useDeleteDupes } from './composables/useDeleteDupes.js'
 
 // Extract functions from composables and router.
 let { submitQuery } = useSubmitQuery()
-let { removeEuroFormat } = useRemoveEuroFormat()
 let { deleteDupes } = useDeleteDupes()
 
 // True if the citiesList has not finished generating yet.
@@ -63,16 +61,41 @@ async function getCitiesDupes() {
                 //   filter(langMatches(lang(?enLabel),"en"))   
                 // }
     let result = await submitQuery(query)
-    return result
+
+    // remove euro format
+    let resultNoEuro = result.map(entry => {
+        return { city: { value: entry.city.value, population: removeEuroFormat(entry.city.population)}}
+    })
+
+    return resultNoEuro
 }
 
 // Sorts a list of all the cities by population.
 async function sortByPop(list) {
     list.sort(
         (first, second) => { 
-        return removeEuroFormat(first.population) - removeEuroFormat(second.population) }
+        return first.population - second.population }
     );
     return list
+}
+
+// Many of the cities have populations where decimal points replace commas.
+// This function takes those numbers that JS assumed were floats and translates them back into integers.
+function removeEuroFormat(num) {
+    let numStr = String(num)
+
+    if (numStr.includes('.')) {
+        let numArray = numStr.split('.')
+        let arrLen = numArray.length
+        let digitsInLastChunk = numArray[arrLen - 1].length
+        let zerosNeeded = 3 - digitsInLastChunk
+        let zeros = '0'.repeat(zerosNeeded)
+        let lastChunkUpdated = numArray[arrLen - 1].concat(zeros)
+        numArray[arrLen - 1] = lastChunkUpdated
+        let finalStr = numArray.join('')
+        return finalStr
+    }
+    return num
 }
 
 </script>
