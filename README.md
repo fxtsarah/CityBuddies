@@ -36,7 +36,7 @@ The web app also works on mobile.
 
 ![Mobile](images/mobile.jpg)
 
-## Project setup
+## Project setup (for main branch)
 
 ```
 npm install
@@ -44,6 +44,10 @@ npm install
 
 ### Compiles and hot-reloads for development
 
+```
+npm start
+```
+or
 ```
 npm run serve
 ```
