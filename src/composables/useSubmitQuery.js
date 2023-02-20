@@ -18,7 +18,7 @@ export function useSubmitQuery() {
             return simplifiedResults
         }
         catch(error) {
-            throw new Error(`(from sparql) ${error.message}` )
+            throw new Error(`(from submit query) ${error.message}` )
         }
     }
     return { submitQuery }
