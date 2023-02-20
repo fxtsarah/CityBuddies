@@ -4,7 +4,7 @@ This Vue JS web app determines which city is the closest to another in terms of 
 
 _The 'site branch' is used to for GitHub Pages only. If you would like to use this repository, use main or backend._
 
-_The 'backend' branch contains a version of the website that utilizes Node JS + Express for the backend, but does not work on MacOS. The functionality is the same as the main branch._
+_The 'backend' branch contains a version of the website that utilizes Node JS + Express for the backend. The functionality is the same as the main branch._
 
 ## Live site
 
@@ -38,41 +38,37 @@ The web app also works on mobile.
 
 ## Project setup
 
+Ensure that the Node backend and Vue frontend commands are being run in different terminals.
+
+### Node Backend
+Open a new terminal, and run:
+
 ```
+cd backend
+npm install
+npm start
+```
+
+### Vue Frontend
+Open a new terminal, and run:
+
+```
+cd frontend
 npm install
 ```
 
-Then, for backend branch only, run:
-
-```
-npm install -p ./backend
-```
-
-### Node backend: Server setup
-
-For backend branch only.
-
-In a **different terminal window** than the vue frontend server, run:
-
-```
-node backend/src/app.js
-```
-
-### Vue frontend: Compiles and hot-reloads for development
-
-In a **different terminal window** than the node backend server, run:
+If you want to run the program for develop, then run:
 
 ```
 npm run serve
 ```
 
-### Vue frontend: Compiles and minifies for production
-
-In a **different terminal window** than the node backend server, run:
+Otherwise, if you want to run the program for production, then run:
 
 ```
 npm run build
 ```
+
 
 ### Customize configuration
 
