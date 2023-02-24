@@ -58,19 +58,18 @@ async function addMarkers() {
 // If the marker represents the target city, the marker is orange. 
 // Otherwise, the marker is green.
 function addMarker(latlong, label, isTarget) {
-    let icon = L.icon({
-        iconUrl: isTarget ? '/map-marker-orange.png' : '/map-marker-green.png' ,
-        shadowUrl: '/marker-shadow.png',
+    let color = isTarget ? '#E16036' : '#519872'
 
-        iconSize:     [25, 40], // size of the icon
-        shadowSize:   [40, 50], // size of the shadow
+    const bootstrapIcon = L.divIcon({
+        html: `<i class="bi bi-geo-alt-fill" style="font-size:2rem; color:${color}"></i>`,
+
         iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
-        shadowAnchor: [12.5, 50],  // the same for the shadow
+        className: 'myDivIcon'
     });
 
-    let marker = L.marker(latlong, {icon: icon}).addTo(layerGroup);
+    let marker = L.marker(latlong, {icon: bootstrapIcon}).addTo(layerGroup);
     if (label) {
-        marker.bindTooltip(label, {permanent: true, offset: [15, -20] });
+        marker.bindTooltip(label, {permanent: true, offset: [20, -20] });
     }
 }
 
@@ -113,9 +112,9 @@ watch(() => props.buddies, async (newBuddies) => {
 
 #map { 
     display: block;
-    height: 500px; 
-    max-height: 500px; 
-    margin-top: 40px;
+    height: 32rem; 
+    max-height: 32rem; 
+    margin-top: 3rem;
     width: 90%;
     margin-left: auto;
     margin-right: auto;

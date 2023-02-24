@@ -51,9 +51,9 @@ onMounted(async () => {
 
 @media screen and (max-width: 1000px) {
     .city-choice {
-        margin: auto;
+        margin-left: auto;
+        margin-right: auto;
         width: 90%;
-        margin-bottom: 25px;
     }
 
 }

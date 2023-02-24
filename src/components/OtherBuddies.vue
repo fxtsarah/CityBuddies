@@ -101,7 +101,6 @@ function remove(list, item) {
 @media screen and (max-width: 1000px) {
     .other-buddy {
         width: 90%;
-        margin-bottom: 25px;
     }
 }
 

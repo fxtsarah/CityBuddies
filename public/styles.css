@@ -1,13 +1,18 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #E16036;
-    padding-bottom: 1.5rem;
-    padding-top: 1.5rem;
     caret-color: transparent;
 }
+
+body {
+    min-width:400px;
+    width: auto !important;
+    width: 400px;
+ }
 
 .invisible {
     visibility: hidden
@@ -18,18 +23,18 @@
     height: 8px;
     width: 55%;
     margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
   
 .above-divider {
-    margin-top: 25px;
-    margin-bottom: 18px;
+    margin-top: 2rem;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
   
 .below-divider {
-    margin-top: 18px; 
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -43,5 +48,12 @@ ul {
 li {
     width: 55%;
     margin: auto;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
+}
+
+@media screen and (max-width: 1000px) {
+    li {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 }

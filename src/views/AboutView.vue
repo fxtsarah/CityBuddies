@@ -1,9 +1,9 @@
 <template>
-    <div id='about-info'>
+    <div id='about-info' class="text-start">
         <h5>This web app determines which city is the closest to another in terms of population.</h5>
         <br>
         <h5><strong>How to Use:</strong></h5>
-        <h5>Input the name of a city into the 'City name' search bar.
+        <h5>Input the name of a city into the 'City Name' search bar.
         If there are multiple cities with the given name, 
         you will be asked to choose which city you would like to search for by clicking on the city's description.</h5>
         <br>
@@ -22,13 +22,11 @@
 <style>
 
 #about-info{
-  text-align: left;
-  padding: 30px;
-  margin-top: 8px;
+    padding: 6vw;
 }
 
 a {
-  color: #519872;
+    color: #519872;
 }
 
 </style>

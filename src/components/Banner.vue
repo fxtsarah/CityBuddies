@@ -2,15 +2,15 @@
     <div id='banner'>
         <div id='nav'>
             <h1 id='title'>City Buddies</h1>
-            <div id='pages'>
+            <div class="ms-3">
                 <router-link :to="{ name: 'home' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
                 <router-link :to="{ name: 'about' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
             </div>
         </div>
         <div id='banner-form'>
             <div id='banner-input-and-button'>
-                <input @keydown.enter='inputSubmit' placeholder='City name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
-                <button class='btn btn-light banner-button' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex><strong>Search For Buddy</strong></button>
+                <input @keydown.enter='inputSubmit' placeholder='City Name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
+                <button class='btn btn-light banner-button ms-4 font-weight-bold' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex>Search For Buddy</button>
             </div>
             <p v-if='props.listLoading' id='list-loading'><i>The cities list is loading, please wait...</i></p>
         </div> 
@@ -187,7 +187,7 @@ function capitalizeFirstLetter(str) {
 }
   
 #banner-form {
-    margin-top: 5px;
+    margin-top: .4rem;
     display: block;
 }
 
@@ -196,7 +196,6 @@ function capitalizeFirstLetter(str) {
 }
 
 #input-form {
-    margin-right: 20px;
     max-width: 300px; 
     min-width: 60px;
     caret-color: black;
@@ -209,12 +208,10 @@ function capitalizeFirstLetter(str) {
 
 #input-button {
     color:#E16036;
-    width: 250px;
-    margin-left: 20px;
+    width: 16rem;
 }
 
 .banner-button {
-    background-color: #F6F6F6; 
     white-space: nowrap;  
 }
 
@@ -239,24 +236,13 @@ function capitalizeFirstLetter(str) {
 }
 
 .page {
-    background-color: #F6F6F6;
-    font-size: 16px;
-    margin: 5px;
-    width: 70px;
+    margin: .4rem;
+    width: 4.3rem;
 }
 
 .page.router-link-exact-active {
     color:#E16036;
     font-weight: bold;
-}
-
-#pages {
-    margin-left: 15px;
-}
-
-#title {
-    margin-right: 10px;
-    margin-top: 0;
 }
 
 @media screen and (max-width: 1000px) {
@@ -267,7 +253,7 @@ function capitalizeFirstLetter(str) {
     }
 
     #input-form {
-        margin-right: 10px;
+        margin-right: .6rem;
     }
 
     #banner-form {
@@ -280,14 +266,13 @@ function capitalizeFirstLetter(str) {
 
     #title {
         font-size: min(7.5vw, 40px);
-        margin-top: 5px;
+        margin-top: .4rem;
     }
 
     .page {
         color:#F6F6F6;
         background-color: #E16036;
         border: transparent;
-        font-size: 2vm;
         transition: none;
         --bs-btn-active-color: #dbdbdb;
         --bs-btn-active-bg: transparent;
@@ -295,7 +280,7 @@ function capitalizeFirstLetter(str) {
 
     .page:hover, .page:focus {
         background-color: transparent;
-        color:#F6F6F6;
+        color:#dbdbdb;
     }
 
     .page.router-link-exact-active {
