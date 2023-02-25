@@ -8,8 +8,8 @@ export function useIdToLabel() {
     // Get the name of a city given its ID.
     async function idToLabel(targetId) {
         let query = `SELECT DISTINCT ?cityLabel {
-                    VALUES ?city { wd:${targetId}} 
-                    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+                        VALUES ?city { wd:${targetId}} 
+                        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                     }`
         try {
             let result = await submitQuery(query)

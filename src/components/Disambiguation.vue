@@ -38,14 +38,15 @@ onMounted(async () => {
 
 </script>
 
-<style>
+<style lang='scss'>
+@import '../../public/constants.scss';
 
 .city-choice {
     cursor: pointer;
 }
 
 .city-choice:hover, .city-choice:focus {
-    color: #519872;
+    color: $secondary;
     outline: none;
 }
 
@@ -55,7 +56,6 @@ onMounted(async () => {
         margin-right: auto;
         width: 90%;
     }
-
 }
 </style>
 

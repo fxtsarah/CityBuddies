@@ -1,11 +1,17 @@
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css');
+@import 'constants';
 
 #app {
+    background-color: $background;
     font-family: Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #E16036;
+    color: $primary;
     caret-color: transparent;
+}
+
+html {
+    background-color: $background;
 }
 
 body {
@@ -19,7 +25,7 @@ body {
 }
 
 .divider {
-    background-color: #E16036;
+    background-color: $primary;
     height: 8px;
     width: 55%;
     margin: auto;

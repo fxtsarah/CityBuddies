@@ -58,10 +58,10 @@ async function addMarkers() {
 // If the marker represents the target city, the marker is orange. 
 // Otherwise, the marker is green.
 function addMarker(latlong, label, isTarget) {
-    let color = isTarget ? '#E16036' : '#519872'
+    let color = isTarget ? 'target' : 'buddy'
 
     const bootstrapIcon = L.divIcon({
-        html: `<i class="bi bi-geo-alt-fill" style="font-size:2rem; color:${color}"></i>`,
+        html: `<i class="bi bi-geo-alt-fill ${color}" style="font-size:2rem;"  </i>`,
 
         iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
         className: 'myDivIcon'
@@ -76,13 +76,12 @@ function addMarker(latlong, label, isTarget) {
 // Get the latitude and longitude of a city given its ID.
 async function idToLatlong(targetId) {
     let query = `SELECT ?city ?long ?lat
-                WHERE
-                {
-                VALUES ?city { wd:${targetId} } 
-                ?city p:P625 ?coordinate.
-                ?coordinate psv:P625 ?coordinate_node.
-                ?coordinate_node wikibase:geoLongitude ?long.
-                ?coordinate_node wikibase:geoLatitude ?lat.  
+                WHERE {
+                    VALUES ?city { wd:${targetId} } 
+                    ?city p:P625 ?coordinate.
+                    ?coordinate psv:P625 ?coordinate_node.
+                    ?coordinate_node wikibase:geoLongitude ?long.
+                    ?coordinate_node wikibase:geoLatitude ?lat.  
                 }`
     let result = await submitQuery(query)
     return L.latLng(result[0].lat, result[0].long)
@@ -108,7 +107,8 @@ watch(() => props.buddies, async (newBuddies) => {
 
 </script>
 
-<style>
+<style lang='scss'>
+@import '../../public/constants.scss';
 
 #map { 
     display: block;
@@ -119,6 +119,14 @@ watch(() => props.buddies, async (newBuddies) => {
     margin-left: auto;
     margin-right: auto;
     overflow: hidden
+}
+
+.target {
+    color: $primary 
+}
+
+.buddy {
+    color: $secondary
 }
 
 </style>

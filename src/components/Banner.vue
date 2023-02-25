@@ -3,14 +3,14 @@
         <div id='nav'>
             <h1 id='title'>City Buddies</h1>
             <div class="ms-3">
-                <router-link :to="{ name: 'home' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
-                <router-link :to="{ name: 'about' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
+                <router-link :to="{ name: 'home' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
+                <router-link :to="{ name: 'about' }" class='btn  banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
             </div>
         </div>
-        <div id='banner-form'>
-            <div id='banner-input-and-button'>
+        <div id='banner-form' class="d-block mt-1">
+            <div id='banner-input-and-button' class="d-flex">
                 <input @keydown.enter='inputSubmit' placeholder='City Name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
-                <button class='btn btn-light banner-button ms-4 font-weight-bold' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex>Search For Buddy</button>
+                <button class='btn banner-button ms-4 font-weight-bold' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex>Search For Buddy</button>
             </div>
             <p v-if='props.listLoading' id='list-loading'><i>The cities list is loading, please wait...</i></p>
         </div> 
@@ -169,11 +169,12 @@ function capitalizeFirstLetter(str) {
 
 </script>
 
-<style>
+<style lang='scss'>
+@import '../../public/constants.scss';
 
 #banner {
-    background-color: #E16036;
-    color: #F6F6F6;
+    background-color: $primary;
+    color: $background;
     height: 9rem;
     padding: 2.5rem;
     display: flex;
@@ -185,15 +186,7 @@ function capitalizeFirstLetter(str) {
     caret-color: transparent;
     width: 40%;    
 }
-  
-#banner-form {
-    margin-top: .4rem;
-    display: block;
-}
 
-#banner-input-and-button {
-    display: flex;
-}
 
 #input-form {
     max-width: 300px; 
@@ -202,21 +195,23 @@ function capitalizeFirstLetter(str) {
 }
 
 #input-form:focus {
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px $secondary;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px $secondary;
 }
 
 #input-button {
-    color:#E16036;
+    color: $primary;
     width: 16rem;
 }
 
 .banner-button {
-    white-space: nowrap;  
+    white-space: nowrap;
+    background-color: $btnColor;
+    color: $ternary
 }
 
 .banner-button:hover, .banner-button:focus {
-    background-color: #dbdbdb;
+    background-color: $btnHover;
 }
 
 #list-loading {
@@ -230,24 +225,23 @@ function capitalizeFirstLetter(str) {
 }
 
 #nav {
-    background-color: #E16036;
-    color: #F6F6F6;
+    background-color: $primary;
+    color: $background;
     display: flex;
 }
 
 .page {
-    margin: .4rem;
     width: 4.3rem;
 }
 
 .page.router-link-exact-active {
-    color:#E16036;
+    color: $primary;
     font-weight: bold;
 }
 
 @media screen and (max-width: 1000px) {
     #banner {
-        height: min(36vw, 10.5rem);
+        height: max(140px, min(36vw, 10.5rem));
         padding: 3vw;
         display: block;
     }
@@ -265,37 +259,28 @@ function capitalizeFirstLetter(str) {
     }
 
     #title {
-        font-size: min(7.5vw, 40px);
+        font-size: max(30px, min(7.5vw, 40px));
         margin-top: .4rem;
     }
 
     .page {
-        color:#F6F6F6;
-        background-color: #E16036;
+        color: $background;
+        background-color: $primary;
         border: transparent;
         transition: none;
-        --bs-btn-active-color: #dbdbdb;
+        --bs-btn-active-color: $backgroundHover;
         --bs-btn-active-bg: transparent;
     }
 
     .page:hover, .page:focus {
         background-color: transparent;
-        color:#dbdbdb;
+        color: $backgroundHover;
     }
 
     .page.router-link-exact-active {
-        color:#F6F6F6;
+        color: $background;
         text-decoration: underline;
     }
-
-}
-
-@media screen and (max-width: 1000px) and (min-width: 750px) {
-
-    #list-loading {
-        float: right;
-    }
-
 }
 
 </style>

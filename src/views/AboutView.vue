@@ -19,14 +19,15 @@
     </div>
 </template>
 
-<style>
+<style lang='scss'>
+@import '../../public/constants.scss';
 
-#about-info{
-    padding: 6vw;
+#about-info {
+    padding: min(2.5rem, 6vw);
 }
 
 a {
-    color: #519872;
+    color: $secondary;
 }
 
 </style>
