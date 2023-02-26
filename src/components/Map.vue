@@ -1,11 +1,11 @@
 <template>
-  <div id='map' :class='{ invisible: !props.active }'></div>
+  <div id='map' :class='{ invisible: !props.active }' ></div>
 </template>
 
 <script setup>
 
 // Vue imports.
-import { watch, ref, onMounted } from 'vue'
+import { watch, onMounted } from 'vue'
 
 // Import composables.
 import { useSubmitQuery } from '../composables/useSubmitQuery.js'
@@ -20,9 +20,6 @@ const props = defineProps(['active', 'targetId', 'targetLabel', 'buddies'])
 let map
 let layerGroup
 
-// Flags to determine if targetLabel and buddies have been caluclated yet
-let targetLabelChanged = ref(false)
-let buddiesChanged = ref(false)
 
 // Initializes the map when the component is mounted.
 onMounted(async () => {
@@ -38,6 +35,12 @@ onMounted(async () => {
 // The map should be zoomed out further on mobile than on desktop.
 function getZoom() {
     return (window.innerWidth > 900) ? 2 : 1
+}
+
+// When the user makes a new search, call this function to re-center the map and get rid of the old buddy markers.
+async function resetMap() {
+    layerGroup.clearLayers()
+    map.setView([0, 0], getZoom() )
 }
 
 // Add markers on the map at the locations of the target and buddy cities.
@@ -87,22 +90,16 @@ async function idToLatlong(targetId) {
     return L.latLng(result[0].lat, result[0].long)
 }
 
-// Whenever the targetLabel is changed, check if the buddies have also been changed.
-// If so, add the markers.
+// Whenever the targetLabel is changed, refresh the map with new markers.
 watch(() => props.targetLabel, async (newLabel) => {
-    targetLabelChanged.value = true
-    if (buddiesChanged.value) {
-        await addMarkers()
-    }
+    resetMap()
+    await addMarkers()
 })
 
-// Whenever the buddies are changed, check if the targetLabel has also been changed.
-// If so, add the markers.
+// Whenever the buddies are changed, refresh the map with new markers.
 watch(() => props.buddies, async (newBuddies) => {
-    buddiesChanged.value = true
-    if (targetLabelChanged.value) {
-        await addMarkers()
-    }
+    resetMap()
+    await addMarkers()
 })
 
 </script>
