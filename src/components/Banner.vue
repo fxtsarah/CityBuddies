@@ -2,13 +2,13 @@
     <div id='banner'>
         <div id='nav'>
             <h1 id='title'>City Buddies</h1>
-            <div class="ms-3">
+            <div class='ms-3'>
                 <router-link :to="{ name: 'home' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
                 <router-link :to="{ name: 'about' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
             </div>
         </div>
-        <div id='banner-form' class="d-block mt-1">
-            <div id='banner-input-and-button' class="d-flex">
+        <div id='banner-form' class='d-block mt-1'>
+            <div id='banner-input-and-button' class='d-flex'>
                 <input @keydown.enter='inputSubmit' placeholder='City Name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
                 <button class='btn banner-button ms-4 font-weight-bold' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex>Search For Buddy</button>
             </div>
