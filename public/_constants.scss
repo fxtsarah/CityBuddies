@@ -5,13 +5,6 @@ $secondary: #519872;
 
 $btnColor: #f6f6f6;
 
-// $background: #333333;
-
-// $primary: #ffffff;
-// $secondary: #aaaaff;
-
-// $btnColor: #777777;
-
 $btnHover: lighten($btnColor, 10%);
 $btnInactiveText: #ffffff;
 
@@ -19,16 +12,3 @@ $btnInactiveText: #ffffff;
     $btnHover: darken($btnColor, 10%);
     $btnInactiveText: #000000;
 }
-
-
-// $background: #333333;
-// $backgroundHover: #555555;
-
-// $primary: #ffffff;
-// $secondary: #aaaaff;
-// $ternary: #dddddd;
-
-// $btnColor: #333333;
-// $btnHover: #555555;
-
-

@@ -10,7 +10,7 @@
         <div id='banner-form' class='d-block mt-1'>
             <div id='banner-input-and-button' class='d-flex'>
                 <input @keydown.enter='inputSubmit' placeholder='City Name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
-                <button class='btn banner-button ms-4 font-weight-bold' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex>Search For Buddy</button>
+                <button class='btn banner-button ms-4 fw-bold' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex>Search For Buddy</button>
             </div>
             <p v-if='props.listLoading' id='list-loading'><i>The cities list is loading, please wait...</i></p>
         </div> 
@@ -175,8 +175,8 @@ function capitalizeFirstLetter(str) {
 #banner {
     background-color: $primary;
     color: $background;
-    height: 9rem;
-    padding: 2.5rem;
+    height: 10rem;
+    padding: 3rem;
     display: flex;
     justify-content: space-between;
 }
@@ -215,7 +215,7 @@ function capitalizeFirstLetter(str) {
 }
 
 #list-loading {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     margin-top: .25rem;
 }
 
@@ -231,12 +231,17 @@ function capitalizeFirstLetter(str) {
 }
 
 .page {
-    width: 4.4rem;
+    width: 7rem;
 }
 
 .page.router-link-exact-active {
     color: $primary;
     font-weight: bold;
+}
+
+
+#title {
+    margin-top: 0;
 }
 
 @media screen and (max-width: 1000px) {

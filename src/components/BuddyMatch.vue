@@ -7,8 +7,25 @@
             <div class='below-divider'>
                 <h4>Population of {{ targetLabel }}, {{ targetCountry }}: <strong>{{ targetPop }}</strong></h4>
                 <h4>Population of {{ buddyLabel }}, {{ buddyCountry }}: <strong>{{ buddyPop }}</strong></h4>
+                <div class='d-flex' style='flex-direction: column;'>
+                    <div id='other-buddies' class='mt-3 d-flex' style=' margin: auto;'>
+                        <h5>See</h5> 
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown button
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </div>
+                        <h5>cities with a similar population to {{ targetLabel }}</h5>
+                    </div>  
+                </div>
             </div>
-            <h5><router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }">See other cities with a similar population to {{ targetLabel }}</router-link></h5>
+            <!-- <h5><router-link :to="{ name: 'other-buddies', params: { targetId: route.params.targetId } }">See other cities with a similar population to {{ targetLabel }}</router-link></h5> -->
+          
         </div>
         <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddyDict' />
     </div>
@@ -71,12 +88,17 @@ onMounted(async () => {
 
 </script>
 
-<style>
+<style lang='scss'>
+@import '../../public/constants.scss';
 
 #buddy-match-info {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+}
+
+#other-buddies {
+    color: $secondary;
 }
 
 </style>

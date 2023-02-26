@@ -1,6 +1,6 @@
 <template>
     <div v-if='!infoLoading'>
-        <h3 class='above-divider'><strong>{{ targetLabel }}, {{ targetCountry }}: {{ targetPopulation }}</strong></h3>
+        <h3 class='above-divider fw-bold'>Population of {{ targetLabel }}, {{ targetCountry }}: {{ targetPopulation }}</h3>
         <div class='divider'></div>
         <ul class='below-divider'>
             <li v-for='entry in buddiesList' :key='entry' tabindex='-1' class='other-buddy'>

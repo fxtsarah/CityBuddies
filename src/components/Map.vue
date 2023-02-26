@@ -61,7 +61,7 @@ function addMarker(latlong, label, isTarget) {
     let color = isTarget ? 'target' : 'buddy'
 
     const bootstrapIcon = L.divIcon({
-        html: `<i class='bi bi-geo-alt-fill ${color}' style='font-size:2rem;'  </i>`,
+        html: `<i class='bi bi-geo-alt-fill ${color}' style='font-size:3rem;'  </i>`,
 
         iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
         className: 'myDivIcon'
@@ -112,8 +112,7 @@ watch(() => props.buddies, async (newBuddies) => {
 
 #map { 
     display: block;
-    height: 32rem; 
-    max-height: 32rem; 
+    height: 50rem;
     margin-top: 3rem;
     width: 90%;
     margin-left: auto;

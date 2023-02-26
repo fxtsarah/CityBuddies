@@ -47,7 +47,9 @@ npm install
 ```
 npm start
 ```
+
 or
+
 ```
 npm run serve
 ```
@@ -57,6 +59,17 @@ npm run serve
 ```
 npm run build
 ```
+
+### Editing SCSS
+
+If you intend to edit any SCSS files, open a new terminal, and run:
+
+```
+cd public
+gulp
+```
+
+This ensures that SCSS files are automatically compiled into CSS files.
 
 ### Customize configuration
 
