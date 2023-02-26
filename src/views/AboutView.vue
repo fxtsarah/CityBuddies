@@ -11,7 +11,7 @@
         <h5>Every time the website is loaded, a query is made to <a href='https://www.wikidata.org/wiki/Wikidata:Main_Page' target='_blank'>Wikidata</a>
         that returns the list of all the cities in its database, as well as their populations.
         This list allows the 'buddy' - the city with the closest population to another - to be calculated. <br><br>
-        Once the buddy is found, another query to wikidata is sent to ask for the location of both the inputted city and the buddy. Those locations are used by <a href='https://leafletjs.com/' target='_blank'>Leaflet</a> to show where the cities are on a map.
+        Once the buddy is found, another query to Wikidata is sent to ask for the location of both the inputted city and the buddy. Those locations are used by <a href='https://leafletjs.com/' target='_blank'>Leaflet</a> to show where the cities are on a map.
         </h5>
         <br>
         <h5><a href='https://github.com/sjkkolasa/CityBuddies' target='_blank'>View the City Buddies repository on GitHub!</a></h5>
