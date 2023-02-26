@@ -118,15 +118,21 @@ watch(() => props.buddies, async (newBuddies) => {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-    overflow: hidden
+    overflow: hidden;
 }
 
 .target {
-    color: $primary 
+    color: $primary ;
+    @if lightness($primary) > 90 or ((grayscale($primary) == $primary) and lightness($primary) > 50) {
+        color: darken($primary, 40%)
+    }
 }
 
 .buddy {
-    color: $secondary
+    color: $secondary;
+    @if lightness($secondary) > 90 or ((grayscale($secondary) == $secondary) and lightness($secondary) > 50) {
+        color: darken($secondary, 40%)
+    }
 }
 
 </style>

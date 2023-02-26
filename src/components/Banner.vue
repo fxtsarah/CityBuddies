@@ -4,7 +4,7 @@
             <h1 id='title'>City Buddies</h1>
             <div class="ms-3">
                 <router-link :to="{ name: 'home' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
-                <router-link :to="{ name: 'about' }" class='btn  banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
+                <router-link :to="{ name: 'about' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
             </div>
         </div>
         <div id='banner-form' class="d-block mt-1">
@@ -187,7 +187,6 @@ function capitalizeFirstLetter(str) {
     width: 40%;    
 }
 
-
 #input-form {
     max-width: 300px; 
     min-width: 60px;
@@ -207,11 +206,12 @@ function capitalizeFirstLetter(str) {
 .banner-button {
     white-space: nowrap;
     background-color: $btnColor;
-    color: $ternary
+    color: $btnInactiveText;
 }
 
 .banner-button:hover, .banner-button:focus {
     background-color: $btnHover;
+    color: $btnInactiveText;
 }
 
 #list-loading {
@@ -231,7 +231,7 @@ function capitalizeFirstLetter(str) {
 }
 
 .page {
-    width: 4.3rem;
+    width: 4.4rem;
 }
 
 .page.router-link-exact-active {
@@ -264,21 +264,21 @@ function capitalizeFirstLetter(str) {
     }
 
     .page {
-        color: $background;
-        background-color: $primary;
+        color: $btnColor;
+        background-color: transparent;
         border: transparent;
         transition: none;
-        --bs-btn-active-color: $backgroundHover;
+        --bs-btn-active-color: $btnHover;
         --bs-btn-active-bg: transparent;
     }
 
     .page:hover, .page:focus {
+        color: $btnHover;
         background-color: transparent;
-        color: $backgroundHover;
     }
 
     .page.router-link-exact-active {
-        color: $background;
+        color: $btnColor;
         text-decoration: underline;
     }
 }
