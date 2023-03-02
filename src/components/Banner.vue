@@ -1,10 +1,10 @@
 <template>
     <div id='banner'>
         <div id='nav'>
-            <h1 id='title'>City Buddies</h1>
+            <h1 class='mt-0'><router-link id='title-link' :to="{ name: 'home' }" :class="{ 'disabled-title': props.listLoading }" :tabindex=bannerTabIndex>City Buddies</router-link> </h1>
             <div class='ms-3'>
-                <router-link :to="{ name: 'home' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
                 <router-link :to="{ name: 'about' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
+                <router-link :to="{ name: 'random' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</router-link> 
             </div>
         </div>
         <div id='banner-form' class='d-block mt-1'>
@@ -224,6 +224,10 @@ function capitalizeFirstLetter(str) {
     opacity: .6;
 }
 
+.disabled-title {
+    pointer-events: none;
+}
+
 #nav {
     background-color: $primary;
     color: $background;
@@ -231,7 +235,7 @@ function capitalizeFirstLetter(str) {
 }
 
 .page {
-    width: 7rem;
+    width: 8rem;
 }
 
 .page.router-link-exact-active {
@@ -240,8 +244,13 @@ function capitalizeFirstLetter(str) {
 }
 
 
-#title {
-    margin-top: 0;
+#title-link {
+    color: $background;
+    text-decoration: none;
+}
+
+#title-link:hover {
+    color: $backgroundHover;
 }
 
 @media screen and (max-width: 1000px) {
@@ -266,6 +275,8 @@ function capitalizeFirstLetter(str) {
     #title {
         font-size: max(30px, min(7.5vw, 40px));
         margin-top: .4rem;
+        color: $background !important;
+        text-decoration: none !important;
     }
 
     .page {

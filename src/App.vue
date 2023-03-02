@@ -62,7 +62,7 @@ async function getCitiesDupes() {
                 // }
     let result = await submitQuery(query)
 
-    // remove euro format
+    // Format the population to use commas instead of decimals
     let resultNoEuro = result.map(entry => {
         return { city: { value: entry.city.value, population: removeEuroFormat(entry.city.population)}}
     })

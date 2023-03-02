@@ -12,3 +12,9 @@ $btnInactiveText: #ffffff;
     $btnHover: darken($btnColor, 10%);
     $btnInactiveText: #000000;
 }
+
+$backgroundHover: lighten($background, 10%);
+
+@if (lightness($background) > 50) {
+    $backgroundHover: darken($btnColor, 10%);
+}

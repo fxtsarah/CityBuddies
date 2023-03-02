@@ -14,6 +14,9 @@ import MatchRedirect from '../components/redirects/MatchRedirect.vue'
 // Import composables.
 import { useIdToLabel } from '../composables/useIdToLabel.js'
 
+// Import state.
+import { state } from '../stores/store.js'
+
 // Extract functions from composables.
 let { idToLabel } = useIdToLabel()
 
@@ -85,6 +88,16 @@ const routes = [
                     }
                 ]
             },
+            // Random: Redirects the user to the match page of a random city
+            {
+                path: 'random',
+                name: 'random',
+                component: Search,
+                redirect: to => {
+                    var randomCity = state.citiesList[Math.floor(Math.random()*state.citiesList.length)]
+                    return { name: 'match-redirect', params: { targetId: randomCity.value } }
+                }
+            },
             // Match Redirect: Ensures that the target ID is a valid city and has the correct buddy before showing the Match screen.
             // Used when Match is accessed using a direct link.
             {
@@ -92,6 +105,7 @@ const routes = [
                 name: 'match-redirect',
                 component: MatchRedirect,
             },
+            
         ]
     },
     // About: Describes what the website is, how to use it, and very generally how it works.
