@@ -1,7 +1,7 @@
 <template>
     <div id='banner'>
         <div id='nav'>
-            <h1 class='mt-0'><router-link id='title-link' :to="{ name: 'home' }" :class="{ 'disabled-title': props.listLoading }" :tabindex=bannerTabIndex>City Buddies</router-link> </h1>
+            <h1 class='mt-0 text-nowrap'><router-link id='title-link' :to="{ name: 'home' }" :class="{ 'disabled-title': props.listLoading }" :tabindex=bannerTabIndex>City Buddies</router-link> </h1>
             <div class='ms-3'>
                 <router-link :to="{ name: 'about' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
                 <router-link :to="{ name: 'random' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</router-link> 
@@ -280,6 +280,7 @@ function capitalizeFirstLetter(str) {
     }
 
     .page {
+        width: 7rem;
         color: $btnColor;
         background-color: transparent;
         border: transparent;

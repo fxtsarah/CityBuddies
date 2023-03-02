@@ -9,33 +9,37 @@
                 <div v-for='entry in buddyDict' :key='entry'>
                     <h4>Population of {{ entry.label }}, {{ entry.country }}: <strong>{{ entry.population }}</strong></h4>
                 </div>
-                <div class='d-flex' style='flex-direction: column;'>
-                    <div id='other-buddies' class='mt-2 d-flex' style='margin: auto;'>
-                        <h4>See</h4> 
-                        <div class='dropdown'>
-                            <button class='btn dropdown-toggle mt-1' type='button' id='dropdown-menu-button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                {{ numBuddies }}
-                            </button>
-                            <div class='dropdown-menu' aria-labelledby='dropdown-menu-button'>
-                                <p class='dropdown-item' @click='changeNumBuddies(1)'>1</p>
-                                <p class='dropdown-item' @click='changeNumBuddies(3)'>3</p>
-                                <p class='dropdown-item' @click='changeNumBuddies(5)'>5</p>
-                                <p class='dropdown-item' @click='changeNumBuddies(10)'>10</p>
+                <div id='other-buddies' class='d-block'>
+                    <div class='d-flex' style='flex-direction: column;'>
+                        <div class='mt-2 d-flex' style='margin: auto;'>
+                            <h4>See</h4> 
+                            <div class='dropdown'>
+                                <button class='btn dropdown-toggle p-0' type='button' id='dropdown-menu-button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                    {{ numBuddies }}
+                                </button>
+                                <div class='dropdown-menu' aria-labelledby='dropdown-menu-button'>
+                                    <p class='dropdown-item' @click='changeNumBuddies(1)'>1</p>
+                                    <p class='dropdown-item' @click='changeNumBuddies(3)'>3</p>
+                                    <p class='dropdown-item' @click='changeNumBuddies(5)'>5</p>
+                                    <p class='dropdown-item' @click='changeNumBuddies(10)'>10</p>
+                                </div>
                             </div>
+                            <h4>{{ numBuddies == 1 ? 'city' : 'cities' }} with a similar population to</h4>
+                            <h4 class='showBigScreen ms-2'>{{ targetLabel }}</h4>
                         </div>
-                        <h4>{{ numBuddies == 1 ? 'city' : 'cities' }} with a similar population to {{ targetLabel }}</h4>
-                    </div>  
+                    </div>
+                    <h4 class='showSmallScreen'>{{ targetLabel }}</h4>
                 </div>
             </div>
         </div>
         <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddyDict' />
-    </div>
+    </div>  
 </template>
 
 <script setup>
 
 // Vue imports.
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 // Import components.
@@ -83,6 +87,11 @@ onMounted(async () => {
     await changeNumBuddies(1)
 
     infoLoading.value = false
+})
+
+// Determines if the screen is small enout that the "see more cities" need to be on separate lines.
+const isSmallScreen = computed(() => {
+    return window.innerWidth < 1000
 })
 
 async function changeNumBuddies(newNumBuddies) {
@@ -134,6 +143,20 @@ function remove(list, item) {
 
 #other-buddies {
     color: $secondary;
+}
+
+.showSmallScreen {
+    display: none;
+}
+
+@media screen and (max-width: 1000px) {
+    .showSmallScreen {
+        display: unset;
+    }
+
+    .showBigScreen {
+        display: none;
+    }
 }
 
 </style>
