@@ -43,8 +43,10 @@ const bannerTabIndex = computed(() => {
 
 // When a value is submitted, clear the input box and pass the value onto the Search component
 async function inputSubmit() {
-    await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
-    inputValue.value = ''
+    if (inputValue.value != '') {
+        await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
+        inputValue.value = ''
+    }
 }
 
 // Correctly format the name of a city according to capitalization rules.

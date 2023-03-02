@@ -12,9 +12,9 @@
                 <div id='other-buddies' class='d-block'>
                     <div class='d-flex' style='flex-direction: column;'>
                         <div class='mt-2 d-flex' style='margin: auto;'>
-                            <h4>See</h4> 
+                            <h4 class='mb-0'>See</h4> 
                             <div class='dropdown'>
-                                <button class='btn dropdown-toggle p-0' type='button' id='dropdown-menu-button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                <button class='btn dropdown-toggle mt-1' type='button' id='dropdown-menu-button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                     {{ numBuddies }}
                                 </button>
                                 <div class='dropdown-menu' aria-labelledby='dropdown-menu-button'>
@@ -24,7 +24,7 @@
                                     <p class='dropdown-item' @click='changeNumBuddies(10)'>10</p>
                                 </div>
                             </div>
-                            <h4>{{ numBuddies == 1 ? 'city' : 'cities' }} with a similar population to</h4>
+                            <h4 class='mb-0'>{{ numBuddies == 1 ? 'city' : 'cities' }} with a similar population to</h4>
                             <h4 class='showBigScreen ms-2'>{{ targetLabel }}</h4>
                         </div>
                     </div>
