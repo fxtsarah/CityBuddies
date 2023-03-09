@@ -5,38 +5,32 @@
             <h3 class='above-divider'><strong>{{ targetLabel }}</strong> is buddies with <strong>{{ buddyDict[0].label }}</strong></h3>
             <div class='divider'></div>
             <div class='below-divider'>
-                <table class='pop-table'>
-                    <tr class='table-header'>
-                        <th>City</th>
-                        <th>Population</th>
-                    </tr>
-                    <tr>
-                        <td class='city-cell'>{{ targetLabel }}, {{ targetCountry }}</td>
-                        <td>{{ targetPop }}</td>
-                    </tr>
-                    <tr v-for='entry in buddyDict' :key='entry'>
-                        <td class='city-cell'><router-link :to="{ name: 'match-redirect', params: { targetId: entry.id } }">{{ entry.label }}, {{ entry.country }}</router-link></td>
-                        <td>{{ entry.population }}</td>
-                    </tr>
-                </table>
+                
+                <BuddyTable v-if='numCities < 8' :tableDict='tableDict' />
+
+                <div v-if='numCities >= 8' class="d-flex">
+                    <BuddyTable :tableDict='getFirstHalf(tableDict)' />
+                    <BuddyTable :tableDict='getSecondHalf(tableDict)' />
+                </div>
 
                 <div id='other-buddies' class='d-block'>
                     <div class='d-flex' style='flex-direction: column;'>
                         <div class='mt-2 d-flex' style='margin: auto;'>
                             <h4 class='mb-0'>See</h4> 
                             <div class='dropdown'>
-                                <button class='btn dropdown-toggle mt-1' type='button' id='dropdown-menu-button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' tabindex='0'>
-                                    {{ numBuddies }}
+                                <!--  -->
+                                <button class='btn dropdown-toggle mt-1 mx-1' type='button' id='dropdown-menu-button' @keydown.enter='dropdownActive = !dropdownActive' @click='dropdownActive = !dropdownActive' aria-haspopup='true' aria-expanded='false' tabindex='0'>
+                                    {{ numCities }}
                                 </button>
-                                <div class='dropdown-menu' aria-labelledby='dropdown-menu-button'>
-                                    <p class='dropdown-item' @keydown.enter='changeNumBuddies(1)' @click='changeNumBuddies(1)' tabindex='0'>1</p>
-                                    <p class='dropdown-item' @keydown.enter='changeNumBuddies(3)' @click='changeNumBuddies(3)' tabindex='0'>3</p>
-                                    <p class='dropdown-item' @keydown.enter='changeNumBuddies(5)' @click='changeNumBuddies(5)' tabindex='0'>5</p>
-                                    <p class='dropdown-item' @keydown.enter='changeNumBuddies(10)' @click='changeNumBuddies(10)' tabindex='0'>10</p>
+                                <!-- aria-labelledby='dropdown-menu-button' -->
+                                <div class='dropdown-menu is-active' :class="{ 'is-active': dropdownActive}">
+                                    <p class='dropdown-item' @keydown.enter='changeNumCities(2)' @click='changeNumCities(2)' tabindex='0'>2</p>
+                                    <p class='dropdown-item' @keydown.enter='changeNumCities(5)' @click='changeNumCities(5)' tabindex='0'>5</p>
+                                    <p class='dropdown-item' @keydown.enter='changeNumCities(10)' @click='changeNumCities(10)' tabindex='0'>10</p>
+                                    <p class='dropdown-item' @keydown.enter='changeNumCities(15)' @click='changeNumCities(15)' tabindex='0'>15</p>
                                 </div>
                             </div>
-                            <h4 class='mb-0 text-nowrap'>{{ numBuddies == 1 ? 'city' : 'cities' }} with a similar population to</h4>
-                            <h4 class='showBigScreen ms-2'>{{ targetLabel }}</h4>
+                            <h4 class='mb-0'>{{ numCities == 1 ? 'city' : 'cities' }}</h4>
                         </div>
                     </div>
                     <h4 class='showSmallScreen'>{{ targetLabel }}</h4>
@@ -56,6 +50,7 @@ import { useRoute } from 'vue-router'
 
 // Import components.
 import Map from './Map.vue'
+import BuddyTable from './BuddyTable.vue'
 
 // Import state.
 import { state } from '../stores/store.js'
@@ -77,8 +72,8 @@ let { idToPop } = useIdToPop()
 // Extract route info.
 const route = useRoute()
 
-// Number of buddies to show
-let numBuddies = ref(1)
+// Number of cities to show
+let numCities = ref(2)
 
 // Target and buddy city info.
 let targetLabel = ref('')
@@ -93,28 +88,38 @@ let infoLoading = ref(true)
 // True if num buddies has been changes and the new infomration has not loaded yet.
 let buddiesLoading = ref(false)
 
+let dropdownActive = ref(false)
+
 // On mount, calculate the target and buddy city info with the ID's in the params.
 onMounted(async () => {
+    window.addEventListener('keydown.esc', () => {alert("hi")})
+
     targetLabel.value = await idToLabel(route.params.targetId)
     targetCountry.value = await idToCountry(route.params.targetId)
     targetPop.value = formatPopulation(idToPop(route.params.targetId))
 
-    await changeNumBuddies(1)
+    await changeNumCities(2)
 
     infoLoading.value = false
 })
 
-// Determines if the screen is small enough  that the "see more cities" need to be on separate lines.
+// Determines if the screen is small enough that the "see more cities" need to be on separate lines.
 const isSmallScreen = computed(() => {
     return window.innerWidth < 1000
 })
 
-async function changeNumBuddies(newNumBuddies) {
+// Determines if the screen is small enough that the "see more cities" need to be on separate lines.
+const tableDict = computed(() => {
+    let targetInfo = {id: route.params.targetId, label: targetLabel.value, country: targetCountry.value, population: targetPop.value}
+    return [targetInfo, ...buddyDict.value]
+})
+
+async function changeNumCities(newNumCities) {
 
     buddiesLoading.value = true
 
-    numBuddies.value = newNumBuddies
-    buddyDict.value = await findBuddies(newNumBuddies)
+    numCities.value = newNumCities
+    buddyDict.value = await findBuddies(newNumCities - 1)
 
     buddiesLoading.value = false
 }
@@ -150,6 +155,24 @@ function remove(list, item) {
     return list;
 }
 
+function getFirstHalf(list) {
+    let returnList = []
+    for (let i = 0; i < Math.floor((list.length / 2)); i++){
+        returnList.push(list[i])
+        console.log(`push to first half, index ${i}: ${JSON.stringify(list[i])}`)
+    }
+    return returnList
+}
+
+function getSecondHalf(list) {
+    let returnList = []
+    for (let i = Math.floor((list.length / 2)); i < list.length; i++){
+        returnList.push(list[i])
+        console.log(`push to second half, index ${i}: ${JSON.stringify(list[i])}`)
+    }
+    return returnList
+}
+
 </script>
 
 <style lang='scss' scoped>
@@ -169,38 +192,15 @@ function remove(list, item) {
     display: none;
 }
 
-.pop-table {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-    border-collapse: collapse; 
-    font-size: 1.75rem;
-}
-.table-header {
-    // border-bottom: 2px solid $primary;
-    font-weight: 800;
-}
-
-td, th {
-    padding: .5rem;
-}
-
-.city-cell {
-    padding-right: 3rem;
-}
-
-.city-cell a {
-    color: $primary;
-}
-
-.city-cell a:hover, .city-cell a:focus {
-    color: $secondary;
-    text-decoration: none;
-}
-
 #buddies-loading {
     color: $secondary;
     font-style: italic;
+}
+
+#dropdown-menu-button {
+    width: 5rem;
+    // margin-right: 1rem;
+    // margin-left: 1rem;
 }
 
 #dropdown-menu-button:focus {

@@ -1,5 +1,5 @@
 <template>
-  <div id='map' :class='{ invisible: !props.active }' ></div>
+    <div id='map' :class='{ invisible: !props.active }' ></div>
 </template>
 
 <script setup>
