@@ -1,7 +1,9 @@
 <template>
     <div>
         <h3 class='above-divider'>Choose which <strong>{{ route.params.targetLabel }}</strong> you want to search for:</h3>
+        
         <div class='divider'></div>
+        
         <ul class='below-divider'>
             <li v-for='entry in possibleTargetCities' :key='entry' @keydown.enter='chosenTarget(entry.value, router)' @click='chosenTarget(entry.value, router)' class ='city-choice' tabindex='0' >
                 <h4>{{ entry.description }}</h4>

@@ -24,7 +24,6 @@ const route = useRoute()
 // Act as if the ID has just been chosen.
 // If not, go to the 404 page.
 onMounted(() => {
-    console.log(route.params.targetId)
     let isCity = isCityId(route.params.targetId)
     isCity ? chosenTarget(route.params.targetId, router) : router.push(({ name: '404' }))
 })

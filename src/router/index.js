@@ -73,7 +73,7 @@ const routes = [
             },
             // Match: Displays which city is closesnt in population to the inputted city.
             {
-                path: 'match/:targetId/:buddyId',
+                path: 'match/:targetId/',
                 name: 'match',
                 component: BuddyMatch,
                 children: [

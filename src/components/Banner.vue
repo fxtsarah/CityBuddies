@@ -1,5 +1,6 @@
 <template>
     <div id='banner'>
+
         <div id='nav'>
             <h1 class='mt-0 text-nowrap'><router-link id='title-link' :to="{ name: 'home' }" :class="{ 'disabled-title': props.listLoading }" :tabindex=bannerTabIndex>City Buddies</router-link> </h1>
             <div class='ms-3'>
@@ -7,6 +8,7 @@
                 <router-link :to="{ name: 'random' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</router-link> 
             </div>
         </div>
+
         <div id='banner-form' class='d-block mt-1'>
             <div id='banner-input-and-button' class='d-flex'>
                 <input @keydown.enter='inputSubmit' placeholder='City Name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
@@ -14,6 +16,7 @@
             </div>
             <p v-if='props.listLoading' id='list-loading'><i>The cities list is loading, please wait...</i></p>
         </div> 
+        
   </div>
 </template>
 

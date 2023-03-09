@@ -1,13 +1,16 @@
 <template>
     <table class='pop-table'>
+        
         <tr class='table-header'>
             <th>City</th>
             <th>Population</th>
         </tr>
+
         <tr v-for='entry in props.tableDict' :key='entry'>
             <td class='city-cell'><router-link :to="{ name: 'match-redirect', params: { targetId: entry.id } }">{{ entry.label }}, {{ entry.country }}</router-link></td>
             <td>{{ entry.population }}</td>
         </tr>
+
     </table>
 </template>
 
@@ -15,9 +18,6 @@
 
 // Define props.
 const props = defineProps(['tableDict'])
-
-
-
 
 </script>
 
@@ -33,7 +33,6 @@ const props = defineProps(['tableDict'])
     font-size: 1.75rem;
 }
 .table-header {
-    // border-bottom: 2px solid $primary;
     font-weight: 800;
 }
 

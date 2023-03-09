@@ -3,41 +3,46 @@
         <router-view />
         <div id='buddy-match-info' v-if='!infoLoading'>
             <h3 class='above-divider'><strong>{{ targetLabel }}</strong> is buddies with <strong>{{ buddyDict[0].label }}</strong></h3>
+            
             <div class='divider'></div>
+            
             <div class='below-divider'>
-                
-                <BuddyTable v-if='numCities < 8' :tableDict='tableDict' />
 
-                <div v-if='numCities >= 8' class="d-flex">
-                    <BuddyTable :tableDict='getFirstHalf(tableDict)' />
-                    <BuddyTable :tableDict='getSecondHalf(tableDict)' />
+                <div class="show-small-screen">
+                    <BuddyTable :tableDict='tableDict' />
                 </div>
 
-                <div id='other-buddies' class='d-block'>
-                    <div class='d-flex' style='flex-direction: column;'>
-                        <div class='mt-2 d-flex' style='margin: auto;'>
-                            <h4 class='mb-0'>See</h4> 
-                            <div class='dropdown'>
-                                <!--  -->
-                                <button class='btn dropdown-toggle mt-1 mx-1' type='button' id='dropdown-menu-button' @keydown.enter='dropdownActive = !dropdownActive' @click='dropdownActive = !dropdownActive' aria-haspopup='true' aria-expanded='false' tabindex='0'>
-                                    {{ numCities }}
-                                </button>
-                                <!-- aria-labelledby='dropdown-menu-button' -->
-                                <div class='dropdown-menu is-active' :class="{ 'is-active': dropdownActive}">
-                                    <p class='dropdown-item' @keydown.enter='changeNumCities(2)' @click='changeNumCities(2)' tabindex='0'>2</p>
-                                    <p class='dropdown-item' @keydown.enter='changeNumCities(5)' @click='changeNumCities(5)' tabindex='0'>5</p>
-                                    <p class='dropdown-item' @keydown.enter='changeNumCities(10)' @click='changeNumCities(10)' tabindex='0'>10</p>
-                                    <p class='dropdown-item' @keydown.enter='changeNumCities(15)' @click='changeNumCities(15)' tabindex='0'>15</p>
-                                </div>
-                            </div>
-                            <h4 class='mb-0'>{{ numCities == 1 ? 'city' : 'cities' }}</h4>
-                        </div>
+                <div class="show-big-screen">
+                    <BuddyTable v-if='numCities < 6' :tableDict='tableDict' />
+
+                    <div v-if='numCities >= 6' class="d-flex">
+                        <BuddyTable :tableDict='getFirstHalf(tableDict)' />
+                        <BuddyTable :tableDict='getSecondHalf(tableDict)' />
                     </div>
-                    <h4 class='showSmallScreen'>{{ targetLabel }}</h4>
+                </div>
+                
+                <div id='num-buddies-choice'>
+                    <div class='mt-2 d-flex' style='margin: auto;'>
+                        <h4 class='mb-0'>See</h4> 
+                        <div class='dropdown'>
+                            <button class='btn dropdown-toggle mt-1 mx-1 ' type='button' id='dropdown-menu-button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' tabindex='0'>
+                                {{ numCities }}
+                            </button>
+                            <div class='dropdown-menu' aria-labelledby='dropdown-menu-button'>
+                                <p class='dropdown-item' @keydown.enter='changeNumCities(2)' @click='changeNumCities(2)' tabindex='0'>2</p>
+                                <p class='dropdown-item' @keydown.enter='changeNumCities(5)' @click='changeNumCities(5)' tabindex='0'>5</p>
+                                <p class='dropdown-item' @keydown.enter='changeNumCities(10)' @click='changeNumCities(10)' tabindex='0'>10</p>
+                                <p class='dropdown-item' @keydown.enter='changeNumCities(15)' @click='changeNumCities(15)' tabindex='0'>15</p>
+                            </div>
+                        </div>
+                        <h4 class='mb-0'>{{ numCities == 1 ? 'city' : 'cities' }}</h4>
+                    </div>
                 </div>
             </div>
         </div>
+
         <h4 v-if='!infoLoading && buddiesLoading' id='buddies-loading'>Buddies are loading, please wait...</h4>
+
         <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddyDict' />
     </div>  
 </template>
@@ -88,11 +93,8 @@ let infoLoading = ref(true)
 // True if num buddies has been changes and the new infomration has not loaded yet.
 let buddiesLoading = ref(false)
 
-let dropdownActive = ref(false)
-
 // On mount, calculate the target and buddy city info with the ID's in the params.
 onMounted(async () => {
-    window.addEventListener('keydown.esc', () => {alert("hi")})
 
     targetLabel.value = await idToLabel(route.params.targetId)
     targetCountry.value = await idToCountry(route.params.targetId)
@@ -115,6 +117,8 @@ const tableDict = computed(() => {
 })
 
 async function changeNumCities(newNumCities) {
+
+    $('#dropdown-menu-button').click();
 
     buddiesLoading.value = true
 
@@ -159,7 +163,6 @@ function getFirstHalf(list) {
     let returnList = []
     for (let i = 0; i < Math.floor((list.length / 2)); i++){
         returnList.push(list[i])
-        console.log(`push to first half, index ${i}: ${JSON.stringify(list[i])}`)
     }
     return returnList
 }
@@ -168,7 +171,6 @@ function getSecondHalf(list) {
     let returnList = []
     for (let i = Math.floor((list.length / 2)); i < list.length; i++){
         returnList.push(list[i])
-        console.log(`push to second half, index ${i}: ${JSON.stringify(list[i])}`)
     }
     return returnList
 }
@@ -184,12 +186,10 @@ function getSecondHalf(list) {
     margin-right: auto;
 }
 
-#other-buddies {
+#num-buddies-choice {
     color: $secondary;
-}
-
-.showSmallScreen {
-    display: none;
+    display: flex;
+    flex-direction: column;
 }
 
 #buddies-loading {
@@ -199,20 +199,21 @@ function getSecondHalf(list) {
 
 #dropdown-menu-button {
     width: 5rem;
-    // margin-right: 1rem;
-    // margin-left: 1rem;
 }
 
 #dropdown-menu-button:focus {
     border: 1px solid $secondary;
 }
 
+.show-small-screen {
+    display: none;
+}
+
 @media screen and (max-width: 1000px) {
-    .showSmallScreen {
+    .show-small-screen {
         display: unset;
     }
-
-    .showBigScreen {
+    .show-big-screen {
         display: none;
     }
 }
