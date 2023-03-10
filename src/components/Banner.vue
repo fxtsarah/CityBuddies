@@ -286,11 +286,11 @@ function random() {
         justify-content: space-between;
     }
 
-    #title {
+    #title-link {
         font-size: max(30px, min(7.5vw, 40px));
         margin-top: .4rem;
-        color: $background !important;
-        text-decoration: none !important;
+        // color: $background !important;
+        // text-decoration: none !important;
     }
 
     .page {
