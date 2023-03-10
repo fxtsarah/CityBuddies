@@ -312,6 +312,10 @@ function random() {
         color: $btnColor;
         text-decoration: underline;
     }
+
+    #list-loading {
+    margin-top: .5rem;
+}
 }
 
 </style>
