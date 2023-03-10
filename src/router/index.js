@@ -8,7 +8,7 @@ import AboutView from '../views/AboutView.vue'
 import Disambiguation from '../components/Disambiguation.vue'
 import BuddyMatch from '../components/BuddyMatch.vue'
 import CityNotFound from '../components/CityNotFound.vue'
-import Search from '../components/Search.vue'
+import Search from '../components/redirects/Search.vue'
 import MatchRedirect from '../components/redirects/MatchRedirect.vue'
 
 // Import composables.

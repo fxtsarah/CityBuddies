@@ -66,7 +66,7 @@ function addMarker(latlong, label, isTarget) {
     const bootstrapIcon = L.divIcon({
         html: `<i class='bi bi-geo-alt-fill ${color}' style='font-size:3rem;'  </i>`,
 
-        iconAnchor:   [12.5, 40], // point of the icon which will correspond to marker's location
+        iconAnchor:   [14.5, 35], // point of the icon which will correspond to marker's location
         className: 'myDivIcon'
     });
 

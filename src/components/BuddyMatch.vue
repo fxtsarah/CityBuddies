@@ -13,9 +13,9 @@
                 </div>
 
                 <div class="show-big-screen">
-                    <BuddyTable v-if='numCities < 6' :tableDict='tableDict' />
+                    <BuddyTable v-if='numBuddies < 5' :tableDict='tableDict' />
 
-                    <div v-if='numCities >= 6' class="d-flex">
+                    <div v-if='numBuddies >= 5' class="d-flex">
                         <BuddyTable :tableDict='getFirstHalf(tableDict)' />
                         <BuddyTable :tableDict='getSecondHalf(tableDict)' />
                     </div>
@@ -26,16 +26,16 @@
                         <h4 class='mb-0'>See</h4> 
                         <div class='dropdown'>
                             <button class='btn dropdown-toggle mt-1 mx-1 ' type='button' id='dropdown-menu-button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' tabindex='0'>
-                                {{ numCities }}
+                                {{ numBuddies }}
                             </button>
                             <div class='dropdown-menu' aria-labelledby='dropdown-menu-button'>
-                                <p class='dropdown-item' @keydown.enter='changeNumCities(2)' @click='changeNumCities(2)' tabindex='0'>2</p>
-                                <p class='dropdown-item' @keydown.enter='changeNumCities(5)' @click='changeNumCities(5)' tabindex='0'>5</p>
-                                <p class='dropdown-item' @keydown.enter='changeNumCities(10)' @click='changeNumCities(10)' tabindex='0'>10</p>
-                                <p class='dropdown-item' @keydown.enter='changeNumCities(15)' @click='changeNumCities(15)' tabindex='0'>15</p>
+                                <p class='dropdown-item' @keydown.enter='changeNumBuddies(1)' @click='changeNumBuddies(1)' tabindex='0'>1</p>
+                                <p class='dropdown-item' @keydown.enter='changeNumBuddies(5)' @click='changeNumBuddies(5)' tabindex='0'>5</p>
+                                <p class='dropdown-item' @keydown.enter='changeNumBuddies(10)' @click='changeNumBuddies(10)' tabindex='0'>10</p>
+                                <p class='dropdown-item' @keydown.enter='changeNumBuddies(15)' @click='changeNumBuddies(15)' tabindex='0'>15</p>
                             </div>
                         </div>
-                        <h4 class='mb-0'>{{ numCities == 1 ? 'city' : 'cities' }}</h4>
+                        <h4 class='mb-0'>{{ numBuddies == 1 ? 'city' : 'cities' }} similar to {{ targetLabel }}</h4>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@ let { idToPop } = useIdToPop()
 const route = useRoute()
 
 // Number of cities to show
-let numCities = ref(2)
+let numBuddies = ref(1)
 
 // Target and buddy city info.
 let targetLabel = ref('')
@@ -100,7 +100,7 @@ onMounted(async () => {
     targetCountry.value = await idToCountry(route.params.targetId)
     targetPop.value = formatPopulation(idToPop(route.params.targetId))
 
-    await changeNumCities(2)
+    await changeNumBuddies(1)
 
     infoLoading.value = false
 })
@@ -116,14 +116,14 @@ const tableDict = computed(() => {
     return [targetInfo, ...buddyDict.value]
 })
 
-async function changeNumCities(newNumCities) {
+async function changeNumBuddies(newNumBuddies) {
 
     $('#dropdown-menu-button').click();
 
     buddiesLoading.value = true
 
-    numCities.value = newNumCities
-    buddyDict.value = await findBuddies(newNumCities - 1)
+    numBuddies.value = newNumBuddies
+    buddyDict.value = await findBuddies(newNumBuddies)
 
     buddiesLoading.value = false
 }
@@ -159,6 +159,7 @@ function remove(list, item) {
     return list;
 }
 
+// Get the first half of an array.
 function getFirstHalf(list) {
     let returnList = []
     for (let i = 0; i < Math.floor((list.length / 2)); i++){
@@ -167,6 +168,7 @@ function getFirstHalf(list) {
     return returnList
 }
 
+// Get the second half of an array.
 function getSecondHalf(list) {
     let returnList = []
     for (let i = Math.floor((list.length / 2)); i < list.length; i++){

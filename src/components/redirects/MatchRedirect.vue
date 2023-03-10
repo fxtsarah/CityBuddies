@@ -9,11 +9,9 @@ import { onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 
 // Import composables.
-import { useChosenTarget } from '../../composables/useChosenTarget.js'
 import { useIsCityId } from '../../composables/useIsCityId.js'
 
 // Extract functions from composables.
-let { chosenTarget } = useChosenTarget()
 let { isCityId } = useIsCityId()
 
 // Extract router info.
@@ -25,7 +23,7 @@ const route = useRoute()
 // If not, go to the 404 page.
 onMounted(() => {
     let isCity = isCityId(route.params.targetId)
-    isCity ? chosenTarget(route.params.targetId, router) : router.push(({ name: '404' }))
+    isCity ? router.replace({ name: 'match', params: { targetId: route.params.targetId }}) : router.replace(({ name: '404' }))
 })
 
 </script>

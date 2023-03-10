@@ -5,7 +5,7 @@
             <h1 class='mt-0 text-nowrap'><router-link id='title-link' :to="{ name: 'home' }" :class="{ 'disabled-title': props.listLoading }" :tabindex=bannerTabIndex>City Buddies</router-link> </h1>
             <div class='ms-3'>
                 <router-link :to="{ name: 'about' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
-                <router-link :to="{ name: 'random' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</router-link> 
+                <a @click="random()" @kerydown.enter="random()" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</a> 
             </div>
         </div>
 
@@ -28,6 +28,9 @@ import exceptionsList from '../../public/exceptions.json'
 // Vue imports
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
+
+// Import state.
+import { state } from '../stores/store.js'
 
 // Extract router info.
 const router = useRouter()
@@ -170,6 +173,12 @@ function formatCityName(str) {
 // Capitalize the first character of a string
 function capitalizeFirstLetter(str) {
     return String(str).charAt(0).toUpperCase() + String(str).slice(1)
+}
+
+// Go to the match page of a random city.
+function random() {
+    var randomCity = state.citiesList[Math.floor(Math.random()*state.citiesList.length)]
+    router.push({ name: 'match-redirect', params: { targetId: randomCity.value } })
 }
 
 </script>

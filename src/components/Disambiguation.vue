@@ -5,7 +5,7 @@
         <div class='divider'></div>
         
         <ul class='below-divider'>
-            <li v-for='entry in possibleTargetCities' :key='entry' @keydown.enter='chosenTarget(entry.value, router)' @click='chosenTarget(entry.value, router)' class ='city-choice' tabindex='0' >
+            <li v-for='entry in possibleTargetCities' :key='entry' @keydown.enter='chosenTarget(entry.value)' @click='chosenTarget(entry.value, router)' class ='city-choice' tabindex='0' >
                 <h4>{{ entry.description }}</h4>
             </li>
         </ul>
@@ -20,11 +20,9 @@ import { useRoute, useRouter } from 'vue-router'
 
 // Import composables.
 import { useFindPossibleMatches }  from '../composables/useFindPossibleMatches.js'
-import { useChosenTarget }  from '../composables/useChosenTarget.js'
 
 // Extract functions from composables.
 let { findPossibleMatches } = useFindPossibleMatches()
-let { chosenTarget } = useChosenTarget()
 
 // Extract router info.
 const route = useRoute()
@@ -37,6 +35,11 @@ let possibleTargetCities = ref([])
 onMounted(async () => {
     possibleTargetCities.value = await findPossibleMatches(route.params.targetLabel)
 })
+
+// Method called when a target city is chosen
+function chosenTarget(id) {
+    router.push({ name: 'match', params: { targetId: id }})
+}
 
 </script>
 
