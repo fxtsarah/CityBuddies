@@ -108,7 +108,7 @@ watch(() => props.buddies, async (newBuddies) => {
 #map { 
     display: block;
     height: 50rem;
-    margin-top: 3rem;
+    margin-top: 1rem;
     width: 90%;
     margin-left: auto;
     margin-right: auto;

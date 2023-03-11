@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <h4 v-if='!infoLoading && buddiesLoading' id='buddies-loading'>Buddies are loading, please wait...</h4>
+        <h4 :class='{ invisible: infoLoading || !buddiesLoading }' class="my-0" id='buddies-loading'>Buddies are loading, please wait...</h4>
 
         <Map :active='!infoLoading' :targetId='route.params.targetId' :targetLabel='targetLabel' :buddies='buddyDict' />
     </div>  
