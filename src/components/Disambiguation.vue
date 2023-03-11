@@ -1,9 +1,11 @@
 <template>
     <div>
         <h3 class='above-divider'>Choose which <strong>{{ route.params.targetLabel }}</strong> you want to search for:</h3>
+        
         <div class='divider'></div>
+        
         <ul class='below-divider'>
-            <li v-for='entry in possibleTargetCities' :key='entry' @keydown.enter='chosenTarget(entry.value, router)' @click='chosenTarget(entry.value, router)' class ='city-choice' tabindex='0' >
+            <li v-for='entry in possibleTargetCities' :key='entry' @keydown.enter='chosenTarget(entry.value)' @click='chosenTarget(entry.value, router)' class ='city-choice' tabindex='0' >
                 <h4>{{ entry.description }}</h4>
             </li>
         </ul>
@@ -18,11 +20,9 @@ import { useRoute, useRouter } from 'vue-router'
 
 // Import composables.
 import { useFindPossibleMatches }  from '../composables/useFindPossibleMatches.js'
-import { useChosenTarget }  from '../composables/useChosenTarget.js'
 
 // Extract functions from composables.
 let { findPossibleMatches } = useFindPossibleMatches()
-let { chosenTarget } = useChosenTarget()
 
 // Extract router info.
 const route = useRoute()
@@ -36,26 +36,31 @@ onMounted(async () => {
     possibleTargetCities.value = await findPossibleMatches(route.params.targetLabel)
 })
 
+// Method called when a target city is chosen
+function chosenTarget(id) {
+    router.push({ name: 'match', params: { targetId: id }})
+}
+
 </script>
 
-<style>
+<style lang='scss' scoped>
+@import '../../public/constants.scss';
 
 .city-choice {
     cursor: pointer;
 }
 
 .city-choice:hover, .city-choice:focus {
-    color: #519872;
+    color: $secondary;
     outline: none;
 }
 
 @media screen and (max-width: 1000px) {
     .city-choice {
-        margin: auto;
+        margin-left: auto;
+        margin-right: auto;
         width: 90%;
-        margin-bottom: 25px;
     }
-
 }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-    <h3 id='city-not-found'>Sorry, we couldn't find a city with the name {{ route.params.targetLabel }}.</h3>
+    <h3 class='mt-3'>Sorry, we couldn't find a city with the name {{ route.params.targetLabel }}.</h3>
 </template>
   
 <script setup>
@@ -11,12 +11,3 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 </script>
-
-<style>
-
-#city-not-found {
-    margin-top: 20px;
-}
-
-</style>
-  

@@ -1,19 +1,22 @@
 <template>
     <div id='banner'>
+
         <div id='nav'>
-            <h1 id='title'>City Buddies</h1>
-            <div id='pages'>
-                <router-link :to="{ name: 'home' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Home</router-link> 
-                <router-link :to="{ name: 'about' }" class='btn btn-light banner-button page' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
+            <h1 class='mt-0 text-nowrap'><router-link id='title-link' :to="{ name: 'home' }" :class="{ 'disabled-title': props.listLoading }" :tabindex=bannerTabIndex>City Buddies</router-link> </h1>
+            <div class='ms-3'>
+                <router-link :to="{ name: 'about' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
+                <a @click='random()' @keydown.enter='random()' class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</a> 
             </div>
         </div>
-        <div id='banner-form'>
-            <div id='banner-input-and-button'>
-                <input @keydown.enter='inputSubmit' placeholder='City name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
-                <button class='btn btn-light banner-button' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex><strong>Search For Buddy</strong></button>
+
+        <div id='banner-form' class='d-block mt-1'>
+            <div id='banner-input-and-button' class='d-flex'>
+                <input @keydown.enter='inputSubmit' placeholder='City Name' class='form-control' :class="{ 'disabled-item': props.listLoading }" id='input-form' v-model='inputValue' :tabindex=bannerTabIndex>
+                <button class='btn banner-button ms-4 fw-bold' :class="{ 'disabled-item': props.listLoading }" id='input-button' @keydown.enter='inputSubmit' @click='inputSubmit' :tabindex=bannerTabIndex>Search For Buddy</button>
             </div>
             <p v-if='props.listLoading' id='list-loading'><i>The cities list is loading, please wait...</i></p>
         </div> 
+        
   </div>
 </template>
 
@@ -25,6 +28,9 @@ import exceptionsList from '../../public/exceptions.json'
 // Vue imports
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
+
+// Import state.
+import { state } from '../stores/store.js'
 
 // Extract router info.
 const router = useRouter()
@@ -43,8 +49,10 @@ const bannerTabIndex = computed(() => {
 
 // When a value is submitted, clear the input box and pass the value onto the Search component
 async function inputSubmit() {
-    await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
-    inputValue.value = ''
+    if (inputValue.value != '') {
+        await router.push({ name: 'search', params: { targetLabel: formatCityName(inputValue.value) } })
+        inputValue.value = ''
+    }
 }
 
 // Correctly format the name of a city according to capitalization rules.
@@ -167,15 +175,22 @@ function capitalizeFirstLetter(str) {
     return String(str).charAt(0).toUpperCase() + String(str).slice(1)
 }
 
+// Go to the match page of a random city.
+function random() {
+    var randomCity = state.citiesList[Math.floor(Math.random()*state.citiesList.length)]
+    router.push({ name: 'match-redirect', params: { targetId: randomCity.value } })
+}
+
 </script>
 
-<style>
+<style lang='scss' scoped>
+@import '../../public/constants.scss';
 
 #banner {
-    background-color: #E16036;
-    color: #F6F6F6;
-    height: 9rem;
-    padding: 2.5rem;
+    background-color: $primary;
+    color: $background;
+    height: 10rem;
+    padding: 3rem;
     display: flex;
     justify-content: space-between;
 }
@@ -185,45 +200,36 @@ function capitalizeFirstLetter(str) {
     caret-color: transparent;
     width: 40%;    
 }
-  
-#banner-form {
-    margin-top: 5px;
-    display: block;
-}
-
-#banner-input-and-button {
-    display: flex;
-}
 
 #input-form {
-    margin-right: 20px;
     max-width: 300px; 
     min-width: 60px;
     caret-color: black;
 }
 
 #input-form:focus {
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px #519872;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px $secondary;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px 2px $secondary;
 }
 
 #input-button {
-    color:#E16036;
-    width: 250px;
-    margin-left: 20px;
+    color: $primary;
+    width: 16rem;
 }
 
 .banner-button {
-    background-color: #F6F6F6; 
-    white-space: nowrap;  
+    white-space: nowrap;
+    background-color: $btnColor;
+    color: $btnInactiveText;
 }
 
 .banner-button:hover, .banner-button:focus {
-    background-color: #dbdbdb;
+    background-color: $btnHover;
+    color: $btnInactiveText;
 }
 
 #list-loading {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     margin-top: .25rem;
 }
 
@@ -232,42 +238,44 @@ function capitalizeFirstLetter(str) {
     opacity: .6;
 }
 
+.disabled-title {
+    pointer-events: none;
+}
+
 #nav {
-    background-color: #E16036;
-    color: #F6F6F6;
+    background-color: $primary;
+    color: $background;
     display: flex;
 }
 
 .page {
-    background-color: #F6F6F6;
-    font-size: 16px;
-    margin: 5px;
-    width: 70px;
+    width: 8rem;
 }
 
 .page.router-link-exact-active {
-    color:#E16036;
+    color: $primary;
     font-weight: bold;
 }
 
-#pages {
-    margin-left: 15px;
+
+#title-link {
+    color: $background;
+    text-decoration: none;
 }
 
-#title {
-    margin-right: 10px;
-    margin-top: 0;
+#title-link:hover {
+    color: $backgroundHover;
 }
 
 @media screen and (max-width: 1000px) {
     #banner {
-        height: min(36vw, 10.5rem);
-        padding: 3vw;
+        height: max(140px, min(36vw, 10.5rem));
+        padding: 2.75vw;
         display: block;
     }
 
     #input-form {
-        margin-right: 10px;
+        margin-right: .6rem;
     }
 
     #banner-form {
@@ -278,39 +286,34 @@ function capitalizeFirstLetter(str) {
         justify-content: space-between;
     }
 
-    #title {
-        font-size: min(7.5vw, 40px);
-        margin-top: 5px;
+    #title-link {
+        font-size: max(30px, min(7.5vw, 40px));
+        margin-top: .4rem;
     }
 
     .page {
-        color:#F6F6F6;
-        background-color: #E16036;
+        width: 7rem;
+        color: $btnColor;
+        background-color: transparent;
         border: transparent;
-        font-size: 2vm;
         transition: none;
-        --bs-btn-active-color: #dbdbdb;
+        --bs-btn-active-color: $btnHover;
         --bs-btn-active-bg: transparent;
     }
 
     .page:hover, .page:focus {
+        color: $btnHover;
         background-color: transparent;
-        color:#F6F6F6;
     }
 
     .page.router-link-exact-active {
-        color:#F6F6F6;
+        color: $btnColor;
         text-decoration: underline;
     }
 
-}
-
-@media screen and (max-width: 1000px) and (min-width: 750px) {
-
     #list-loading {
-        float: right;
+    margin-top: .5rem;
     }
-
 }
 
 </style>

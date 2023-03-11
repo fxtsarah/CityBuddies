@@ -8,10 +8,8 @@ import AboutView from '../views/AboutView.vue'
 import Disambiguation from '../components/Disambiguation.vue'
 import BuddyMatch from '../components/BuddyMatch.vue'
 import CityNotFound from '../components/CityNotFound.vue'
-import OtherBuddies from '../components/OtherBuddies.vue'
-import Search from '../components/Search.vue'
+import Search from '../components/redirects/Search.vue'
 import MatchRedirect from '../components/redirects/MatchRedirect.vue'
-import OtherBuddiesRedirect from '../components/redirects/OtherBuddiesRedirect.vue'
 
 // Import composables.
 import { useIdToLabel } from '../composables/useIdToLabel.js'
@@ -45,7 +43,7 @@ const routes = [
                     // Redirects back to the Seach route if the disambiguation page was access via direct link
                     {
                         path: '',
-                        name: 'disambiguation-redirect',
+                        name: 'disambiguation-child',
                         component: Disambiguation,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
@@ -62,7 +60,7 @@ const routes = [
                     // Redirects back to the Seach route if the not found page was access via direct link
                     {
                         path: '',
-                        name: 'not-found-redirect',
+                        name: 'not-found-child',
                         component: CityNotFound,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
@@ -72,7 +70,7 @@ const routes = [
             },
             // Match: Displays which city is closesnt in population to the inputted city.
             {
-                path: 'match/:targetId/:buddyId',
+                path: 'match/:targetId',
                 name: 'match',
                 component: BuddyMatch,
                 children: [
@@ -87,23 +85,6 @@ const routes = [
                     }
                 ]
             },
-            // Other Buddies: Displays the closest 5 cities in population to the inputted city.
-            {
-                path: 'other-buddies/:targetId',
-                name: 'other-buddies',
-                component: OtherBuddies,
-                children: [
-                    // Recalculates the other buddies if the other buddies page was access via direct link.
-                    {
-                        path: '',
-                        name: 'other-buddies-child',
-                        component: OtherBuddies,
-                        redirect: to => {
-                            return { name: 'other-buddies-redirect', params: { targetId: to.params.targetId } }
-                        }
-                    }
-                ]
-            }, 
             // Match Redirect: Ensures that the target ID is a valid city and has the correct buddy before showing the Match screen.
             // Used when Match is accessed using a direct link.
             {
@@ -111,13 +92,7 @@ const routes = [
                 name: 'match-redirect',
                 component: MatchRedirect,
             },
-            // Other Buddies Redirect: Ensures that the target ID is a valid city before showing the Other Buddies screen.
-            // Used when Other Buddies is accessed using a direct link.
-            {
-                path: 'other-buddies-redirect/:targetId',
-                name: 'other-buddies-redirect',
-                component: OtherBuddiesRedirect,
-            }
+            
         ]
     },
     // About: Describes what the website is, how to use it, and very generally how it works.

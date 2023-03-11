@@ -1,0 +1,63 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css');
+#app {
+  background-color: #F6F6F6;
+  font-family: Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #E16036;
+  caret-color: transparent;
+}
+
+html {
+  background-color: #F6F6F6;
+}
+
+body {
+  min-width: 300px;
+  width: auto !important;
+  width: 400px;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.divider {
+  background-color: #E16036;
+  height: 8px;
+  width: 55%;
+  margin: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.above-divider {
+  margin-top: 2rem;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.below-divider {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0 !important;
+}
+
+li {
+  width: 55%;
+  margin: auto;
+  margin-bottom: 1.25rem;
+}
+
+@media screen and (max-width: 1000px) {
+  li {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
