@@ -7,13 +7,12 @@ const { submitQuery } = submitQueryService
 // Get the latitude and longitude of a city given its ID.
 exports.idToLatlong = async id => {
     let query = `SELECT ?city ?long ?lat
-                WHERE
-                {
-                VALUES ?city { wd:${id} } 
-                ?city p:P625 ?coordinate.
-                ?coordinate psv:P625 ?coordinate_node.
-                ?coordinate_node wikibase:geoLongitude ?long.
-                ?coordinate_node wikibase:geoLatitude ?lat.  
+                WHERE {
+                    VALUES ?city { wd:${id} } 
+                    ?city p:P625 ?coordinate.
+                    ?coordinate psv:P625 ?coordinate_node.
+                    ?coordinate_node wikibase:geoLongitude ?long.
+                    ?coordinate_node wikibase:geoLatitude ?lat.  
                 }`
     let result = await submitQuery(query)
     return {lat: result[0].lat, long: result[0].long}

@@ -10,17 +10,16 @@ exports.findPossibleMatches = async (label) => {
     let noQuotes = label.replace("\'", "\\'");
         
     let query = `SELECT DISTINCT ?city ?cityLabel ?population ?cityDescription
-                WHERE
-                { 
-                ?city wdt:P31/wdt:P279* wd:Q515 .
-                { ?city skos:altLabel \'${noQuotes}\'@en }
-                UNION
-                { ?city rdfs:label \'${noQuotes}\'@en }
-                ?city wdt:P1082 ?population .
-                                    
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+                WHERE { 
+                    ?city wdt:P31/wdt:P279* wd:Q515 .
+                    { ?city skos:altLabel \'${noQuotes}\'@en }
+                    UNION
+                    { ?city rdfs:label \'${noQuotes}\'@en }
+                    ?city wdt:P1082 ?population .
+                                        
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
                 } ORDER BY DESC (?population)`
-    
+
     try {
         let result = await submitQuery(query)
         // Remove duplicate cities from the result.
