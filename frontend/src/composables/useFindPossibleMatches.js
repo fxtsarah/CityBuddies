@@ -6,6 +6,5 @@ export function useFindPossibleMatches() {
     async function findPossibleMatches(label) {
         return (await Api().get(`cities/findPossibleMatches/${label}`)).data
     }
-
     return { findPossibleMatches }
 }

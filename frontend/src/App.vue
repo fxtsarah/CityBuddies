@@ -1,6 +1,6 @@
 <template>
-  <Banner :listLoading='listLoading'/>
-  <router-view v-if='!listLoading'/>
+    <Banner :listLoading='listLoading'/>
+    <router-view v-if='!listLoading'/>
 </template>
 
 <script setup>

@@ -6,6 +6,6 @@ export function useIsCityId() {
     function isCityId(id) {
         let matches = Object.values(state.citiesList).filter(entry => String(entry.value) == String(id))
         return matches.length > 0
-  }
-  return { isCityId }
+    }
+    return { isCityId }
 }

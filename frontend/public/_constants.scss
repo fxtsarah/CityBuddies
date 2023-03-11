@@ -1,0 +1,20 @@
+$background: #F6F6F6;
+
+$primary: #E16036;
+$secondary: #519872;
+
+$btnColor: #f6f6f6;
+
+$btnHover: lighten($btnColor, 10%);
+$btnInactiveText: #ffffff;
+
+@if (lightness($btnColor) > 50) {
+    $btnHover: darken($btnColor, 10%);
+    $btnInactiveText: #000000;
+}
+
+$backgroundHover: lighten($background, 10%);
+
+@if (lightness($background) > 50) {
+    $backgroundHover: darken($btnColor, 10%);
+}

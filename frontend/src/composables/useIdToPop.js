@@ -7,5 +7,5 @@ export function useIdToPop() {
         let entry = Object.values(state.citiesList).filter(entry => String(entry.value) == String(id))[0]
         return entry.population
     }
-return { idToPop }
+    return { idToPop }
 }
