@@ -25,20 +25,27 @@ const routes = [
         name: 'home',
         component: HomeView,
         meta: {
-            title: 'Home'
+            title: 'Home',
+            noTitle: false
         },
         children: [
             // Search: Where the user is directed after submitting an input. Searches for cities that match the user's input.
             {
                 path: 'search/:targetLabel',
                 name: 'search',
-                component: Search
+                component: Search,
+                meta: {
+                    noTitle: false
+                }
             },
             // Disambiguation: When there are multiple cities with the inputted name, allow the user to choose which city they want.
             {
                 path: 'disambiguation/:targetLabel',
                 name: 'disambiguation',
                 component: Disambiguation,
+                meta: {
+                    noTitle: false
+                },
                 children: [
                     // Redirects back to the Seach route if the disambiguation page was access via direct link
                     {
@@ -47,6 +54,9 @@ const routes = [
                         component: Disambiguation,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
+                        },
+                        meta: {
+                            noTitle: false
                         }
                     }
                 ]
@@ -56,6 +66,9 @@ const routes = [
                 path: 'city-not-found/:targetLabel',
                 name: 'city-not-found',
                 component: CityNotFound,
+                meta: {
+                    noTitle: false
+                },
                 children: [
                     // Redirects back to the Seach route if the not found page was access via direct link
                     {
@@ -64,6 +77,9 @@ const routes = [
                         component: CityNotFound,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
+                        },
+                        meta: {
+                            noTitle: false
                         }
                     }
                 ]
@@ -73,12 +89,18 @@ const routes = [
                 path: 'match/:targetId',
                 name: 'match',
                 component: BuddyMatch,
+                meta: {
+                    noTitle: false
+                },
                 children: [
                     // Recalculates the city buddy if the match page was access via direct link.
                     {
                         path: '',
                         name: 'match-child',
                         component: BuddyMatch,
+                        meta: {
+                            noTitle: false
+                        },
                         redirect: to => {
                             return { name: 'match-redirect', params: { targetId: to.params.targetId } }
                         }
@@ -91,6 +113,9 @@ const routes = [
                 path: 'match-redirect/:targetId',
                 name: 'match-redirect',
                 component: MatchRedirect,
+                meta: {
+                    noTitle: true
+                },
             },
             
         ]
@@ -101,7 +126,8 @@ const routes = [
         name: 'about',
         component: AboutView,
         meta: {
-            title: 'About'
+            title: 'About',
+            noTitle: false
         },
     },
     // 404: Landing page for any other routes.
@@ -110,7 +136,8 @@ const routes = [
         name: '404',
         component: NotFoundView,
         meta: {
-            title: '404'
+            title: '404',
+            noTitle: false
         }
     }
 ]
@@ -123,19 +150,29 @@ const router = createRouter({
 
 // Determine the title for the routes.
 router.beforeEach(async (to, from, next) => {
-    let title = ''
 
-    if (to.params.targetLabel) {
-        title = to.params.targetLabel
+    if (to.meta.noTitle) {
+        document.title = `City Buddies`
     }
-    else if (to.params.targetId) {
-        title = await idToLabel(to.params.targetId)
-    }
+
     else {
-        title = to.meta.title
-    }
 
-    document.title = `${title} | City Buddies`
+        let title = ''
+
+        if (to.params.targetLabel) {
+            title = to.params.targetLabel
+        }
+        else if (to.params.targetId) {
+            title = await idToLabel(to.params.targetId)
+        }
+        else {
+            title = to.meta.title
+        }
+    
+        document.title = `${title} | City Buddies`
+        
+    }
+    
     next()
 })
 
