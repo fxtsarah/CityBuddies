@@ -24,7 +24,6 @@ const props = defineProps(['tableDict'])
 <style lang='scss'>
 @import '../../public/constants.scss';
 
-
 .pop-table {
     margin-left: auto;
     margin-right: auto;
@@ -52,7 +51,5 @@ td, th {
     color: $secondary;
     text-decoration: none;
 }
-
-
 
 </style>

@@ -5,7 +5,7 @@
             <h1 class='mt-0 text-nowrap'><router-link id='title-link' :to="{ name: 'home' }" :class="{ 'disabled-title': props.listLoading }" :tabindex=bannerTabIndex>City Buddies</router-link> </h1>
             <div class='ms-3'>
                 <router-link :to="{ name: 'about' }" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex >About</router-link>
-                <a @click="random()" @kerydown.enter="random()" class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</a> 
+                <a @click='random()' @keydown.enter='random()' class='btn banner-button page m-1' :class="{ 'disabled-item': props.listLoading }" :tabindex=bannerTabIndex>Random</a> 
             </div>
         </div>
 
@@ -270,7 +270,7 @@ function random() {
 @media screen and (max-width: 1000px) {
     #banner {
         height: max(140px, min(36vw, 10.5rem));
-        padding: 3vw;
+        padding: 2.75vw;
         display: block;
     }
 
@@ -289,8 +289,6 @@ function random() {
     #title-link {
         font-size: max(30px, min(7.5vw, 40px));
         margin-top: .4rem;
-        // color: $background !important;
-        // text-decoration: none !important;
     }
 
     .page {
@@ -315,7 +313,7 @@ function random() {
 
     #list-loading {
     margin-top: .5rem;
-}
+    }
 }
 
 </style>

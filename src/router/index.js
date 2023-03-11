@@ -46,7 +46,7 @@ const routes = [
                     // Redirects back to the Seach route if the disambiguation page was access via direct link
                     {
                         path: '',
-                        name: 'disambiguation-redirect',
+                        name: 'disambiguation-child',
                         component: Disambiguation,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
@@ -63,7 +63,7 @@ const routes = [
                     // Redirects back to the Seach route if the not found page was access via direct link
                     {
                         path: '',
-                        name: 'not-found-redirect',
+                        name: 'not-found-child',
                         component: CityNotFound,
                         redirect: to => {
                             return { name: 'search', params: { targetLabel: to.params.targetLabel } }
@@ -73,7 +73,7 @@ const routes = [
             },
             // Match: Displays which city is closesnt in population to the inputted city.
             {
-                path: 'match/:targetId/',
+                path: 'match/:targetId',
                 name: 'match',
                 component: BuddyMatch,
                 children: [
@@ -87,16 +87,6 @@ const routes = [
                         }
                     }
                 ]
-            },
-            // Random: Redirects the user to the match page of a random city
-            {
-                path: 'random',
-                name: 'random',
-                component: Search,
-                redirect: to => {
-                    var randomCity = state.citiesList[Math.floor(Math.random()*state.citiesList.length)]
-                    return { name: 'match-redirect', params: { targetId: randomCity.value } }
-                }
             },
             // Match Redirect: Ensures that the target ID is a valid city and has the correct buddy before showing the Match screen.
             // Used when Match is accessed using a direct link.

@@ -20,7 +20,6 @@ const props = defineProps(['active', 'targetId', 'targetLabel', 'buddies'])
 let map
 let layerGroup
 
-
 // Initializes the map when the component is mounted.
 onMounted(async () => {
     map = L.map('map').setView([0, 0], getZoom() )

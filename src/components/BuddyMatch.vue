@@ -8,14 +8,14 @@
             
             <div class='below-divider'>
 
-                <div class="show-small-screen">
+                <div class='show-small-screen'>
                     <BuddyTable :tableDict='tableDict' />
                 </div>
 
-                <div class="show-big-screen">
+                <div class='show-big-screen'>
                     <BuddyTable v-if='numBuddies < 5' :tableDict='tableDict' />
 
-                    <div v-if='numBuddies >= 5' class="d-flex">
+                    <div v-if='numBuddies >= 5' class='d-flex'>
                         <BuddyTable :tableDict='getFirstHalf(tableDict)' />
                         <BuddyTable :tableDict='getSecondHalf(tableDict)' />
                     </div>
@@ -85,12 +85,13 @@ let targetLabel = ref('')
 let targetCountry = ref('')
 let targetPop = ref('')
 
+// List of dictionaries containing information about each of the city buddies.
 let buddyDict = ref([])
 
 // True if the target and buddy information has not loaded yet.
 let infoLoading = ref(true)
 
-// True if num buddies has been changes and the new infomration has not loaded yet.
+// True if num buddies has been changed and the new infomration has not loaded yet.
 let buddiesLoading = ref(false)
 
 // On mount, calculate the target and buddy city info with the ID's in the params.
@@ -106,24 +107,20 @@ onMounted(async () => {
 })
 
 // Determines if the screen is small enough that the "see more cities" need to be on separate lines.
-const isSmallScreen = computed(() => {
-    return window.innerWidth < 1000
-})
-
-// Determines if the screen is small enough that the "see more cities" need to be on separate lines.
 const tableDict = computed(() => {
     let targetInfo = {id: route.params.targetId, label: targetLabel.value, country: targetCountry.value, population: targetPop.value}
     return [targetInfo, ...buddyDict.value]
 })
 
+// Edit the number of buddies currently being shown.
 async function changeNumBuddies(newNumBuddies) {
 
     $('#dropdown-menu-button').click();
 
     buddiesLoading.value = true
 
-    numBuddies.value = newNumBuddies
     buddyDict.value = await findBuddies(newNumBuddies)
+    numBuddies.value = newNumBuddies
 
     buddiesLoading.value = false
 }
