@@ -14,9 +14,6 @@ import MatchRedirect from '../components/redirects/MatchRedirect.vue'
 // Import composables.
 import { useIdToLabel } from '../composables/useIdToLabel.js'
 
-// Import state.
-import { state } from '../stores/store.js'
-
 // Extract functions from composables.
 let { idToLabel } = useIdToLabel()
 
