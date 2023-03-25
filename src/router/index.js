@@ -151,6 +151,8 @@ const router = createRouter({
 // Determine the title for the routes.
 router.beforeEach(async (to, from, next) => {
 
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
     if (to.meta.noTitle) {
         document.title = `City Buddies`
     }
